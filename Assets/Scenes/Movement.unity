@@ -206,10 +206,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   jumpForce: 5
-  groundCheckRadius: 0.52
+  groundCheckDistance: 0.6
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  dashSpeed: 10
+  dashDuration: 0.2
+  dashCooldown: 1
 --- !u!50 &254036046
 Rigidbody2D:
   serializedVersion: 4
@@ -278,7 +281,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 398251199}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd31809e6568b664fb67bbf6694d84d4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -462,7 +465,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 1142883625}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: bd31809e6568b664fb67bbf6694d84d4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
