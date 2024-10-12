@@ -13,12 +13,23 @@ public class Movement : MonoBehaviour
     private Rigidbody2D rb; // Referensi ke komponen Rigidbody2D
 
     // Dash variables
-    public float dashSpeed = 10f; // Kecepatan dash
+    [SerializeField] private float horizontalDashSpeed = 10f; // Kecepatan dash horizontal
+    [SerializeField] private float verticalDashSpeed = 7f; // Kecepatan dash vertical
     public float dashDuration = 0.2f; // Durasi dash
     public float dashCooldown = 1f; // Waktu cooldown dash
     private bool isDashing = false; // Status dash
     private float dashTime = 0f; // Timer dash
     private float dashCooldownTimer = 0f; // Timer cooldown dash
+
+    // Reference for flipping character
+    private bool isFacingRight = true; // Status apakah karakter menghadap kanan
+
+    // Double jump variables
+    [SerializeField] private bool canDoubleJump = true; // Status untuk mengaktifkan double jump
+    private bool hasDoubleJumped = false; // Status apakah sudah double jump
+
+    [SerializeField]
+    public Animator PlayerAnimationController;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +40,6 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Mengambil input dari tombol A/D atau arah kiri/kanan
         float horizontalInput = Input.GetAxis("Horizontal");
 
         // Pengecekan apakah dash sedang dalam cooldown
@@ -38,21 +48,35 @@ public class Movement : MonoBehaviour
             dashCooldownTimer -= Time.deltaTime;
         }
 
-        // Menghitung gerakan karakter di sumbu X
-        Vector2 movement = new Vector2(horizontalInput * speed, rb.velocity.y);
-
         // Pengecekan apakah karakter berada di tanah menggunakan Raycast 2D
         GroundCheck();
 
-        // Jika karakter sedang tidak dash, gunakan gerakan normal
+        // Menghandle animasi idle atau walk berdasarkan input gerakan horizontal
+        if (Mathf.Abs(horizontalInput) > 0 && isGrounded && !isDashing)
+        {
+            PlayerAnimationController.SetInteger("state", 1); // Animasi berjalan
+        }
+        else if (isGrounded && !isDashing)
+        {
+            PlayerAnimationController.SetInteger("state", 0); // Animasi idle
+        }
+
         if (!isDashing)
         {
+            Vector2 movement = new Vector2(horizontalInput * speed, rb.velocity.y);
             rb.velocity = movement;
 
-            // Menghandle lompatan jika karakter berada di tanah
-            if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+            // Menghandle lompatan dan double jump
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                Jump();
+                if (isGrounded)
+                {
+                    Jump(); // Lompat pertama
+                }
+                else if (!hasDoubleJumped && canDoubleJump)
+                {
+                    DoubleJump(); // Double jump jika belum double jump
+                }
             }
 
             // Memulai dash jika tombol Shift ditekan dan cooldown sudah selesai
@@ -60,61 +84,67 @@ public class Movement : MonoBehaviour
             {
                 StartDash(horizontalInput);
             }
-        }
-        else
-        {
-            // Jika sedang dash, lanjutkan gerakan dash
-            Dash(horizontalInput);
+
+            // Logika untuk membalikkan karakter
+            if (horizontalInput > 0 && !isFacingRight)
+            {
+                Flip();
+            }
+            else if (horizontalInput < 0 && isFacingRight)
+            {
+                Flip();
+            }
         }
     }
 
     private void GroundCheck()
     {
-        // Membuat Raycast dari posisi karakter ke bawah
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
 
         if (hit.collider != null)
         {
             isGrounded = true; // Karakter berada di tanah
+            hasDoubleJumped = false; // Reset double jump setelah menyentuh tanah
         }
         else
         {
             isGrounded = false; // Karakter tidak berada di tanah
         }
-
-        Debug.Log("Grounded: " + isGrounded);
     }
 
     private void Jump()
     {
-        // Mengaplikasikan gaya lompat pada Rigidbody2D
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isGrounded = false; // Setelah melompat, karakter tidak berada di tanah
+        PlayerAnimationController.SetInteger("state", 2); // Set animasi lompat
+    }
+
+    private void DoubleJump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0); // Reset kecepatan vertikal sebelum double jump
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Lompatan kedua
+        hasDoubleJumped = true; // Setelah double jump, set true
+
+        PlayerAnimationController.SetInteger("state", 2); // Set animasi lompat
     }
 
     private void StartDash(float horizontalInput)
     {
         isDashing = true;
-        dashTime = dashDuration;
-        dashCooldownTimer = dashCooldown;
+        dashCooldownTimer = dashCooldown; // Mengatur cooldown
 
-        // Mengatur kecepatan dash sesuai arah input horizontal (ke kiri atau ke kanan)
-        rb.velocity = new Vector2(horizontalInput * dashSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(horizontalInput * horizontalDashSpeed, rb.velocity.y);
     }
 
-    private void Dash(float horizontalInput)
+    private void Flip()
     {
-        // Mengurangi timer dash
-        dashTime -= Time.deltaTime;
-
-        // Jika dash selesai, kembali ke keadaan normal
-        if (dashTime <= 0)
-        {
-            isDashing = false;
-        }
+        isFacingRight = !isFacingRight; // Balik status arah
+        Vector3 scale = transform.localScale; // Mengambil skala objek
+        scale.x *= -1; // Balik skala di sumbu X
+        transform.localScale = scale; // Terapkan skala baru
     }
 
-    // Menggambar raycast di editor untuk visualisasi
+    // Menggambar raycast di editor untuk visualisasia
     private void OnDrawGizmos()
     {
         // Set warna Gizmos
