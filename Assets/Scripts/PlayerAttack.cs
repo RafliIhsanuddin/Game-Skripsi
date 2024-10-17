@@ -11,6 +11,8 @@ public class PlayerAttack : MonoBehaviour
     private float timeToAttack = 0.05f;
     private float timer = 0f;
 
+    [SerializeField] Animator PlayerAnimationController; // Referensi ke Animator
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +36,7 @@ public class PlayerAttack : MonoBehaviour
                 timer = 0f;
                 attacking = false;
                 AttackArea.SetActive(false); // Nonaktifkan AttackArea setelah serangan
+                PlayerAnimationController.SetInteger("state", 0); // Kembali ke animasi idle
             }
         }
     }
@@ -42,8 +45,6 @@ public class PlayerAttack : MonoBehaviour
     {
         attacking = true;
         AttackArea.SetActive(true); // Aktifkan AttackArea saat menyerang
-
-        // Menambahkan debug log untuk menyerang
-        //Debug.Log("Player is attacking!");
+        PlayerAnimationController.SetInteger("state", 5); // Set animasi menyerang
     }
 }

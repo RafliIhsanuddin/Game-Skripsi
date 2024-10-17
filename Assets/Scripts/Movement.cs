@@ -14,11 +14,10 @@ public class Movement : MonoBehaviour
 
     // Dash variables
     [SerializeField] private float horizontalDashSpeed = 10f; // Kecepatan dash horizontal
-    [SerializeField] private float verticalDashSpeed = 7f; // Kecepatan dash vertical
+    [SerializeField] private float verticalDashSpeed = 7f; // Kecepatan dash vertikal
     public float dashDuration = 0.2f; // Durasi dash
     public float dashCooldown = 1f; // Waktu cooldown dash
     private bool isDashing = false; // Status dash
-    private float dashTime = 0f; // Timer dash
     private float dashCooldownTimer = 0f; // Timer cooldown dash
 
     // Reference for flipping character
@@ -41,6 +40,7 @@ public class Movement : MonoBehaviour
     void Update()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
         // Pengecekan apakah dash sedang dalam cooldown
         if (dashCooldownTimer > 0)
@@ -82,7 +82,7 @@ public class Movement : MonoBehaviour
             // Memulai dash jika tombol Shift ditekan dan cooldown sudah selesai
             if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0)
             {
-                StartDash(horizontalInput);
+                StartCoroutine(PreDash(horizontalInput, verticalInput));
             }
 
             // Logika untuk membalikkan karakter
@@ -128,12 +128,26 @@ public class Movement : MonoBehaviour
         PlayerAnimationController.SetInteger("state", 2); // Set animasi lompat
     }
 
-    private void StartDash(float horizontalInput)
+    private IEnumerator PreDash(float horizontalInput, float verticalInput)
     {
         isDashing = true;
-        dashCooldownTimer = dashCooldown; // Mengatur cooldown
+        PlayerAnimationController.SetInteger("state", 3); // Set animasi pre-dash
+        yield return new WaitForSeconds(0.05f); // Delay sebelum dash
 
-        rb.velocity = new Vector2(horizontalInput * horizontalDashSpeed, rb.velocity.y);
+        // Lanjutkan ke dash setelah delay
+        PlayerAnimationController.SetInteger("state", 4); // Set animasi dash
+
+        // Normalisasi input untuk memastikan dash serong memiliki kecepatan yang konsisten
+        Vector2 dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
+
+        // Terapkan dash ke arah yang ditentukan oleh input pemain
+        rb.velocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
+
+        yield return new WaitForSeconds(dashDuration); // Durasi dash
+
+        isDashing = false; // Selesai dash
+        PlayerAnimationController.SetInteger("state", 0); // Kembali ke animasi idle atau sesuai kondisi
+        dashCooldownTimer = dashCooldown; // Mengatur cooldown
     }
 
     private void Flip()

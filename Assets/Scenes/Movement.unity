@@ -258,6 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AttackArea: {fileID: 853563087}
+  PlayerAnimationController: {fileID: 642912365}
 --- !u!1 &398251199
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba944a6e1db7164989f9766772ad6f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 20
 --- !u!61 &740218748
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -685,10 +686,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.20871782, y: -0.5048826}
-      - {x: 0.17504025, y: 0.21146369}
-      - {x: -0.1834817, y: 0.21046352}
-      - {x: -0.14247471, y: -0.51133037}
+    - - {x: 0.09607792, y: -0.46334195}
+      - {x: 0.22768164, y: -0.30920005}
+      - {x: 0.30405664, y: -0.18448448}
+      - {x: 0.29145813, y: 0.09680414}
+      - {x: 0.17194605, y: 0.2184434}
+      - {x: -0.27655315, y: 0.23605824}
+      - {x: -0.24718004, y: -0.49504256}
   m_UseDelaunayMesh: 0
 --- !u!114 &853563090
 MonoBehaviour:
@@ -1163,7 +1167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba944a6e1db7164989f9766772ad6f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 20
 --- !u!61 &1961628800
 BoxCollider2D:
   m_ObjectHideFlags: 0
