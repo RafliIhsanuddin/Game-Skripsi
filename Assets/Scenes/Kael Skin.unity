@@ -578,7 +578,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: e58f14a5f40c34c47b993e193d3dde08, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.34
+      value: -4.76
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: e58f14a5f40c34c47b993e193d3dde08, type: 3}
       propertyPath: m_LocalPosition.z
@@ -834,6 +834,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: e58f14a5f40c34c47b993e193d3dde08, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1083819244}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: e58f14a5f40c34c47b993e193d3dde08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1083819245}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: e58f14a5f40c34c47b993e193d3dde08, type: 3}
 --- !u!1 &1083819238 stripped
 GameObject:
@@ -908,6 +911,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1083819245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083819238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f59c223a5288de4bb734c355f5f99be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  kaelAnimationController: {fileID: 1083819244}
 --- !u!1 &1103873806
 GameObject:
   m_ObjectHideFlags: 0

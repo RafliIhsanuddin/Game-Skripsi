@@ -16328,6 +16328,26 @@ ScriptedImporter:
     flatten: 0
     isImported: 0
     isVisible: 0
+  - name: Right Arm
+    spriteName: Right Arm
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 5e4a8cb6499a0354697f7a095ddd57d1
+    layerID: 13
+    mosaicPosition: {x: 133, y: 547}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Right Hand
+    spriteName: Right Hand
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 7c7b5270c6b2f664d8a18485b6f9a559
+    layerID: 12
+    mosaicPosition: {x: 133, y: 894}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
   - name: Eyes
     spriteName: Eyes
     isGroup: 0
@@ -16355,26 +16375,6 @@ ScriptedImporter:
     spriteID: f189d5139785df9429fff6fcdfee9421
     layerID: 16
     mosaicPosition: {x: 525, y: 4}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
-  - name: Right Arm
-    spriteName: Right Arm
-    isGroup: 0
-    parentIndex: -1
-    spriteID: 5e4a8cb6499a0354697f7a095ddd57d1
-    layerID: 13
-    mosaicPosition: {x: 133, y: 547}
-    flatten: 0
-    isImported: 1
-    isVisible: 1
-  - name: Right Hand
-    spriteName: Right Hand
-    isGroup: 0
-    parentIndex: -1
-    spriteID: 7c7b5270c6b2f664d8a18485b6f9a559
-    layerID: 12
-    mosaicPosition: {x: 133, y: 894}
     flatten: 0
     isImported: 1
     isVisible: 1
