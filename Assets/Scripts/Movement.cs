@@ -6,11 +6,15 @@ public class Movement : MonoBehaviour
 {
 
     public float speed = 5f; // Kecepatan gerakan karakter
+    public float runSpeed = 8f; // Kecepatan lari
     public float jumpForce = 5f; // Kekuatan lompatan
     public float groundCheckDistance = 1.1f; // Jarak pengecekan tanah menggunakan Raycast
-    public LayerMask groundLayer; // Layer untuk tanah (untuk memfilter raycast)
+    public LayerMask groundLayer; // Layer untuk tanah
     private bool isGrounded; // Status apakah karakter berada di tanah
     private Rigidbody2D rb; // Referensi ke komponen Rigidbody2D
+
+    private float groundTimeBuffer = 0.1f; // Toleransi waktu sebelum menganggap karakter di tanah
+    private float timeSinceGrounded = 0f;
 
     // Dash variables
     [SerializeField] private float horizontalDashSpeed = 10f; // Kecepatan dash horizontal
@@ -20,15 +24,18 @@ public class Movement : MonoBehaviour
     private bool isDashing = false; // Status dash
     private float dashCooldownTimer = 0f; // Timer cooldown dash
 
+    // Jump
+    private float jumpDebounceTime = 0.2f;
+    private float lastJumpTime = -1f;
+
     // Reference for flipping character
     private bool isFacingRight = true; // Status apakah karakter menghadap kanan
 
-    // Double jump variables
-    [SerializeField] private bool canDoubleJump = true; // Status untuk mengaktifkan double jump
-    private bool hasDoubleJumped = false; // Status apakah sudah double jump
-
     [SerializeField]
     public Animator PlayerAnimationController;
+
+    // Offset for ground check
+    public float bodyHeightOffset = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -39,8 +46,8 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
 
         // Pengecekan apakah dash sedang dalam cooldown
         if (dashCooldownTimer > 0)
@@ -51,41 +58,45 @@ public class Movement : MonoBehaviour
         // Pengecekan apakah karakter berada di tanah menggunakan Raycast 2D
         GroundCheck();
 
-        // Menghandle animasi idle atau walk berdasarkan input gerakan horizontal
-        if (Mathf.Abs(horizontalInput) > 0 && isGrounded && !isDashing)
+        // Animasi berdasarkan gerakan horizontal
+        if (isGrounded && !isDashing)
         {
-            PlayerAnimationController.SetInteger("state", 1); // Animasi berjalan
-        }
-        else if (isGrounded && !isDashing)
-        {
-            PlayerAnimationController.SetInteger("state", 0); // Animasi idle
+            if (Mathf.Abs(horizontalInput) > 0)
+            {
+                // Berjalan atau berlari berdasarkan input tombol C
+                PlayerAnimationController.SetInteger("state", Input.GetKey(KeyCode.C) ? 2 : 1);
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Jump();
+                }
+            }
+            else
+            {
+                // Idle
+                PlayerAnimationController.SetInteger("state", 0);
+            }
         }
 
+        // Gerakan horizontal
         if (!isDashing)
         {
-            Vector2 movement = new Vector2(horizontalInput * speed, rb.velocity.y);
+            float movementSpeed = Input.GetKey(KeyCode.C) ? runSpeed : speed;
+            Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.velocity.y);
             rb.velocity = movement;
 
-            // Menghandle lompatan dan double jump
+            // Lompat
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (isGrounded)
-                {
-                    Jump(); // Lompat pertama
-                }
-                else if (!hasDoubleJumped && canDoubleJump)
-                {
-                    DoubleJump(); // Double jump jika belum double jump
-                }
+                Jump();
             }
 
-            // Memulai dash jika tombol Shift ditekan dan cooldown sudah selesai
+            // Dash
             if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0)
             {
-                StartCoroutine(PreDash(horizontalInput, verticalInput));
+                Dash(horizontalInput, verticalInput);
             }
 
-            // Logika untuk membalikkan karakter
+            // Membalik arah karakter
             if (horizontalInput > 0 && !isFacingRight)
             {
                 Flip();
@@ -99,55 +110,88 @@ public class Movement : MonoBehaviour
 
     private void GroundCheck()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+        Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
+        RaycastHit2D hit = Physics2D.Raycast(bodyCenter, Vector2.down, groundCheckDistance, groundLayer);
 
         if (hit.collider != null)
         {
-            isGrounded = true; // Karakter berada di tanah
-            hasDoubleJumped = false; // Reset double jump setelah menyentuh tanah
+            timeSinceGrounded = Time.time; // Catat waktu terakhir kali menyentuh tanah
+            isGrounded = true;
         }
-        else
+        else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
-            isGrounded = false; // Karakter tidak berada di tanah
+            isGrounded = false; // Hanya ubah isGrounded jika sudah melewati buffer
         }
     }
 
     private void Jump()
     {
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        isGrounded = false; // Setelah melompat, karakter tidak berada di tanah
-        PlayerAnimationController.SetInteger("state", 2); // Set animasi lompat
+        if (Time.time - lastJumpTime > jumpDebounceTime)
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            isGrounded = false;
+            lastJumpTime = Time.time;
+
+            // Aktifkan animasi lompat
+            PlayerAnimationController.SetInteger("state", 3);
+            StartCoroutine(EndJumpAnimation());
+        }
     }
 
-    private void DoubleJump()
+    private IEnumerator EndJumpAnimation()
     {
-        rb.velocity = new Vector2(rb.velocity.x, 0); // Reset kecepatan vertikal sebelum double jump
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Lompatan kedua
-        hasDoubleJumped = true; // Setelah double jump, set true
+        // Tunggu hingga karakter benar-benar mendarat
+        while (!isGrounded)
+        {
+            yield return null; // Tunggu satu frame
+        }
 
-        PlayerAnimationController.SetInteger("state", 2); // Set animasi lompat
+        // Setelah mendarat, periksa status gerakan untuk kembali ke animasi yang sesuai
+        if (isGrounded)
+        {
+            if (Mathf.Abs(rb.velocity.x) > 0)
+            {
+                // Jika bergerak horizontal, set animasi berjalan atau lari
+                PlayerAnimationController.SetInteger("state", Input.GetKey(KeyCode.C) ? 2 : 1);
+            }
+            else
+            {
+                // Jika diam, set animasi idle
+                PlayerAnimationController.SetInteger("state", 0);
+            }
+        }
     }
 
-    private IEnumerator PreDash(float horizontalInput, float verticalInput)
+    private void Dash(float horizontalInput, float verticalInput)
     {
         isDashing = true;
-        PlayerAnimationController.SetInteger("state", 3); // Set animasi pre-dash
-        yield return new WaitForSeconds(0.05f); // Delay sebelum dash
-
-        // Lanjutkan ke dash setelah delay
-        PlayerAnimationController.SetInteger("state", 4); // Set animasi dash
-
-        // Normalisasi input untuk memastikan dash serong memiliki kecepatan yang konsisten
+        dashCooldownTimer = dashCooldown; // Atur cooldown
         Vector2 dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
 
-        // Terapkan dash ke arah yang ditentukan oleh input pemain
+        // Set animasi dash sesuai arah dash
+        PlayerAnimationController.SetInteger("state", 4);
+
+        // Terapkan kecepatan dash
         rb.velocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
 
-        yield return new WaitForSeconds(dashDuration); // Durasi dash
+        // Cek apakah lompat saat dash
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
 
-        isDashing = false; // Selesai dash
-        PlayerAnimationController.SetInteger("state", 0); // Kembali ke animasi idle atau sesuai kondisi
-        dashCooldownTimer = dashCooldown; // Mengatur cooldown
+        // Kembali ke kondisi normal setelah durasi dash
+        StartCoroutine(EndDash());
+    }
+
+    private IEnumerator EndDash()
+    {
+        yield return new WaitForSeconds(dashDuration);
+        isDashing = false; // Akhiri dash
+        if (isGrounded)
+        {
+            PlayerAnimationController.SetInteger("state", 0); // Kembali ke idle jika di tanah
+        }
     }
 
     private void Flip()
@@ -158,14 +202,12 @@ public class Movement : MonoBehaviour
         transform.localScale = scale; // Terapkan skala baru
     }
 
-    // Menggambar raycast di editor untuk visualisasia
+    // Menggambar raycast di editor untuk visualisasi
     private void OnDrawGizmos()
     {
-        // Set warna Gizmos
         Gizmos.color = Color.red;
-
-        // Menggambar garis raycast ke bawah
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
+        Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
+        Gizmos.DrawLine(bodyCenter, bodyCenter + Vector3.down * groundCheckDistance);
     }
 
 }
