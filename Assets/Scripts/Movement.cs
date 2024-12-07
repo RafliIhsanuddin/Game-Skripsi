@@ -74,6 +74,10 @@ public class Movement : MonoBehaviour
             {
                 // Idle
                 PlayerAnimationController.SetInteger("state", 0);
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Jump();
+                }
             }
         }
 
