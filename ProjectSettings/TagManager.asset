@@ -54,3 +54,9 @@ TagManager:
   - name: Ground
     uniqueID: 1717771973
     locked: 0
+  - name: Bush
+    uniqueID: 3023628367
+    locked: 0
+  - name: Shadow
+    uniqueID: 251804319
+    locked: 0
