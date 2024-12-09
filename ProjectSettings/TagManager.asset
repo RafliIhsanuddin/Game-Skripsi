@@ -42,3 +42,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Tree Branch
+    uniqueID: 3222370469
+    locked: 0
+  - name: Leaf
+    uniqueID: 4122983185
+    locked: 0
+  - name: Kael
+    uniqueID: 715057127
+    locked: 0
+  - name: Ground
+    uniqueID: 1717771973
+    locked: 0
