@@ -6452,7 +6452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1848666227}
-  parallaxEffect: 0.3
+  parallaxEffect: 0.03
 --- !u!212 &723814418
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11735,7 +11735,7 @@ Transform:
   m_GameObject: {fileID: 1254413703}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.2803376, y: 4.01, z: -10}
+  m_LocalPosition: {x: 3.2788203, y: 4.01, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12694,7 +12694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1848666227}
-  parallaxEffect: 0.2
+  parallaxEffect: 0.02
 --- !u!212 &1389601644
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -16989,7 +16989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1848666227}
-  parallaxEffect: 0.4
+  parallaxEffect: 0.04
 --- !u!212 &1802039992
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -17595,7 +17595,7 @@ Transform:
   m_GameObject: {fileID: 1848666227}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.2803376, y: 4.01, z: -10}
+  m_LocalPosition: {x: 3.2788203, y: 4.01, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19046,7 +19046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1848666227}
-  parallaxEffect: 0.1
+  parallaxEffect: 0.01
 --- !u!212 &1976161363
 SpriteRenderer:
   m_ObjectHideFlags: 0
