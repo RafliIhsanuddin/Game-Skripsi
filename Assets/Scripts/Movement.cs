@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Movement : MonoBehaviour
 {
+    public VisualEffect vfxRenderer;
 
     public float speed = 5f; // Kecepatan gerakan karakter
     public float runSpeed = 8f; // Kecepatan lari
@@ -46,6 +48,8 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        vfxRenderer.SetVector3("ColliderPos", transform.position);
+
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
