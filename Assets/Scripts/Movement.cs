@@ -89,8 +89,8 @@ public class Movement : MonoBehaviour
         if (!isDashing)
         {
             float movementSpeed = Input.GetKey(KeyCode.C) ? runSpeed : speed;
-            Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.velocity.y);
-            rb.velocity = movement;
+            Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
+            rb.linearVelocity = movement;
 
             // Lompat
             if (Input.GetKeyDown(KeyCode.Space))
@@ -157,7 +157,7 @@ public class Movement : MonoBehaviour
         // Setelah mendarat, periksa status gerakan untuk kembali ke animasi yang sesuai
         if (isGrounded)
         {
-            if (Mathf.Abs(rb.velocity.x) > 0)
+            if (Mathf.Abs(rb.linearVelocity.x) > 0)
             {
                 // Jika bergerak horizontal, set animasi berjalan atau lari
                 PlayerAnimationController.SetInteger("state", Input.GetKey(KeyCode.C) ? 2 : 1);
@@ -180,7 +180,7 @@ public class Movement : MonoBehaviour
         PlayerAnimationController.SetInteger("state", 4);
 
         // Terapkan kecepatan dash
-        rb.velocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
+        rb.linearVelocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
 
         // Cek apakah lompat saat dash
         if (Input.GetKeyDown(KeyCode.Space))

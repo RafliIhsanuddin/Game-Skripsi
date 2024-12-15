@@ -23,8 +23,8 @@ public class KaelMovement : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal"); // Mengambil input gerakan horizontal
 
         // Mengatur gerakan karakter hanya ke kiri dan kanan
-        Vector2 movement = new Vector2(horizontalInput * speed, rb.velocity.y);
-        rb.velocity = movement;
+        Vector2 movement = new Vector2(horizontalInput * speed, rb.linearVelocity.y);
+        rb.linearVelocity = movement;
 
         // Menghandle animasi idle atau walk berdasarkan input gerakan horizontal
         if (Mathf.Abs(horizontalInput) > 0)
