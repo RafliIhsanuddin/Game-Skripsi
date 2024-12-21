@@ -18,7 +18,7 @@ public class MorphController : MonoBehaviour
         // Normalisasi jarak ke rentang 0 - 1
         if (distance <= blendDistance)
         {
-            blendValue = 1f; // Jika jarak <= blendDistance, Blend langsung 1
+            
         }
         else
         {
