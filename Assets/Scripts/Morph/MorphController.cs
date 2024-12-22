@@ -7,6 +7,7 @@ public class MorphController : MonoBehaviour
     public Animator animator; // Animator yang memiliki Blend Trees
     [SerializeField] public float maxDistance = 10f; // Jarak maksimum untuk pengaruh blend (dari 0 ke 1)
     [SerializeField] public float blendDistance = 5f; // Jarak di mana Blend menjadi 1
+    [SerializeField] public float maxBlendValue = 1f; // Nilai maksimum untuk Blend
 
     private float blendValue = 0f; // Nilai blend
 
@@ -15,19 +16,21 @@ public class MorphController : MonoBehaviour
         // Hitung jarak antara player dan morph
         float distance = Vector3.Distance(player.position, morph.position);
 
-        // Normalisasi jarak ke rentang 0 - 1
+        // Normalisasi jarak ke rentang 0 - 1 dan sesuaikan dengan maxBlendValue
         if (distance <= blendDistance)
         {
-            
+            blendValue = maxBlendValue;
         }
         else
         {
             // Jika jarak > blendDistance, hitung blendValue berdasarkan normalisasi
-            blendValue = Mathf.Clamp01(1 - ((distance - blendDistance) / (maxDistance - blendDistance)));
+            blendValue = Mathf.Clamp01(1 - ((distance - blendDistance) / (maxDistance - blendDistance))) * maxBlendValue;
         }
 
         // Set parameter blend pada Animator
         animator.SetFloat("Blend", blendValue);
+
+        //Debug.Log($"Blend Value: {blendValue}");
     }
 
     void OnDrawGizmos()
