@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "animation2flipbook": "https://github.com/MarekMarchlewicz/Animation2Flipbook.git",
     "com.unity.cinemachine": "2.10.3",
     "com.unity.collab-proxy": "2.5.2",
     "com.unity.feature.2d": "2.0.1",
