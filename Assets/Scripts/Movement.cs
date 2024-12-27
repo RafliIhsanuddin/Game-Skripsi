@@ -15,6 +15,8 @@ public class Movement : MonoBehaviour
     private bool isGrounded; // Status apakah karakter berada di tanah
     private Rigidbody2D rb; // Referensi ke komponen Rigidbody2D
 
+    public Ghost ghost;
+
     private float groundTimeBuffer = 0.1f; // Toleransi waktu sebelum menganggap karakter di tanah
     private float timeSinceGrounded = 0f;
 
@@ -39,17 +41,41 @@ public class Movement : MonoBehaviour
     // Offset for ground check
     public float bodyHeightOffset = 1.0f;
 
+    [SerializeField] private CapsuleCollider2D capsuleCollider;
+
+    private Vector2 idleOffset = new Vector2(0.0956296921f, 0.16445756f);
+    private Vector2 idleSize = new Vector2(2.33820915f, 15.3902521f);
+
+    private Vector2 walkOffset = new Vector2(0.0295305252f, 0.371431112f);
+    private Vector2 walkSize = new Vector2(2.15312004f, 14.9763098f);
+
+    private Vector2 runOffset = new Vector2(0.0295305252f, 0.454950929f);
+    private Vector2 runSize = new Vector2(2.15312004f, 14.8092728f);
+
+
+
+    /*private float scale = 0.2f; // Skala untuk collider
+
+    private Vector2 idleOffset => new Vector2(0.0139846802f, 0.00200867653f) * scale;
+    private Vector2 idleSize => new Vector2(2.33820915f, 15.3902521f) * scale;
+
+    private Vector2 walkOffset => new Vector2(0.0139846802f, 0.0323162079f) * scale;
+    private Vector2 walkSize => new Vector2(0.415477753f, 2.95295954f) * scale;
+
+    private Vector2 runOffset => new Vector2(0.0139846802f, 0.0626237392f) * scale;
+    private Vector2 runSize => new Vector2(0.415477753f, 2.89234447f) * scale;*/
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // Mengambil komponen Rigidbody2D dari objek
+        UpdateCollider(idleOffset, idleSize); // Set default collider untuk idle
     }
 
     // Update is called once per frame
     void Update()
     {
         vfxRenderer.SetVector3("ColliderPos", transform.position);
-
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -62,13 +88,18 @@ public class Movement : MonoBehaviour
         // Pengecekan apakah karakter berada di tanah menggunakan Raycast 2D
         GroundCheck();
 
-        // Animasi berdasarkan gerakan horizontal
+        // Animasi dan collider berdasarkan gerakan horizontal
         if (isGrounded && !isDashing)
         {
             if (Mathf.Abs(horizontalInput) > 0)
             {
+                ghost.makeGhost = false;
                 // Berjalan atau berlari berdasarkan input tombol C
-                PlayerAnimationController.SetInteger("state", Input.GetKey(KeyCode.C) ? 2 : 1);
+                bool isRunning = Input.GetKey(KeyCode.C);
+                PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
+
+                UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
@@ -76,8 +107,11 @@ public class Movement : MonoBehaviour
             }
             else
             {
+                ghost.makeGhost = false;
                 // Idle
                 PlayerAnimationController.SetInteger("state", 0);
+                UpdateCollider(idleOffset, idleSize);
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
@@ -92,15 +126,10 @@ public class Movement : MonoBehaviour
             Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
             rb.linearVelocity = movement;
 
-            // Lompat
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Jump();
-            }
-
             // Dash
             if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0)
             {
+                ghost.makeGhost = true;
                 Dash(horizontalInput, verticalInput);
             }
 
@@ -208,6 +237,16 @@ public class Movement : MonoBehaviour
         Vector3 scale = transform.localScale; // Mengambil skala objek
         scale.x *= -1; // Balik skala di sumbu X
         transform.localScale = scale; // Terapkan skala baru
+
+    }
+
+    private void UpdateCollider(Vector2 offset, Vector2 size)
+    {
+        if (capsuleCollider != null)
+        {
+            capsuleCollider.offset = offset;
+            capsuleCollider.size = size;
+        }
     }
 
     // Menggambar raycast di editor untuk visualisasi
