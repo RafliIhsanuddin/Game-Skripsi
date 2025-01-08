@@ -43,6 +43,8 @@ public class Movement : MonoBehaviour
 
     [SerializeField] private CapsuleCollider2D capsuleCollider;
 
+    [SerializeField] ParticleSystem dust;
+
     private Vector2 idleOffset = new Vector2(0.0956296921f, 0.16445756f);
     private Vector2 idleSize = new Vector2(2.33820915f, 15.3902521f);
 
@@ -95,6 +97,7 @@ public class Movement : MonoBehaviour
             {
                 ghost.makeGhost = false;
                 // Berjalan atau berlari berdasarkan input tombol C
+                PlayDustEffect();
                 bool isRunning = Input.GetKey(KeyCode.C);
                 PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
 
@@ -103,6 +106,7 @@ public class Movement : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
+                    PlayDustEffect();
                 }
             }
             else
@@ -115,6 +119,7 @@ public class Movement : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
+                    PlayDustEffect();
                 }
             }
         }
@@ -129,6 +134,7 @@ public class Movement : MonoBehaviour
             // Dash
             if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0)
             {
+                PlayDustEffect();
                 ghost.makeGhost = true;
                 Dash(horizontalInput, verticalInput);
             }
@@ -238,6 +244,13 @@ public class Movement : MonoBehaviour
         scale.x *= -1; // Balik skala di sumbu X
         transform.localScale = scale; // Terapkan skala baru
 
+        if (dust != null)
+        {
+            Vector3 dustScale = dust.transform.localScale;
+            dustScale.x *= -1; // Balik sumbu X partikel
+            dust.transform.localScale = dustScale;
+        }
+
     }
 
     private void UpdateCollider(Vector2 offset, Vector2 size)
@@ -246,6 +259,21 @@ public class Movement : MonoBehaviour
         {
             capsuleCollider.offset = offset;
             capsuleCollider.size = size;
+        }
+    }
+    private void PlayDustEffect()
+    {
+        if (dust != null && !dust.isPlaying)
+        {
+            dust.Play();
+        }
+    }
+
+    private void StopDustEffect()
+    {
+        if (dust != null && dust.isPlaying)
+        {
+            dust.Stop();
         }
     }
 
