@@ -54,7 +54,8 @@ public class Movement : MonoBehaviour
     private Vector2 runOffset = new Vector2(0.0295305252f, 0.454950929f);
     private Vector2 runSize = new Vector2(2.15312004f, 14.8092728f);
 
-
+    private Vector2 jumpOffset = new Vector2(0.0435304642f, 2.14305782f);
+    private Vector2 jumpSize = new Vector2(1.83390617f, 10.8472614f);
 
     /*private float scale = 0.2f; // Skala untuk collider
 
@@ -90,6 +91,13 @@ public class Movement : MonoBehaviour
         // Pengecekan apakah karakter berada di tanah menggunakan Raycast 2D
         GroundCheck();
 
+        // Update collider during jump
+        if (!isGrounded)
+        {
+            // Update collider for jumping state
+            UpdateCollider(jumpOffset, jumpSize);
+        }
+
         // Animasi dan collider berdasarkan gerakan horizontal
         if (isGrounded && !isDashing)
         {
@@ -107,6 +115,7 @@ public class Movement : MonoBehaviour
                 {
                     Jump();
                     PlayDustEffect();
+                    UpdateCollider(jumpOffset, jumpSize);
                 }
             }
             else
@@ -120,6 +129,7 @@ public class Movement : MonoBehaviour
                 {
                     Jump();
                     PlayDustEffect();
+                    UpdateCollider(jumpOffset, jumpSize);
                 }
             }
         }
@@ -195,12 +205,15 @@ public class Movement : MonoBehaviour
             if (Mathf.Abs(rb.linearVelocity.x) > 0)
             {
                 // Jika bergerak horizontal, set animasi berjalan atau lari
-                PlayerAnimationController.SetInteger("state", Input.GetKey(KeyCode.C) ? 2 : 1);
+                bool isRunning = Input.GetKey(KeyCode.C);
+                PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
+                UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
             }
             else
             {
                 // Jika diam, set animasi idle
                 PlayerAnimationController.SetInteger("state", 0);
+                UpdateCollider(idleOffset, idleSize);
             }
         }
     }
