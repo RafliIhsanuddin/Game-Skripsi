@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -297,5 +298,4 @@ public class Movement : MonoBehaviour
         Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
         Gizmos.DrawLine(bodyCenter, bodyCenter + Vector3.down * groundCheckDistance);
     }
-
 }
