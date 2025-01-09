@@ -14,7 +14,7 @@ TagManager:
   - UI
   - Kael
   - No Post
-  - 
+  - Lava
   - 
   - 
   - 
@@ -62,6 +62,9 @@ TagManager:
     locked: 0
   - name: Shadow
     uniqueID: 251804319
+    locked: 0
+  - name: SortingTexture
+    uniqueID: 3691067023
     locked: 0
   m_RenderingLayers:
   - Default
