@@ -46,6 +46,13 @@ public class Movement : MonoBehaviour
 
     [SerializeField] ParticleSystem dust;
 
+    // Sound GameObjects
+    [SerializeField] private GameObject walkSound;
+    [SerializeField] private GameObject runSound;
+
+    [SerializeField] private GameObject jumpSoundPrefab; // Prefab untuk suara lompat
+    [SerializeField] private GameObject dashSoundPrefab; // Prefab untuk suara dash
+
     private Vector2 idleOffset = new Vector2(0.0956296921f, 0.16445756f);
     private Vector2 idleSize = new Vector2(2.33820915f, 15.3902521f);
 
@@ -58,22 +65,16 @@ public class Movement : MonoBehaviour
     private Vector2 jumpOffset = new Vector2(0.0435304642f, 2.14305782f);
     private Vector2 jumpSize = new Vector2(1.83390617f, 10.8472614f);
 
-    /*private float scale = 0.2f; // Skala untuk collider
 
-    private Vector2 idleOffset => new Vector2(0.0139846802f, 0.00200867653f) * scale;
-    private Vector2 idleSize => new Vector2(2.33820915f, 15.3902521f) * scale;
-
-    private Vector2 walkOffset => new Vector2(0.0139846802f, 0.0323162079f) * scale;
-    private Vector2 walkSize => new Vector2(0.415477753f, 2.95295954f) * scale;
-
-    private Vector2 runOffset => new Vector2(0.0139846802f, 0.0626237392f) * scale;
-    private Vector2 runSize => new Vector2(0.415477753f, 2.89234447f) * scale;*/
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // Mengambil komponen Rigidbody2D dari objek
         UpdateCollider(idleOffset, idleSize); // Set default collider untuk idle
+
+        walkSound.SetActive(false);
+        runSound.SetActive(false);
     }
 
     // Update is called once per frame
@@ -97,6 +98,8 @@ public class Movement : MonoBehaviour
         {
             // Update collider for jumping state
             UpdateCollider(jumpOffset, jumpSize);
+            walkSound.SetActive(false);
+            runSound.SetActive(false);
         }
 
         // Animasi dan collider berdasarkan gerakan horizontal
@@ -112,6 +115,9 @@ public class Movement : MonoBehaviour
 
                 UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
 
+                walkSound.SetActive(!isRunning);
+                runSound.SetActive(isRunning);
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
@@ -125,6 +131,9 @@ public class Movement : MonoBehaviour
                 // Idle
                 PlayerAnimationController.SetInteger("state", 0);
                 UpdateCollider(idleOffset, idleSize);
+
+                walkSound.SetActive(false);
+                runSound.SetActive(false);
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
@@ -189,6 +198,11 @@ public class Movement : MonoBehaviour
             // Aktifkan animasi lompat
             PlayerAnimationController.SetInteger("state", 3);
             StartCoroutine(EndJumpAnimation());
+
+            if (jumpSoundPrefab != null)
+            {
+                GameObject jumpSoundInstance = Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
+            }
         }
     }
 
@@ -230,6 +244,11 @@ public class Movement : MonoBehaviour
 
         // Terapkan kecepatan dash
         rb.linearVelocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
+
+        if (dashSoundPrefab != null)
+        {
+            Instantiate(dashSoundPrefab, transform.position, Quaternion.identity);
+        }
 
         // Cek apakah lompat saat dash
         if (Input.GetKeyDown(KeyCode.Space))

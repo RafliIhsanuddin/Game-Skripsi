@@ -20,7 +20,7 @@ public class PlayerDirection : MonoBehaviour
     void Update()
     {
         UpdateHorizontalSpeed();
-        DetectDirection();
+        //DetectDirection();
     }
     private void UpdateHorizontalSpeed()
     {
