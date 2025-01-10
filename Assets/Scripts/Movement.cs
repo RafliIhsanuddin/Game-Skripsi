@@ -6,7 +6,7 @@ using UnityEngine.VFX;
 
 public class Movement : MonoBehaviour
 {
-    public VisualEffect vfxRenderer;
+    //public VisualEffect vfxRenderer;
 
     public float speed = 5f; // Kecepatan gerakan karakter
     public float runSpeed = 8f; // Kecepatan lari
@@ -80,7 +80,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        vfxRenderer.SetVector3("ColliderPos", transform.position);
+        //vfxRenderer.SetVector3("ColliderPos", transform.position);
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -180,10 +180,16 @@ public class Movement : MonoBehaviour
         {
             timeSinceGrounded = Time.time; // Catat waktu terakhir kali menyentuh tanah
             isGrounded = true;
+
+            // Log jika berada di ground layer
+            Debug.Log("Ground detected: " + hit.collider.gameObject.name);
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
             isGrounded = false; // Hanya ubah isGrounded jika sudah melewati buffer
+
+            // Log jika tidak berada di ground layer
+            Debug.Log("No");
         }
     }
 
