@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Voronoi02_0: 914773602520627324
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
