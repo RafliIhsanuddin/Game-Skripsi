@@ -94,13 +94,14 @@ public class Movement : MonoBehaviour
         GroundCheck();
 
         // Update collider during jump
-        if (!isGrounded)
+        GroundCheck();
+
+        // Jump animation logic
+        if (!isGrounded && !isDashing)
         {
-            // Update collider for jumping state
-            UpdateCollider(jumpOffset, jumpSize);
-            walkSound.SetActive(false);
-            runSound.SetActive(false);
+            PlayerAnimationController.SetInteger("state", 3);
         }
+
 
         // Animasi dan collider berdasarkan gerakan horizontal
         if (isGrounded && !isDashing)
@@ -182,14 +183,14 @@ public class Movement : MonoBehaviour
             isGrounded = true;
 
             // Log jika berada di ground layer
-            Debug.Log("Ground detected: " + hit.collider.gameObject.name);
+            //Debug.Log("Ground detected: " + hit.collider.gameObject.name);
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
             isGrounded = false; // Hanya ubah isGrounded jika sudah melewati buffer
 
             // Log jika tidak berada di ground layer
-            Debug.Log("No");
+            //Debug.Log("No");
         }
     }
 
@@ -223,16 +224,14 @@ public class Movement : MonoBehaviour
         // Setelah mendarat, periksa status gerakan untuk kembali ke animasi yang sesuai
         if (isGrounded)
         {
-            if (Mathf.Abs(rb.linearVelocity.x) > 0)
+            if (Mathf.Abs(rb.linearVelocity.x) > 0.1f) // Jika karakter bergerak horizontal
             {
-                // Jika bergerak horizontal, set animasi berjalan atau lari
                 bool isRunning = Input.GetKey(KeyCode.C);
                 PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
                 UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
             }
-            else
+            else // Jika karakter diam
             {
-                // Jika diam, set animasi idle
                 PlayerAnimationController.SetInteger("state", 0);
                 UpdateCollider(idleOffset, idleSize);
             }

@@ -103,10 +103,10 @@ TextureImporter:
       name: Kael Jump_0026_0
       rect:
         serializedVersion: 2
-        x: 871
-        y: 529
-        width: 626
-        height: 1207
+        x: 876
+        y: 527
+        width: 630
+        height: 1194
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
