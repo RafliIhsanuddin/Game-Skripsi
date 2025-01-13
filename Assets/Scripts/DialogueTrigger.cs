@@ -5,6 +5,7 @@ public class DialogueTrigger : MonoBehaviour
 {
     public LayerMask kael;
     public DialogueRunner dialogueRunner;
+    [SerializeField] private string yarnNode;
 
     // Update is called once per frame
     void Update()
@@ -13,7 +14,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                dialogueRunner.StartDialogue("Start");
+                dialogueRunner.StartDialogue(yarnNode);
             }
         }
     }

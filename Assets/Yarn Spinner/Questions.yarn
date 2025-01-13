@@ -1,0 +1,35 @@
+title: NPC1
+tags:
+---
+Box: Hmm.. Temanku merasa tidak berharga. Seharusmya apa yang kulakukan ya?
+    -> Dengarkan dan beri dukungan
+        Box: Ide bagus! Makasih ya.
+    -> Abaikan saja
+        Box: Kok jahat sekali sih.
+    -> Bilang bahwa itu tidak masalah
+        Box: Kayanya itu tidak bisa membantu dia.
+===
+
+title: NPC2
+tags:
+---
+Box: Siapa ya yang sebaiknya ku ajak bicara saat merasa tertekan?
+    -> Teman atau keluarga
+        Box: Ide bagus! Makasih ya.
+    -> Orang asing di jalan
+        Box: Yang benar saja.
+    -> Tidak perlu bicara pada siapa pun
+        Box: Kayanya itu tidak bisa membantu aku.
+===
+
+title: NPC3
+tags:
+---
+Box: Kenapa ya penting memahami tentang depresi?
+    -> Agar bisa membantu diri sendiri dan orang lain
+        Box: Iya juga ya!
+    -> Itu tidak penting
+        Box: Depresi itu penting tau.
+    -> Untuk menghindari berbicara soal kesehatan mental
+        Box: Hmm kedengarannya itu tidak benar.
+===
