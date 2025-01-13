@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: eebeb4b1a23a16847b42025de3642bd7
+guid: e05aaf2e0ee5e5243828d32b13bb8038
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8691130341877051923
-    second: Stone Line5_0
+      213: 2879135618502370335
+    second: Stone4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stone Line5_0
+      name: Stone4_0
       rect:
         serializedVersion: 2
-        x: 439
-        y: 711
-        width: 1463
-        height: 31
+        x: 0
+        y: 0
+        width: 2160
+        height: 1620
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 31273349ff81d9870800000000000000
-      internalID: 8691130341877051923
+      spriteID: f142209379eb4f720800000000000000
+      internalID: 2879135618502370335
       vertices: []
       indices: 
       edges: []
@@ -135,9 +135,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stone Line5_0: 8691130341877051923
+      Stone4_0: 2879135618502370335
   mipmapLimitGroupName: 
-  pSDRemoveMatte: 0
+  pSDRemoveMatte: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
