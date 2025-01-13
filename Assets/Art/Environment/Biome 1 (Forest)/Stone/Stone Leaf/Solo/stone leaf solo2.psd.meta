@@ -120,7 +120,7 @@ TextureImporter:
         width: 8
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,11 +138,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 212
-        y: 406
+        y: 402
         width: 1737
-        height: 953
+        height: 1034
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -155,77 +155,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: stone leaf solo2_2
-      rect:
-        serializedVersion: 2
-        x: 506
-        y: 1227
-        width: 473
-        height: 202
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f3442a21eb8ee4500800000000000000
-      internalID: 382498921427125311
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stone leaf solo2_3
-      rect:
-        serializedVersion: 2
-        x: 1222
-        y: 1228
-        width: 280
-        height: 218
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 801cd8fb439a612d0800000000000000
-      internalID: -3308270832239918840
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: stone leaf solo2_4
-      rect:
-        serializedVersion: 2
-        x: 1672
-        y: 1257
-        width: 202
-        height: 164
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 58abc913573358150800000000000000
-      internalID: 5874157867411225221
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 46c0df93351776e46b16c5fcba2a4675
     internalID: 0
     vertices: []
     indices: 

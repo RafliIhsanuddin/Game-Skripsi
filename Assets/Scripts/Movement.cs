@@ -100,6 +100,8 @@ public class Movement : MonoBehaviour
         if (!isGrounded && !isDashing)
         {
             PlayerAnimationController.SetInteger("state", 3);
+            walkSound.SetActive(false);
+            runSound.SetActive(false);
         }
 
 

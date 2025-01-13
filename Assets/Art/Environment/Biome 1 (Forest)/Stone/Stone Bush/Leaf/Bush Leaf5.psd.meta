@@ -1,0 +1,191 @@
+fileFormatVersion: 2
+guid: 9a0478eb779a4a74c9227578d11b87a5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -9156037783239361459
+    second: Bush Leaf5_0
+  - first:
+      213: 7474804963890611373
+    second: Bush Leaf5_1
+  - first:
+      213: -2661728483347549935
+    second: Bush Leaf5_2
+  - first:
+      213: 8003759089187108262
+    second: Bush Leaf5_3
+  - first:
+      213: -4673862509472321635
+    second: Bush Leaf5_4
+  - first:
+      213: -8603514270398954754
+    second: Bush Leaf5_5
+  - first:
+      213: 6333146934172704615
+    second: Bush Leaf5_6
+  - first:
+      213: -509115780610285314
+    second: Bush Leaf5_7
+  - first:
+      213: -8545091560159357914
+    second: Bush Leaf5_8
+  - first:
+      213: -4910828439471293782
+    second: Bush Leaf5_9
+  - first:
+      213: 6772873768494158297
+    second: Bush Leaf5_10
+  - first:
+      213: 14800419605128326
+    second: Bush Leaf5_11
+  - first:
+      213: 122320205733989145
+    second: Bush Leaf5_12
+  - first:
+      213: -6138795621934354242
+    second: Bush Leaf5_13
+  - first:
+      213: -6916488266237312896
+    second: Bush Leaf5_14
+  - first:
+      213: -6240669911310676787
+    second: Bush Leaf5_15
+  - first:
+      213: -8428903640520036108
+    second: Bush Leaf5_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bush Leaf5_0
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 491
+        width: 1439
+        height: 444
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4c76fb95283fe080800000000000000
+      internalID: -9156037783239361459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: a045a726ac00f9b42b2de52b948bc7d4
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bush Leaf5_0: -9156037783239361459
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

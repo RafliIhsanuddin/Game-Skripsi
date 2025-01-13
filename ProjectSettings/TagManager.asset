@@ -51,6 +51,12 @@ TagManager:
   - name: Leaf
     uniqueID: 4122983185
     locked: 0
+  - name: Big Trees
+    uniqueID: 2446832847
+    locked: 0
+  - name: Stone
+    uniqueID: 3201390039
+    locked: 0
   - name: Kael
     uniqueID: 715057127
     locked: 0
