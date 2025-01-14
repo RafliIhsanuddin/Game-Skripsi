@@ -65,6 +65,10 @@ public class Movement : MonoBehaviour
     private Vector2 jumpOffset = new Vector2(0.0435304642f, 2.14305782f);
     private Vector2 jumpSize = new Vector2(1.83390617f, 10.8472614f);
 
+    private bool isOnPlatform = false; // Status apakah karakter berada di platform
+    private Vector2 platformVelocity = Vector2.zero; // Kecepatan platform
+
+
 
 
     // Start is called before the first frame update
@@ -76,6 +80,8 @@ public class Movement : MonoBehaviour
         walkSound.SetActive(false);
         runSound.SetActive(false);
     }
+
+
 
     // Update is called once per frame
     void Update()
@@ -152,7 +158,15 @@ public class Movement : MonoBehaviour
         {
             float movementSpeed = Input.GetKey(KeyCode.C) ? runSpeed : speed;
             Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
-            rb.linearVelocity = movement;
+
+            if (isOnPlatform)
+            {
+                rb.linearVelocity = movement + platformVelocity;
+            }
+            else
+            {
+                rb.linearVelocity = movement;
+            }
 
             // Dash
             if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0)
@@ -172,6 +186,12 @@ public class Movement : MonoBehaviour
                 Flip();
             }
         }
+    }
+
+    public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
+    {
+        platformVelocity = velocity;
+        isOnPlatform = onPlatform;
     }
 
     private void GroundCheck()

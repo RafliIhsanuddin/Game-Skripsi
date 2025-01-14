@@ -9,7 +9,7 @@ public class SimpleColliderController : MonoBehaviour
     {
         // Pastikan collider utama aktif di awal
         mainCollider.enabled = true;
-        Debug.Log("Main Collider aktif pada awal permainan.");
+        //Debug.Log("Main Collider aktif pada awal permainan.");
     }
 
     void OnTriggerEnter2D(Collider2D other)
