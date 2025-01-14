@@ -10,7 +10,7 @@ public class DialogueTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Physics2D.Raycast(transform.position, Vector2.left, 2f, kael))
+        if (Physics2D.Raycast(transform.position, Vector2.left, 10f, kael))
         {
             if (Input.GetKeyDown(KeyCode.E))
             {

@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Puffkin corn_0: 8155171271888598418
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
