@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ed66210a1e184fc4cb707c91c4496470
+guid: 6fdb16ea183f95746be0ba692ee3e8a9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1568175666702191629
-    second: venus_0
+      213: 1995736288330803279
+    second: Puffkin cherry_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: venus_0
+      name: Puffkin cherry_0
       rect:
         serializedVersion: 2
-        x: 512
-        y: 464
-        width: 620
-        height: 1066
+        x: 1398
+        y: 840
+        width: 1220
+        height: 1873
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d0c0237d57743c510800000000000000
-      internalID: 1568175666702191629
+      spriteID: f486053949742bb10800000000000000
+      internalID: 1995736288330803279
       vertices: []
       indices: 
       edges: []
@@ -135,9 +135,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      venus_0: 1568175666702191629
+      Puffkin cherry_0: 1995736288330803279
   mipmapLimitGroupName: 
-  pSDRemoveMatte: 0
+  pSDRemoveMatte: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
