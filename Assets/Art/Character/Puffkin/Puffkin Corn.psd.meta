@@ -3,8 +3,8 @@ guid: c4ff96fe12cf9ac42b91672d7c63e87c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5567667764871337026
-    second: Puffkin Corn_0
+      213: 8155171271888598418
+    second: Puffkin corn_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Puffkin Corn_0
+      name: Puffkin corn_0
       rect:
         serializedVersion: 2
-        x: 1167
-        y: 812
-        width: 1666
-        height: 1615
+        x: 1353
+        y: 555
+        width: 1229
+        height: 2619
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2449c885554544d40800000000000000
-      internalID: 5567667764871337026
+      spriteID: 295f367501dfc2170800000000000000
+      internalID: 8155171271888598418
       vertices: []
       indices: 
       edges: []
@@ -134,10 +134,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Puffkin Corn_0: 5567667764871337026
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
-  pSDRemoveMatte: 1
+  pSDRemoveMatte: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
