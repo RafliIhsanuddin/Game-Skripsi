@@ -73,6 +73,10 @@ public class Movement : MonoBehaviour
     private bool stopLeft;
 
 
+    private bool canJump = true;
+    private bool canDash = true;
+
+
 
 
     // Start is called before the first frame update
@@ -140,7 +144,7 @@ public class Movement : MonoBehaviour
                 walkSound.SetActive(!isRunning);
                 runSound.SetActive(isRunning);
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (canJump && Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
                     PlayDustEffect();
@@ -157,7 +161,7 @@ public class Movement : MonoBehaviour
                 walkSound.SetActive(false);
                 runSound.SetActive(false);
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (canJump && Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
                     PlayDustEffect();
@@ -182,7 +186,7 @@ public class Movement : MonoBehaviour
             }
 
             // Dash
-            if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0)
             {
                 PlayDustEffect();
                 ghost.makeGhost = true;
@@ -371,6 +375,28 @@ public class Movement : MonoBehaviour
     {
         stopRight = false;
         stopLeft = false;
+    }
+
+    public void DisableJump()
+    {
+        canJump = false;
+    }
+
+    // Metode untuk mengaktifkan kembali kemampuan melompat
+    public void EnableJump()
+    {
+        canJump = true;
+    }
+
+    public void DisableDash()
+    {
+        canDash = false;
+    }
+
+    // Metode untuk mengaktifkan kembali kemampuan dash
+    public void EnableDash()
+    {
+        canDash = true;
     }
 
 }

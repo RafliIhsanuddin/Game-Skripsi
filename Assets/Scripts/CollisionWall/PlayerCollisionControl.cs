@@ -12,6 +12,8 @@ public class PlayerCollisionControl : MonoBehaviour
             if (playerMovement != null)
             {
                 playerMovement.SetStopRight(StopRight);
+                playerMovement.DisableJump(); // Nonaktifkan kemampuan melompat
+                playerMovement.DisableDash(); // Nonaktifkan kemampuan dash
             }
         }
     }
@@ -23,7 +25,9 @@ public class PlayerCollisionControl : MonoBehaviour
             Movement playerMovement = collision.gameObject.GetComponent<Movement>();
             if (playerMovement != null)
             {
-                playerMovement.ResetMovement(); // Kembalikan ke gerakan normal
+                playerMovement.ResetMovement(); // Kembalikan gerakan normal
+                playerMovement.EnableJump();   // Kembalikan kemampuan melompat
+                playerMovement.EnableDash();   // Kembalikan kemampuan dash
             }
         }
     }
