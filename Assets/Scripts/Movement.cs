@@ -69,6 +69,10 @@ public class Movement : MonoBehaviour
     private Vector2 platformVelocity = Vector2.zero; // Kecepatan platform
 
 
+    private bool stopRight; // Status apakah karakter tidak dapat bergerak ke kanan
+    private bool stopLeft;
+
+
 
 
     // Start is called before the first frame update
@@ -96,8 +100,17 @@ public class Movement : MonoBehaviour
             dashCooldownTimer -= Time.deltaTime;
         }
 
-        // Pengecekan apakah karakter berada di tanah menggunakan Raycast 2D
-        GroundCheck();
+        // Batasi gerakan berdasarkan stopRight dan stopLeft
+        if (stopRight && horizontalInput > 0)
+        {
+            horizontalInput = 0; // Hentikan gerakan ke kanan
+        }
+
+        if (stopLeft && horizontalInput < 0)
+        {
+            horizontalInput = 0; // Hentikan gerakan ke kiri
+        }
+
 
         // Update collider during jump
         GroundCheck();
@@ -344,4 +357,20 @@ public class Movement : MonoBehaviour
         Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
         Gizmos.DrawLine(bodyCenter, bodyCenter + Vector3.down * groundCheckDistance);
     }
+
+    public void SetStopRight(bool value)
+    {
+        stopRight = value;
+        stopLeft = !value; // Jika stopRight true, maka stopLeft false, dan sebaliknya
+
+        // Set animasi idle saat terkena collider
+        PlayerAnimationController.SetInteger("state", 0);
+    }
+
+    public void ResetMovement()
+    {
+        stopRight = false;
+        stopLeft = false;
+    }
+
 }

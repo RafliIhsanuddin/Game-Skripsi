@@ -14,15 +14,15 @@ public class SimpleColliderController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTriggerEnter2D dipanggil.");
+        //Debug.Log("OnTriggerEnter2D dipanggil.");
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Trigger mendeteksi Player! Menonaktifkan main collider.");
+            //Debug.Log("Trigger mendeteksi Player! Menonaktifkan main collider.");
             mainCollider.enabled = false;
         }
         else
         {
-            Debug.Log("Trigger mendeteksi objek lain: " + other.tag);
+            //Debug.Log("Trigger mendeteksi objek lain: " + other.tag);
         }
     }
 
@@ -31,12 +31,12 @@ public class SimpleColliderController : MonoBehaviour
         Debug.Log("OnTriggerExit2D dipanggil.");
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player keluar dari trigger! Mengaktifkan kembali main collider.");
+            //Debug.Log("Player keluar dari trigger! Mengaktifkan kembali main collider.");
             mainCollider.enabled = true;
         }
         else
         {
-            Debug.Log("Objek dengan tag " + other.tag + " keluar dari trigger.");
+            //Debug.Log("Objek dengan tag " + other.tag + " keluar dari trigger.");
         }
     }
 }

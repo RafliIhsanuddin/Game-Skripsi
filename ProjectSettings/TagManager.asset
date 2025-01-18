@@ -47,14 +47,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Tree Branch
-    uniqueID: 3222370469
-    locked: 0
   - name: Leaf
     uniqueID: 4122983185
     locked: 0
   - name: Big Trees
     uniqueID: 2446832847
+    locked: 0
+  - name: After Tree and Stone
+    uniqueID: 2521262939
     locked: 0
   - name: Stone
     uniqueID: 3201390039
@@ -70,9 +70,6 @@ TagManager:
     locked: 0
   - name: Shadow
     uniqueID: 251804319
-    locked: 0
-  - name: SortingTexture
-    uniqueID: 3691067023
     locked: 0
   m_RenderingLayers:
   - Default

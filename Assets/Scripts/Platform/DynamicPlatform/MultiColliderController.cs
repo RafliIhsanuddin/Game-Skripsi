@@ -12,15 +12,15 @@ public class MultiColliderController : MonoBehaviour
         {
             collider.enabled = true;
         }
-        Debug.Log("Semua Main Collider aktif pada awal permainan.");
+        //Debug.Log("Semua Main Collider aktif pada awal permainan.");
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTriggerEnter2D dipanggil.");
+        //Debug.Log("OnTriggerEnter2D dipanggil.");
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Trigger mendeteksi Player! Menonaktifkan semua main collider.");
+            //Debug.Log("Trigger mendeteksi Player! Menonaktifkan semua main collider.");
             foreach (var collider in mainColliders)
             {
                 collider.enabled = false;
@@ -28,16 +28,16 @@ public class MultiColliderController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Trigger mendeteksi objek lain: " + other.tag);
+            //Debug.Log("Trigger mendeteksi objek lain: " + other.tag);
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log("OnTriggerExit2D dipanggil.");
+        //Debug.Log("OnTriggerExit2D dipanggil.");
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player keluar dari trigger! Mengaktifkan kembali semua main collider.");
+            //Debug.Log("Player keluar dari trigger! Mengaktifkan kembali semua main collider.");
             foreach (var collider in mainColliders)
             {
                 collider.enabled = true;
@@ -45,7 +45,7 @@ public class MultiColliderController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Objek dengan tag " + other.tag + " keluar dari trigger.");
+            //Debug.Log("Objek dengan tag " + other.tag + " keluar dari trigger.");
         }
     }
 }
