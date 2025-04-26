@@ -50,6 +50,9 @@ TagManager:
   - name: Leaf
     uniqueID: 4122983185
     locked: 0
+  - name: Dark1
+    uniqueID: 3898439213
+    locked: 0
   - name: Big Trees
     uniqueID: 2446832847
     locked: 0
@@ -59,6 +62,9 @@ TagManager:
   - name: Stone
     uniqueID: 3201390039
     locked: 0
+  - name: Dark2
+    uniqueID: 2506899659
+    locked: 0
   - name: Kael
     uniqueID: 715057127
     locked: 0
@@ -67,6 +73,9 @@ TagManager:
     locked: 0
   - name: Bush
     uniqueID: 3023628367
+    locked: 0
+  - name: Dark3
+    uniqueID: 2768585981
     locked: 0
   - name: Shadow
     uniqueID: 251804319

@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 103941fc17d4a964981049a227a4b8c9
+guid: 9a64d93f279e4c748bcfdff4dbd0da9b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2574722035660519353
-    second: Stone11_0
+      213: 5699659396184827317
+    second: BushForest4_0
   - first:
-      213: -7649841717652049874
-    second: Stone11_1
+      213: -3102012438857469407
+    second: BushForest4_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stone11_0
+      name: BushForest4_0
       rect:
         serializedVersion: 2
-        x: 339
-        y: 344
-        width: 2156
-        height: 2469
+        x: 2370
+        y: 2659
+        width: 22
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9b77aeacc004bb320800000000000000
-      internalID: 2574722035660519353
+      spriteID: 5b56052d502491f40800000000000000
+      internalID: 5699659396184827317
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone11_1
+      name: BushForest4_1
       rect:
         serializedVersion: 2
-        x: 1796
-        y: 242
-        width: 139
-        height: 15
+        x: 39
+        y: 511
+        width: 2808
+        height: 1639
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e20b2670d7d46d590800000000000000
-      internalID: -7649841717652049874
+      spriteID: 122be0d3f1073f4d0800000000000000
+      internalID: -3102012438857469407
       vertices: []
       indices: 
       edges: []
@@ -159,9 +159,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Stone11_0: 2574722035660519353
-      Stone11_1: -7649841717652049874
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 103941fc17d4a964981049a227a4b8c9
+guid: 099191b6bc3248f46ad9c01fa6954e3b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2574722035660519353
-    second: Stone11_0
+      213: -6836955150861472661
+    second: Stone13_0
   - first:
-      213: -7649841717652049874
-    second: Stone11_1
+      213: -3563336998564328039
+    second: Stone13_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,45 +103,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stone11_0
+      name: Stone13_1
       rect:
         serializedVersion: 2
-        x: 339
-        y: 344
-        width: 2156
-        height: 2469
+        x: 200
+        y: 568
+        width: 6432
+        height: 4838
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9b77aeacc004bb320800000000000000
-      internalID: 2574722035660519353
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stone11_1
-      rect:
-        serializedVersion: 2
-        x: 1796
-        y: 242
-        width: 139
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e20b2670d7d46d590800000000000000
-      internalID: -7649841717652049874
+      spriteID: 99d019111eb7c8ec0800000000000000
+      internalID: -3563336998564328039
       vertices: []
       indices: 
       edges: []
@@ -150,7 +128,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ea6131262bbaec943821c00c47ad75ee
     internalID: 0
     vertices: []
     indices: 
@@ -160,10 +138,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stone11_0: 2574722035660519353
-      Stone11_1: -7649841717652049874
+      Stone13_0: -6836955150861472661
+      Stone13_1: -3563336998564328039
   mipmapLimitGroupName: 
-  pSDRemoveMatte: 0
+  pSDRemoveMatte: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 

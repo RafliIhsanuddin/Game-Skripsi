@@ -6,20 +6,19 @@ public class CameraTriggerDirectionNoPost : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Camera noPostCamera; // Referensi ke No Post Camera
-    [SerializeField] private TriggerHandler zoomInTrigger;
-    [SerializeField] private TriggerHandler zoomOutTrigger;
+    [SerializeField] private TriggerHandler leftTrigger; // Left Trigger untuk Zoom In
+    [SerializeField] private TriggerHandler rightTrigger; // Right Trigger untuk Zoom Out
 
-    // Pengaturan zoom untuk gerakan ke kanan
-    [SerializeField] private float targetOrthoSizeZoomIn = 18f;
-    [SerializeField] private Vector3 targetTrackedObjectOffsetZoomIn = new Vector3(0, 12, 0);
-    [SerializeField] private float transitionDurationZoomIn = 1f;
+    // Pengaturan zoom untuk gerakan ke kiri (Left Trigger)
+    [SerializeField] private float targetOrthoSizeLeftTrigger = 18f;
+    [SerializeField] private Vector3 targetTrackedObjectOffsetLeftTrigger = new Vector3(0, 12, 0);
+    [SerializeField] private float transitionDurationLeftTrigger = 1f;
 
-    // Pengaturan zoom out
-    [SerializeField] private float targetOrthoSizeZoomOut = 14f;
-    [SerializeField] private Vector3 targetTrackedObjectOffsetZoomOut = new Vector3(0, 16, 0);
-    [SerializeField] private float transitionDurationZoomOut = 1f;
+    // Pengaturan zoom untuk gerakan ke kanan (Right Trigger)
+    [SerializeField] private float targetOrthoSizeRightTrigger = 14f;
+    [SerializeField] private Vector3 targetTrackedObjectOffsetRightTrigger = new Vector3(0, 16, 0);
+    [SerializeField] private float transitionDurationRightTrigger = 1f;
 
-    private Rigidbody2D playerRigidbody;
     private float initialOrthoSize;
     private Vector3 initialTrackedObjectOffset;
     private float transitionTime;
@@ -38,7 +37,6 @@ public class CameraTriggerDirectionNoPost : MonoBehaviour
             return;
         }
 
-        // Ambil nilai awal kamera
         initialOrthoSize = virtualCamera.m_Lens.OrthographicSize;
         var framingTransposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         if (framingTransposer != null)
@@ -46,26 +44,24 @@ public class CameraTriggerDirectionNoPost : MonoBehaviour
             initialTrackedObjectOffset = framingTransposer.m_TrackedObjectOffset;
         }
 
-        // Daftarkan event dari trigger handler
-        if (zoomInTrigger != null)
+        if (leftTrigger != null)
         {
-            zoomInTrigger.OnPlayerEnter += () =>
+            leftTrigger.OnPlayerEnter += () =>
             {
-                StartTransition(targetOrthoSizeZoomIn, targetTrackedObjectOffsetZoomIn, transitionDurationZoomIn);
-                Debug.Log("Player entered Zoom In trigger.");
+                TriggerTransition(targetOrthoSizeLeftTrigger, targetTrackedObjectOffsetLeftTrigger, transitionDurationLeftTrigger);
+                Debug.Log("Player triggered Left Trigger for Zoom In.");
             };
         }
 
-        if (zoomOutTrigger != null)
+        if (rightTrigger != null)
         {
-            zoomOutTrigger.OnPlayerEnter += () =>
+            rightTrigger.OnPlayerEnter += () =>
             {
-                StartTransition(targetOrthoSizeZoomOut, targetTrackedObjectOffsetZoomOut, transitionDurationZoomOut);
-                Debug.Log("Player entered Zoom Out trigger.");
+                TriggerTransition(targetOrthoSizeRightTrigger, targetTrackedObjectOffsetRightTrigger, transitionDurationRightTrigger);
+                Debug.Log("Player triggered Right Trigger for Zoom Out.");
             };
         }
 
-        // Tambahkan CinemachineBrain ke No Post Camera jika belum ada
         if (noPostCamera != null)
         {
             noPostCameraBrain = noPostCamera.GetComponent<CinemachineBrain>();
@@ -82,9 +78,11 @@ public class CameraTriggerDirectionNoPost : MonoBehaviour
     {
         if (isTransitioning)
         {
+            // Update waktu transisi
             transitionTime += Time.fixedDeltaTime / currentTransitionDuration;
             transitionTime = Mathf.Clamp01(transitionTime);
 
+            // Lerp untuk OrthographicSize
             float newOrthoSize = Mathf.Lerp(initialOrthoSize, targetOrthoSize, transitionTime);
             virtualCamera.m_Lens.OrthographicSize = newOrthoSize;
 
@@ -93,6 +91,7 @@ public class CameraTriggerDirectionNoPost : MonoBehaviour
                 noPostCamera.orthographicSize = newOrthoSize;
             }
 
+            // Lerp untuk TrackedObjectOffset
             var framingTransposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
             if (framingTransposer != null)
             {
@@ -105,6 +104,7 @@ public class CameraTriggerDirectionNoPost : MonoBehaviour
                 }
             }
 
+            // Akhiri transisi jika selesai
             if (transitionTime >= 1f)
             {
                 isTransitioning = false;
@@ -113,7 +113,7 @@ public class CameraTriggerDirectionNoPost : MonoBehaviour
         }
     }
 
-    private void StartTransition(float newTargetOrthoSize, Vector3 newTargetTrackedObjectOffset, float newTransitionDuration)
+    private void TriggerTransition(float newTargetOrthoSize, Vector3 newTargetTrackedObjectOffset, float newTransitionDuration)
     {
         targetOrthoSize = newTargetOrthoSize;
         targetTrackedObjectOffset = newTargetTrackedObjectOffset;

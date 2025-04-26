@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 103941fc17d4a964981049a227a4b8c9
+guid: fea89fea3e7623a4f838e2e20e1e1d4e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2574722035660519353
-    second: Stone11_0
-  - first:
-      213: -7649841717652049874
-    second: Stone11_1
+      213: -2936636794373932723
+    second: BushForest2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stone11_0
+      name: BushForest2_0
       rect:
         serializedVersion: 2
-        x: 339
-        y: 344
-        width: 2156
-        height: 2469
+        x: 114
+        y: 511
+        width: 2689
+        height: 1447
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,30 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9b77aeacc004bb320800000000000000
-      internalID: 2574722035660519353
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Stone11_1
-      rect:
-        serializedVersion: 2
-        x: 1796
-        y: 242
-        width: 139
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e20b2670d7d46d590800000000000000
-      internalID: -7649841717652049874
+      spriteID: d49fffcf468fe37d0800000000000000
+      internalID: -2936636794373932723
       vertices: []
       indices: 
       edges: []
@@ -159,9 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Stone11_0: 2574722035660519353
-      Stone11_1: -7649841717652049874
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

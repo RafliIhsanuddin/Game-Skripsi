@@ -24,8 +24,8 @@ public class Movement : MonoBehaviour
     // Dash variables
     [SerializeField] private float horizontalDashSpeed = 10f; // Kecepatan dash horizontal
     [SerializeField] private float verticalDashSpeed = 7f; // Kecepatan dash vertikal
-    public float dashDuration = 0.2f; // Durasi dash
-    public float dashCooldown = 1f; // Waktu cooldown dash
+    public float dashDuration = 0.1f; // Durasi dash
+    public float dashCooldown = 0.01f; // Waktu cooldown dash
     private bool isDashing = false; // Status dash
     private float dashCooldownTimer = 0f; // Timer cooldown dash
 
