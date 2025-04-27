@@ -11,7 +11,8 @@ public class Movement : MonoBehaviour
     public float speed = 5f; // Kecepatan gerakan karakter
     public float runSpeed = 8f; // Kecepatan lari
     public float jumpForce = 5f; // Kekuatan lompatan
-    public float groundCheckDistance = 1.1f; // Jarak pengecekan tanah menggunakan Raycast
+    [SerializeField] private Vector2 groundCheckStartOffset = new Vector2(0f, -0.5f);
+    [SerializeField] private float groundCheckRayLength = 1.1f;
     public LayerMask groundLayer; // Layer untuk tanah
     private bool isGrounded; // Status apakah karakter berada di tanah
     private Rigidbody2D rb; // Referensi ke komponen Rigidbody2D
@@ -213,23 +214,17 @@ public class Movement : MonoBehaviour
 
     private void GroundCheck()
     {
-        Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
-        RaycastHit2D hit = Physics2D.Raycast(bodyCenter, Vector2.down, groundCheckDistance, groundLayer);
+        Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
+        RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, groundCheckRayLength, groundLayer);
 
         if (hit.collider != null)
         {
-            timeSinceGrounded = Time.time; // Catat waktu terakhir kali menyentuh tanah
+            timeSinceGrounded = Time.time;
             isGrounded = true;
-
-            // Log jika berada di ground layer
-            //Debug.Log("Ground detected: " + hit.collider.gameObject.name);
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
-            isGrounded = false; // Hanya ubah isGrounded jika sudah melewati buffer
-
-            // Log jika tidak berada di ground layer
-            //Debug.Log("No");
+            isGrounded = false;
         }
     }
 
@@ -358,8 +353,8 @@ public class Movement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
-        Gizmos.DrawLine(bodyCenter, bodyCenter + Vector3.down * groundCheckDistance);
+        Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
+        Gizmos.DrawLine(start, start + Vector3.down * groundCheckRayLength);
     }
 
     public void SetStopRight(bool value)
