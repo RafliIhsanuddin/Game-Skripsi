@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using UnityEngine;
 
 public class Companion : MonoBehaviour
@@ -90,3 +90,82 @@ public class Companion : MonoBehaviour
         }
     }
 }
+*/
+
+using UnityEngine;
+
+public class Companion : MonoBehaviour
+{
+    public Movement player; // Reference to player movement script
+    public float moveSpeed = 5f;
+    public float jumpForce = 6f;
+    public LayerMask groundLayer; // Ground detection layer
+
+    private Rigidbody2D rb;
+    private bool isGrounded; // Check if the companion is grounded
+    private Vector2 targetPosition; // Position we want the companion to move to
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>(); // Get the rigidbody of the companion
+    }
+
+    void Update()
+    {
+        // Horizontal movement: Follow the player's position
+        FollowPlayer();
+
+        // Jump logic: Only jump if grounded and need to jump
+        if (isGrounded && ShouldJump())
+        {
+            Jump();
+        }
+        else if (isGrounded)
+        {
+            // When grounded and not jumping, make sure vertical velocity is zero
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Reset vertical velocity to 0
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Check if the companion is grounded
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 1f, groundLayer);
+    }
+
+    void FollowPlayer()
+    {
+        // Get the player's current position
+        targetPosition = player.transform.position;
+
+        // Move the companion horizontally towards the player
+        float distanceX = targetPosition.x - transform.position.x;
+        if (Mathf.Abs(distanceX) > 2f) // If not already close to the player
+        {
+            float moveDirection = Mathf.Sign(distanceX); // Determine the direction
+            rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y); // Update only the horizontal velocity
+        }
+        else
+        {
+            // If close enough, stop horizontal movement
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        }
+    }
+
+    bool ShouldJump()
+    {
+        // Calculate vertical distance between player and companion
+        float distanceY = player.transform.position.y - transform.position.y;
+
+        // If the player is higher (in the air) and we need to jump to follow
+        return distanceY > 1f; // You can adjust this threshold as needed
+    }
+
+    void Jump()
+    {
+        // Apply jump force to the vertical velocity
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); // Only apply vertical velocity for jumping
+    }
+}
+
+

@@ -77,8 +77,14 @@ public class Movement : MonoBehaviour
     private bool canJump = true;
     private bool canDash = true;
 
+    public struct PlayerState
+    {
+        public Vector3 position;
+        public bool isGrounded;
+    }
 
-
+    public List<PlayerState> positionHistory = new List<PlayerState>();
+    public int historyLimit = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -95,6 +101,23 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //record player state
+        //bool grounded = Physics2D.Raycast(transform.position, Vector2.down, 1f, groundLayer);
+
+        PlayerState state = new PlayerState
+        {
+            position = transform.position,
+            isGrounded = this.isGrounded
+        };
+
+        positionHistory.Insert(0, state);
+
+        if (positionHistory.Count > historyLimit)
+        {
+            positionHistory.RemoveAt(positionHistory.Count - 1);
+        }
+        //end record player state
+
         //vfxRenderer.SetVector3("ColliderPos", transform.position);
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
