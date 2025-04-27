@@ -28,7 +28,7 @@ public class SimpleColliderController : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log("OnTriggerExit2D dipanggil.");
+        //Debug.Log("OnTriggerExit2D dipanggil.");
         if (other.CompareTag("Player"))
         {
             //Debug.Log("Player keluar dari trigger! Mengaktifkan kembali main collider.");
