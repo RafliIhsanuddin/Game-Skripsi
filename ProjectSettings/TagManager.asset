@@ -41,11 +41,11 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Background
-    uniqueID: 2897509101
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2897509101
     locked: 0
   - name: Tree Branch
     uniqueID: 3222370469
@@ -73,6 +73,9 @@ TagManager:
     locked: 0
   - name: SortingTexture
     uniqueID: 3691067023
+    locked: 0
+  - name: Bubble
+    uniqueID: 375669321
     locked: 0
   m_RenderingLayers:
   - Default
