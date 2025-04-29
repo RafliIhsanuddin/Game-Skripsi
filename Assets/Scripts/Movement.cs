@@ -11,8 +11,10 @@ public class Movement : MonoBehaviour
     public float speed = 5f; // Kecepatan gerakan karakter
     public float runSpeed = 8f; // Kecepatan lari
     public float jumpForce = 5f; // Kekuatan lompatan
-    public float groundCheckDistance = 1.1f; // Jarak pengecekan tanah menggunakan Raycast
+    [SerializeField] private Vector2 groundCheckStartOffset = new Vector2(0f, -0.5f);
+    [SerializeField] private float groundCheckRayLength = 1.1f;
     public LayerMask groundLayer; // Layer untuk tanah
+    public LayerMask platformLayer;
     private bool isGrounded; // Status apakah karakter berada di tanah
     private Rigidbody2D rb; // Referensi ke komponen Rigidbody2D
 
@@ -24,8 +26,8 @@ public class Movement : MonoBehaviour
     // Dash variables
     [SerializeField] private float horizontalDashSpeed = 10f; // Kecepatan dash horizontal
     [SerializeField] private float verticalDashSpeed = 7f; // Kecepatan dash vertikal
-    public float dashDuration = 0.2f; // Durasi dash
-    public float dashCooldown = 1f; // Waktu cooldown dash
+    public float dashDuration = 0.1f; // Durasi dash
+    public float dashCooldown = 0.01f; // Waktu cooldown dash
     private bool isDashing = false; // Status dash
     private float dashCooldownTimer = 0f; // Timer cooldown dash
 
@@ -69,7 +71,21 @@ public class Movement : MonoBehaviour
     private Vector2 platformVelocity = Vector2.zero; // Kecepatan platform
 
 
+    private bool stopRight; // Status apakah karakter tidak dapat bergerak ke kanan
+    private bool stopLeft;
 
+
+    private bool canJump = true;
+    private bool canDash = true;
+
+    public struct PlayerState
+    {
+        public Vector3 position;
+        public bool isGrounded;
+    }
+
+    public List<PlayerState> positionHistory = new List<PlayerState>();
+    public int historyLimit = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -86,6 +102,23 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //record player state
+        //bool grounded = Physics2D.Raycast(transform.position, Vector2.down, 1f, groundLayer);
+
+        PlayerState state = new PlayerState
+        {
+            position = transform.position,
+            isGrounded = this.isGrounded
+        };
+
+        positionHistory.Insert(0, state);
+
+        if (positionHistory.Count > historyLimit)
+        {
+            positionHistory.RemoveAt(positionHistory.Count - 1);
+        }
+        //end record player state
+
         //vfxRenderer.SetVector3("ColliderPos", transform.position);
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
@@ -96,8 +129,17 @@ public class Movement : MonoBehaviour
             dashCooldownTimer -= Time.deltaTime;
         }
 
-        // Pengecekan apakah karakter berada di tanah menggunakan Raycast 2D
-        GroundCheck();
+        // Batasi gerakan berdasarkan stopRight dan stopLeft
+        if (stopRight && horizontalInput > 0)
+        {
+            horizontalInput = 0; // Hentikan gerakan ke kanan
+        }
+
+        if (stopLeft && horizontalInput < 0)
+        {
+            horizontalInput = 0; // Hentikan gerakan ke kiri
+        }
+
 
         // Update collider during jump
         GroundCheck();
@@ -127,7 +169,7 @@ public class Movement : MonoBehaviour
                 walkSound.SetActive(!isRunning);
                 runSound.SetActive(isRunning);
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (canJump && Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
                     PlayDustEffect();
@@ -144,7 +186,7 @@ public class Movement : MonoBehaviour
                 walkSound.SetActive(false);
                 runSound.SetActive(false);
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (canJump && Input.GetKeyDown(KeyCode.Space))
                 {
                     Jump();
                     PlayDustEffect();
@@ -169,7 +211,7 @@ public class Movement : MonoBehaviour
             }
 
             // Dash
-            if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0)
             {
                 PlayDustEffect();
                 ghost.makeGhost = true;
@@ -196,23 +238,17 @@ public class Movement : MonoBehaviour
 
     private void GroundCheck()
     {
-        Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
-        RaycastHit2D hit = Physics2D.Raycast(bodyCenter, Vector2.down, groundCheckDistance, groundLayer);
+        Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
+        RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, groundCheckRayLength, groundLayer | platformLayer); // Gunakan OR untuk memeriksa kedua layer
 
         if (hit.collider != null)
         {
-            timeSinceGrounded = Time.time; // Catat waktu terakhir kali menyentuh tanah
+            timeSinceGrounded = Time.time;
             isGrounded = true;
-
-            // Log jika berada di ground layer
-            //Debug.Log("Ground detected: " + hit.collider.gameObject.name);
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
-            isGrounded = false; // Hanya ubah isGrounded jika sudah melewati buffer
-
-            // Log jika tidak berada di ground layer
-            //Debug.Log("No");
+            isGrounded = false;
         }
     }
 
@@ -341,7 +377,45 @@ public class Movement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Vector3 bodyCenter = transform.position + new Vector3(0, bodyHeightOffset, 0);
-        Gizmos.DrawLine(bodyCenter, bodyCenter + Vector3.down * groundCheckDistance);
+        Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
+        Gizmos.DrawLine(start, start + Vector3.down * groundCheckRayLength);
     }
+
+    public void SetStopRight(bool value)
+    {
+        stopRight = value;
+        stopLeft = !value; // Jika stopRight true, maka stopLeft false, dan sebaliknya
+
+        // Set animasi idle saat terkena collider
+        PlayerAnimationController.SetInteger("state", 0);
+    }
+
+    public void ResetMovement()
+    {
+        stopRight = false;
+        stopLeft = false;
+    }
+
+    public void DisableJump()
+    {
+        canJump = false;
+    }
+
+    // Metode untuk mengaktifkan kembali kemampuan melompat
+    public void EnableJump()
+    {
+        canJump = true;
+    }
+
+    public void DisableDash()
+    {
+        canDash = false;
+    }
+
+    // Metode untuk mengaktifkan kembali kemampuan dash
+    public void EnableDash()
+    {
+        canDash = true;
+    }
+
 }
