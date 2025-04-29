@@ -14,6 +14,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private Vector2 groundCheckStartOffset = new Vector2(0f, -0.5f);
     [SerializeField] private float groundCheckRayLength = 1.1f;
     public LayerMask groundLayer; // Layer untuk tanah
+    public LayerMask platformLayer;
     private bool isGrounded; // Status apakah karakter berada di tanah
     private Rigidbody2D rb; // Referensi ke komponen Rigidbody2D
 
@@ -238,7 +239,7 @@ public class Movement : MonoBehaviour
     private void GroundCheck()
     {
         Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
-        RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, groundCheckRayLength, groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, groundCheckRayLength, groundLayer | platformLayer); // Gunakan OR untuk memeriksa kedua layer
 
         if (hit.collider != null)
         {
