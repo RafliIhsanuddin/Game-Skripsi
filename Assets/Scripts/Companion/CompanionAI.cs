@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class CompanionAI : MonoBehaviour
 {
+    [Header("References")]
     public Transform player;
     public LayerMask groundLayer;
     public LayerMask platformLayer;
+
+    [Header("Movement")]
     public float moveSpeed = 3f;
     public float jumpHeight = 1.5f;
     public float arriveThreshold = 0.1f;
-    public float groundCheckDistance = 0.2f;
-    public Vector2 groundCheckOffset;
+
+    [Header("Ground Check Settings")]
+    [SerializeField] private float companionGroundCheckDistance = 0.2f;
+    [SerializeField] private Vector2 companionGroundCheckOffset;
+    [SerializeField] private float playerGroundCheckDistance = 0.2f;
+    [SerializeField] private Vector2 playerGroundCheckOffset;
 
     private Rigidbody2D rb;
 
@@ -31,12 +38,11 @@ public class CompanionAI : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        ScanPlatforms(); // inisialisasi awal
+        ScanPlatforms();
     }
 
     void Update()
     {
-        // Timer pemindaian platform setiap 0.2 detik
         platformScanTimer += Time.deltaTime;
         if (platformScanTimer >= platformScanInterval)
         {
@@ -46,27 +52,32 @@ public class CompanionAI : MonoBehaviour
 
         UpdateStatus();
 
-        // Cek apakah platform berubah → reset jalur lompat
         if (HasPlatformChanged())
         {
-            Debug.Log("Platform Companion atau Player berubah → reset jalur lompat");
-            jumpPath.Clear();
-            isJumping = false;
+            Debug.Log("Platform Companion atau Player berubah → tandai ulang lompatan");
+            isJumping = false; // Tidak clear jumpPath
         }
 
-        // Logika tidak follow jika player di udara
-        if (IsAirborne(player.position) && !IsAirborne(transform.position))
+        if (isGrounded && isPlayerGrounded)
+        {
+            EnableRigidbodyIfDisabled("FollowPlayer()");
+            FollowPlayer();
+            return;
+        }
+
+        if (IsAirborne(player.position, playerGroundCheckDistance, playerGroundCheckOffset) &&
+            !IsAirborne(transform.position, companionGroundCheckDistance, companionGroundCheckOffset))
         {
             Debug.Log("Player di udara → companion tidak follow.");
             return;
         }
 
-        if (IsAirborne(transform.position) && !IsAirborne(player.position))
+        if (IsAirborne(transform.position, companionGroundCheckDistance, companionGroundCheckOffset) &&
+            !IsAirborne(player.position, playerGroundCheckDistance, playerGroundCheckOffset))
         {
             Debug.Log("Companion di udara → tetap follow player.");
         }
 
-        // Jika di platform sama atau sama-sama di ground, langsung follow
         if (IsSamePlatform())
         {
             EnableRigidbodyIfDisabled("FollowPlayer()");
@@ -74,13 +85,6 @@ public class CompanionAI : MonoBehaviour
             return;
         }
 
-        // Jika Companion di udara atau platform null → aktifkan Rigidbody
-        if (IsAirborne(transform.position) || currentPlatform == null || playerPlatform == null)
-        {
-            EnableRigidbodyIfDisabled("Di udara atau platform null, enable Rigidbody");
-        }
-
-        // Jika tidak sedang melompat dan belum punya path → hitung path
         if (!isJumping && jumpPath.Count == 0)
         {
             CalculateJumpPath();
@@ -104,8 +108,8 @@ public class CompanionAI : MonoBehaviour
 
     void UpdateStatus()
     {
-        isGrounded = IsOnGround(transform.position);
-        isPlayerGrounded = IsOnGround(player.position);
+        isGrounded = IsOnGround(transform.position, companionGroundCheckDistance, companionGroundCheckOffset);
+        isPlayerGrounded = IsOnGround(player.position, playerGroundCheckDistance, playerGroundCheckOffset);
 
         currentPlatform = GetPlatformUnder(transform.position);
         playerPlatform = GetPlatformUnder(player.position);
@@ -115,17 +119,17 @@ public class CompanionAI : MonoBehaviour
         Debug.Log($"Companion: {companionStatus} | Player: {playerStatus}");
     }
 
-    bool IsOnGround(Vector2 pos)
+    bool IsOnGround(Vector2 pos, float distance, Vector2 offset)
     {
-        Vector2 origin = pos + groundCheckOffset;
-        Debug.DrawRay(origin, Vector2.down * groundCheckDistance, Color.green, 0.1f);
-        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, groundCheckDistance, groundLayer);
+        Vector2 origin = pos + offset;
+        Debug.DrawRay(origin, Vector2.down * distance, Color.green, 0.1f);
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, distance, groundLayer);
         return hit.collider != null;
     }
 
-    bool IsAirborne(Vector2 pos)
+    bool IsAirborne(Vector2 pos, float distance, Vector2 offset)
     {
-        return !IsOnGround(pos) && GetPlatformUnder(pos) == null;
+        return !IsOnGround(pos, distance, offset) && GetPlatformUnder(pos) == null;
     }
 
     Platform GetPlatformUnder(Vector2 pos)
@@ -168,19 +172,20 @@ public class CompanionAI : MonoBehaviour
 
         var sorted = allPlatforms.OrderBy(p => p.platformID).ToList();
 
-        // Jika companion ada di platform yang lebih tinggi dari player
-        if (fromID > toID)
+        if (playerPlatform == null && isPlayerGrounded)
         {
-            foreach (var p in sorted)
+            foreach (var p in sorted.OrderByDescending(p => p.platformID))
             {
-                if (p.platformID < fromID && p.platformID >= toID)
+                if (p.platformID < fromID)
                 {
                     jumpPath.Add(p);
                     Debug.Log($"Menambahkan platform {p.platformID} ke jalur lompat");
                 }
             }
+
+            jumpPath.Add(null); // Target akhir: ground
+            Debug.Log("Menambahkan ground sebagai target terakhir");
         }
-        // Jika companion ada di platform yang lebih rendah dari player
         else if (fromID < toID)
         {
             foreach (var p in sorted)
@@ -192,12 +197,16 @@ public class CompanionAI : MonoBehaviour
                 }
             }
         }
-
-        // Menambahkan ground sebagai fallback jika player berada di ground
-        if (playerPlatform == null && isPlayerGrounded)
+        else if (fromID > toID)
         {
-            jumpPath.Add(null);
-            Debug.Log("Menambahkan ground sebagai target terakhir");
+            foreach (var p in sorted.OrderByDescending(p => p.platformID))
+            {
+                if (p.platformID < fromID && p.platformID >= toID)
+                {
+                    jumpPath.Add(p);
+                    Debug.Log($"Menambahkan platform {p.platformID} ke jalur lompat");
+                }
+            }
         }
 
         jumpIndex = 0;
@@ -222,7 +231,6 @@ public class CompanionAI : MonoBehaviour
         if (jumpIndex >= jumpPath.Count)
         {
             isJumping = false;
-            jumpPath.Clear();
             EnableRigidbodyIfDisabled("Selesai semua lompatan");
             return;
         }
@@ -241,15 +249,14 @@ public class CompanionAI : MonoBehaviour
         {
             jumpIndex++;
             EnableRigidbodyIfDisabled($"Tiba di {(targetPlatform != null ? $"platform {targetPlatform.platformID}" : "ground")}");
-
-            // Setelah mendarat, tunggu sejenak sebelum lompat ke platform berikutnya
             StartCoroutine(WaitUntilLandedThenContinue());
         }
     }
 
     System.Collections.IEnumerator WaitUntilLandedThenContinue()
     {
-        yield return new WaitUntil(() => IsOnGround(transform.position) || GetPlatformUnder(transform.position) != null);
+        yield return new WaitUntil(() => IsOnGround(transform.position, companionGroundCheckDistance, companionGroundCheckOffset)
+                                     || GetPlatformUnder(transform.position) != null);
         yield return new WaitForSeconds(0.05f);
         DisableRigidbodyIfEnabled("Siap lompat ke platform berikutnya");
     }
