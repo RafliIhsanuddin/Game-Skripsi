@@ -1896,20 +1896,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
+      propertyPath: DEBUGMODE
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
       propertyPath: rayHeight
-      value: 33.3
+      value: 63
       objectReference: {fileID: 0}
     - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
       propertyPath: jumpHeight
-      value: 71.86
+      value: 51.4
       objectReference: {fileID: 0}
     - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
       propertyPath: followRange
-      value: 142.86
+      value: 69.4
       objectReference: {fileID: 0}
     - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
       propertyPath: groundRayLength
       value: 5.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
+      propertyPath: jumpHorizontalForce
+      value: 0.24
       objectReference: {fileID: 0}
     - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
       propertyPath: longGroundRayLength
@@ -1919,6 +1927,10 @@ PrefabInstance:
       propertyPath: whatIsGround.m_Bits
       value: 256
       objectReference: {fileID: 0}
+    - target: {fileID: 1189540127108465086, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
+      propertyPath: showJumpCalculations
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1380880581031069095, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
       propertyPath: m_Name
       value: Companion Test
@@ -1927,6 +1939,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6966399149899836523, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: bd31809e6568b664fb67bbf6694d84d4, type: 2}
     - target: {fileID: 8525701034659324699, guid: ad6def47f4400fa44b07ebd684ebc66d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -124.3
