@@ -20,21 +20,34 @@ public class CompanionPlugIn : MonoBehaviour
     public float maxSpeed = 14;                                                         // determine max speed
     public float minJumpHeight = 5f;                                                    // minimum jump height
     public float maxJumpHeight = 12f;                                                   // maximum jump height
-    public float jumpHorizontalForce = 2.5f;                                            // reduced horizontal force when jumping
     float speed;                                                                        // current speed
 
     [Header("Jump Tuning")]
     public float baseHorizontalForce = 2.5f;  // Base horizontal force
-    public float horizontalForceMultiplier = 1f; // Dynamic multiplier
+    private float horizontalForceMultiplier = 1f; // The actual multiplier variable
+    [Range(0.1f, 50f)] public float minHorizontalForceMultiplier = 0.5f;
+    [Range(0.1f, 50f)] public float maxHorizontalForceMultiplier = 2f;
     public float horizontalForceAdjustSpeed = 0.5f; // How quickly the force adjusts
+
+    [Header("Jump Height Smoothing")]
+    public float minRequiredJumpHeight = 5f;
+    public float maxRequiredJumpHeight = 12f;
+    public float heightSmoothingFactor = 0.2f;
+    public float distanceWeight = 0.1f;
+    public float heightWeight = 1.2f;
 
     [Header("DEBUGING")]
     public bool DEBUGMODE = false;
     public bool showJumpCalculations = false;
+    public bool showJumpDebugInfo = false;
 
     private bool lastJumpWasRight;
     private Vector2 lastJumpVelocity;
     private Vector2 lastJumpStartPosition;
+    private Vector2 lastJumpTargetPosition;
+    private float lastJumpHorizontalForce;
+    private float lastJumpVerticalForce;
+    private float lastJumpCalculatedHeight;
 
     [Header("Booleans")]
     private bool movingRight = true;
@@ -42,6 +55,7 @@ public class CompanionPlugIn : MonoBehaviour
     private bool moveEnabled = true;
     private bool isGrounded = false;
     private bool isInFollowRange = false;
+    private bool isJumping = false;
 
     [Header("Range")]
     public float followRange = 40;                                                      // follow distance
@@ -76,9 +90,9 @@ public class CompanionPlugIn : MonoBehaviour
     RaycastHit2D rightInfo;
 
     // Jump calculation variables
-    private Vector2 currentPlatformPosition;
-    private Vector2 targetPlatformPosition;
-    private float requiredJumpHeight;
+    [SerializeField] private Vector2 currentPlatformPosition;
+    [SerializeField] private Vector2 targetPlatformPosition;
+    [SerializeField] private float requiredJumpHeight;
     #endregion
 
     void Start()
@@ -107,10 +121,10 @@ public class CompanionPlugIn : MonoBehaviour
     void Update()
     {
         #region Nearest Target
-        targets.RemoveAll(target => target == null); // Clean up null targets first
+        targets.RemoveAll(target => target == null);
         targets = GameObject.FindGameObjectsWithTag("Player").Distinct().Where(t => t != null).ToList();
 
-        distDic.Clear(); // Clear the dictionary before adding new entries
+        distDic.Clear();
 
         foreach (GameObject obj in targets)
         {
@@ -118,7 +132,6 @@ public class CompanionPlugIn : MonoBehaviour
 
             float dist = Vector2.Distance(transform.position, obj.transform.position);
 
-            // Add only if the distance isn't already a key
             if (!distDic.ContainsKey(dist))
             {
                 distDic.Add(dist, obj);
@@ -131,18 +144,18 @@ public class CompanionPlugIn : MonoBehaviour
             distances.Sort();
             nearestTarget = distDic[distances[0]];
             distance = (transform.position - nearestTarget.transform.position);
+            targetPos = nearestTarget.transform.position;
         }
         #endregion
 
-        // Adjust horizontal force based on distance to target
         if (nearestTarget != null)
         {
             float targetDistance = Mathf.Abs(distance.x);
+            float desiredMultiplier = Mathf.Clamp(
+                targetDistance / 5f,
+                minHorizontalForceMultiplier,
+                maxHorizontalForceMultiplier);
 
-            // Calculate desired multiplier based on distance
-            float desiredMultiplier = Mathf.Clamp(targetDistance / 5f, 0.5f, 2f);
-
-            // Smoothly adjust the current multiplier
             horizontalForceMultiplier = Mathf.Lerp(
                 horizontalForceMultiplier,
                 desiredMultiplier,
@@ -153,21 +166,20 @@ public class CompanionPlugIn : MonoBehaviour
         leftInfoGround = Physics2D.Raycast(left.position, Vector2.down, groundRayLength, whatIsGround);
         rightInfoGround = Physics2D.Raycast(right.position, Vector2.down, groundRayLength, whatIsGround);
 
-        leftInfoLongGround = Physics2D.Raycast(new Vector2(left.position.x - 2, left.position.y), Vector2.down, longGroundRayLength, whatIsGround); // left long ground raycast
-        rightInfoLongGround = Physics2D.Raycast(new Vector2(right.position.x + 2, right.position.y), Vector2.down, longGroundRayLength, whatIsGround); // right long ground raycast
+        leftInfoLongGround = Physics2D.Raycast(new Vector2(left.position.x - 2, left.position.y), Vector2.down, longGroundRayLength, whatIsGround);
+        rightInfoLongGround = Physics2D.Raycast(new Vector2(right.position.x + 2, right.position.y), Vector2.down, longGroundRayLength, whatIsGround);
 
         targetRay = Physics2D.Raycast(transform.position, nearestTarget.transform.position, followRange);
 
-        leftInfoUp = Physics2D.Raycast(new Vector2(left.position.x, left.position.y + rayHeight), Vector2.left, wallRayLength, whatIsGround); // left up raycast
-        RightInfoUp = Physics2D.Raycast(new Vector2(right.position.x, right.position.y + rayHeight), Vector2.right, wallRayLength, whatIsGround); // Right up raycast
+        leftInfoUp = Physics2D.Raycast(new Vector2(left.position.x, left.position.y + rayHeight), Vector2.left, wallRayLength, whatIsGround);
+        RightInfoUp = Physics2D.Raycast(new Vector2(right.position.x, right.position.y + rayHeight), Vector2.right, wallRayLength, whatIsGround);
 
-        leftInfo = Physics2D.Raycast(left.position, Vector2.left, wallRayLength, whatIsGround); // left raycast
-        rightInfo = Physics2D.Raycast(right.position, Vector2.right, wallRayLength, whatIsGround); // right raycast
+        leftInfo = Physics2D.Raycast(left.position, Vector2.left, wallRayLength, whatIsGround);
+        rightInfo = Physics2D.Raycast(right.position, Vector2.right, wallRayLength, whatIsGround);
         #endregion
 
         #region Platform Detection
-        // Detect current platform position
-        if (isGrounded)
+        if (isGrounded && !isJumping)
         {
             RaycastHit2D groundHit = Physics2D.Raycast(transform.position, Vector2.down, groundRayLength * 2, whatIsGround);
             if (groundHit.collider != null)
@@ -176,7 +188,6 @@ public class CompanionPlugIn : MonoBehaviour
             }
         }
 
-        // Detect target platform position (where we want to land)
         Vector2 lookDirection = movingRight ? Vector2.right : Vector2.left;
         RaycastHit2D platformHit = Physics2D.Raycast(
             transform.position + new Vector3(movingRight ? 1 : -1, 0, 0) * platformDetectionRange * 0.5f,
@@ -187,93 +198,68 @@ public class CompanionPlugIn : MonoBehaviour
         if (platformHit.collider != null)
         {
             targetPlatformPosition = platformHit.point;
-
-            // Calculate required jump height based on platform positions
             float heightDifference = targetPlatformPosition.y - currentPlatformPosition.y;
             float distanceToPlatform = Mathf.Abs(targetPlatformPosition.x - currentPlatformPosition.x);
 
-            // Calculate required jump height using physics formula: v = sqrt(2 * g * h)
-            // We adjust based on height difference and distance
             requiredJumpHeight = Mathf.Clamp(
-                Mathf.Abs(heightDifference) * 1.2f + distanceToPlatform * 0.1f, // Reduced distance factor
-                minJumpHeight,
-                maxJumpHeight);
+                Mathf.Abs(heightDifference) * heightWeight + distanceToPlatform * distanceWeight,
+                minRequiredJumpHeight,
+                maxRequiredJumpHeight);
         }
         else
         {
-            // If no platform detected, use default jump height
-            requiredJumpHeight = (minJumpHeight + maxJumpHeight) * 0.5f;
+            requiredJumpHeight = (minRequiredJumpHeight + maxRequiredJumpHeight) * 0.5f;
         }
         #endregion
 
         #region Ground Raycasts
-        // if the left ground ray cast hits nothing and the right ground ray hits somthing then
         if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == false)
         {
-            // we move right
             movingRight = true;
-            // we are grounded
             isGrounded = true;
-            // if the left wall ray hits nothing and we can jump then we jump left
-            if (leftInfo.collider == false && canJump == true) StartCoroutine(Jump("Large", false, 2));
+            if (leftInfo.collider == false && canJump == true && !isJumping) StartCoroutine(Jump("Large", false, 2));
         }
         else if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == true)
         {
-            // we move left
             movingRight = false;
-            StartCoroutine(Jump("Small", false, 2));
-            // we are grounded
+            if (!isJumping) StartCoroutine(Jump("Small", false, 2));
             isGrounded = true;
         }
 
-        // if the left ground ray cast hits somthing and the right ground ray hits somthing then we are grounded
-        if (leftInfoGround.collider == true && rightInfoGround.collider == true) isGrounded = true;
-        // else if no ground ray is colliding with earth then we aren't grounded
+        if (leftInfoGround.collider == true && rightInfoGround.collider == true)
+        {
+            isGrounded = true;
+            isJumping = false;
+        }
         else isGrounded = false;
 
-        // if the left ground ray cast hits somthing and the right ground ray hits nothing then
         if (leftInfoGround.collider == true && rightInfoGround.collider == false && rightInfoLongGround.collider == false)
         {
-            //we move left
             movingRight = false;
-            // we are grounded
             isGrounded = true;
-            // if the right wall ray hits nothing and we can jump then we jump right
-            if (rightInfo.collider == false && canJump == true) StartCoroutine(Jump("Large", true, 2));
+            if (rightInfo.collider == false && canJump == true && !isJumping) StartCoroutine(Jump("Large", true, 2));
         }
         else if (leftInfoGround.collider == true && rightInfoGround.collider == false && rightInfoLongGround.collider == true)
         {
-            // we move right
             movingRight = true;
-            StartCoroutine(Jump("Small", true, 2));
-            // we are grounded
+            if (!isJumping) StartCoroutine(Jump("Small", true, 2));
             isGrounded = true;
         }
         #endregion
 
         #region Wall Raycasts
-        // if the left ground ray cast hits somthing and the right ground ray hits somthing then
         if (leftInfoGround.collider == true && rightInfoGround.collider == true)
         {
-            // if the left ray hits somthing and the distance is about 1 / 3 to him and the left up ray hits nothing and if we are currently moving left, we want to jump left on a ledge
-            if (leftInfo.collider == true && leftInfo.distance <= wallRayLength / 1.5f && leftInfoUp.collider == false && !movingRight)
+            if (leftInfo.collider == true && leftInfo.distance <= wallRayLength / 1.5f && leftInfoUp.collider == false && !movingRight && !isJumping)
                 StartCoroutine(Jump("Precise", movingRight, 2));
 
-            // if left wall ray has collided then
-            if (leftInfo.collider == true)
-                // if left wall ray distance is close to wall we need to turn right
-                if (leftInfo.distance <= 0.1f) movingRight = true;
+            if (leftInfo.collider == true && leftInfo.distance <= 0.1f) movingRight = true;
 
-            // if the right ray hits somthing and the distance is about 1 / 3 to him and the right up ray hits nothing and if we are currently moving right, we want to jump right on a ledge
-            if (rightInfo.collider == true && rightInfo.distance <= wallRayLength / 1.5f && RightInfoUp.collider == false && movingRight)
+            if (rightInfo.collider == true && rightInfo.distance <= wallRayLength / 1.5f && RightInfoUp.collider == false && movingRight && !isJumping)
                 StartCoroutine(Jump("Precise", movingRight, 2));
 
-            // if right wall ray has collided then
-            if (rightInfo.collider == true)
-                // if right wall ray distance is close to wall we need to turn left
-                if (rightInfo.distance <= 0.1f) movingRight = false;
+            if (rightInfo.collider == true && rightInfo.distance <= 0.1f) movingRight = false;
 
-            // if left and right ray hit somthing and there distance is 1/3 and right/left up hits nothing we do nothing, why? because were in a hole
             if (leftInfo.collider == true && leftInfo.distance <= wallRayLength / 1.5f && leftInfoUp.collider == false &&
             rightInfo.collider == true && rightInfo.distance <= wallRayLength / 1.5f && RightInfoUp.collider == false)
                 return;
@@ -281,37 +267,26 @@ public class CompanionPlugIn : MonoBehaviour
         #endregion
 
         #region Follow Range
-        // if player is withing the follow range then
         if (distance.x < followRange && distance.y < followRange && distance.x > -followRange && distance.y > -followRange)
         {
-            // we have someone to follow
             isInFollowRange = true;
-            // increase speed
-            speed += 2;
+            speed = maxSpeed;
         }
         else
         {
-            // decrease speed
-            speed -= 2;
-            // no one to follow
+            speed = minSpeed;
             isInFollowRange = false;
         }
-        // clam our speeds form a min, max, 
-        speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
 
-        // if nearest target is to the left of us
         if (distance.x > 0)
-        { // move left
-            // if nearest target is in follow range then
+        {
             if (distance.x < followRange && distance.y < followRange)
             {
                 movingRight = false;
             }
         }
-        // if nearest target is to the right of us
         if (distance.x < 0)
-        { // move right
-            // if nearest target is in follow range then
+        {
             if (distance.x > -followRange && distance.y > -followRange)
             {
                 movingRight = true;
@@ -319,7 +294,6 @@ public class CompanionPlugIn : MonoBehaviour
         }
         #endregion
 
-        // smoothens falling and jumping with physics
         if (rb.linearVelocity.y < 0)
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (2.5f - 1) * Time.deltaTime;
         else if (rb.linearVelocity.y > 0 && !isGrounded)
@@ -329,33 +303,14 @@ public class CompanionPlugIn : MonoBehaviour
     void FixedUpdate()
     {
         #region Movement
-        // let our animator know were connected to earth
         anim.SetBool("isGrounded", isGrounded);
-        // if we are moving right and we are able to move then
-        if (movingRight && moveEnabled && isGrounded)
-        { // right
-            // let our animator know we are able to move
+
+        if (moveEnabled && isGrounded)
+        {
             anim.SetBool("moveEnabled", true);
-            // flip our sprite to the right side
-            GetComponent<SpriteRenderer>().flipX = false;
-            // set a direction vector to be: (0, 1);
-            Vector2 direction = ((Vector2)Vector2.right).normalized;
-            // create a force to move, this is the direction were facing times our speed times delta time
-            Vector2 force = direction * speed * Time.deltaTime;
-            // move right
-            rb.MovePosition(rb.position + force);
-        }
-        else if (!movingRight && moveEnabled && isGrounded)
-        { // left
-            // let our animator know we are able to move
-            anim.SetBool("moveEnabled", true);
-            // flip our sprite to the left side
-            GetComponent<SpriteRenderer>().flipX = true;
-            // set a direction vector to be: (0, -1);
-            Vector2 direction = ((Vector2)Vector2.left).normalized;
-            // create a force to move, this is the direction were facing times our speed times delta time
-            Vector2 force = direction * speed * Time.deltaTime;
-            // move left
+            GetComponent<SpriteRenderer>().flipX = !movingRight;
+            Vector2 direction = movingRight ? Vector2.right : Vector2.left;
+            Vector2 force = direction * speed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + force);
         }
         #endregion
@@ -364,21 +319,14 @@ public class CompanionPlugIn : MonoBehaviour
     #region Bug fixes
     IEnumerator isStanding()
     {
-        // setting the last pos vector to the current transform postion
         lastPos = transform.position;
-        // wait 0.1 seconds before proceeding
         yield return new WaitForSeconds(1);
-        // if our last position is the same as it was 0.1 seconds ago then
         if (lastPos.x == transform.position.x && lastPos.y == transform.position.y)
         {
-            // let our anim know we cant move
             anim.SetBool("moveEnabled", false);
-            // we move left
-            StartCoroutine(Jump("Small", movingRight, 2));
+            if (!isJumping) StartCoroutine(Jump("Small", movingRight, 2));
         }
-        // else let our anim know we can move
         else anim.SetBool("moveEnabled", true);
-        // re call this function to make it a loop with a 0.1 sec delay
         StartCoroutine(isStanding());
     }
     #endregion
@@ -386,20 +334,14 @@ public class CompanionPlugIn : MonoBehaviour
     #region Jump
     IEnumerator Jump(string size, bool dirRight, float wait)
     {
-        // Store jump direction for debugging
         lastJumpWasRight = dirRight;
         lastJumpStartPosition = transform.position;
+        lastJumpTargetPosition = targetPlatformPosition;
+        isJumping = true;
 
-        // since we jump we can't be grounded
         isGrounded = false;
-        // tell our animator we jumped
         anim.SetTrigger("Jump");
-        // increase speed
-        speed += 2;
-        // move right
-        movingRight = true;
 
-        // Calculate jump force based on jump type and platform detection
         float jumpForce = 0f;
         float horizontalForce = baseHorizontalForce * horizontalForceMultiplier;
 
@@ -407,63 +349,71 @@ public class CompanionPlugIn : MonoBehaviour
         {
             case "Large":
                 jumpForce = maxJumpHeight;
-                horizontalForce *= 1.2f; // Reduced multiplier
+                horizontalForce *= 1.2f;
                 break;
             case "Small":
                 jumpForce = minJumpHeight;
-                horizontalForce *= 0.5f; // Reduced multiplier
+                horizontalForce *= 0.5f;
                 break;
             case "Precise":
-                // Use calculated jump height for precise jumps
                 jumpForce = requiredJumpHeight;
-                horizontalForce *= 0.8f; // Reduced force for precision
+                horizontalForce *= 0.8f;
                 break;
             default:
                 jumpForce = (minJumpHeight + maxJumpHeight) * 0.5f;
                 break;
         }
 
-        // Calculate and store jump velocity for debugging
-        lastJumpVelocity = new Vector2(
-            dirRight ? horizontalForce : -horizontalForce,
-            Mathf.Sqrt(2f * Mathf.Abs(Physics2D.gravity.y) * jumpForce));
+        // Store jump values for debugging
+        lastJumpHorizontalForce = dirRight ? horizontalForce : -horizontalForce;
+        lastJumpVerticalForce = jumpForce;
+        lastJumpCalculatedHeight = requiredJumpHeight;
+        lastJumpVelocity = new Vector2(lastJumpHorizontalForce, jumpForce);
 
-        // Apply jump force (vertical)
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Reset vertical velocity
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-        // Apply continuous horizontal force during jump
-        float forceDuration = 0.2f; // Duration to apply horizontal force
-        float timer = 0f;
-
-        while (timer < forceDuration)
+        // Log jump information to console
+        if (DEBUGMODE && showJumpDebugInfo)
         {
-            if (dirRight)
-                rb.AddForce(Vector2.right * horizontalForce * (1 - timer / forceDuration), ForceMode2D.Force);
-            else
-                rb.AddForce(Vector2.left * horizontalForce * (1 - timer / forceDuration), ForceMode2D.Force);
-
-            timer += Time.deltaTime;
-            yield return null;
+            Debug.Log($"=== JUMP DEBUG ===");
+            Debug.Log($"Jump Type: {size}");
+            Debug.Log($"Direction: {(dirRight ? "Right" : "Left")}");
+            Debug.Log($"Horizontal Force: {lastJumpHorizontalForce:F2}");
+            Debug.Log($"Vertical Force: {lastJumpVerticalForce:F2}");
+            Debug.Log($"Jump Force Value: {jumpForce:F2}");
+            Debug.Log($"Target Position: {lastJumpTargetPosition}");
+            Debug.Log($"Calculated Height: {lastJumpCalculatedHeight:F2}");
+            Debug.Log($"Start Position: {lastJumpStartPosition}");
+            Debug.Log($"Platform Positions - Current: {currentPlatformPosition} | Target: {targetPlatformPosition}");
+            Debug.Log($"Horizontal Force Multiplier: {horizontalForceMultiplier:F2}");
+            Debug.Log($"=== END JUMP DEBUG ===");
         }
 
-        // wait wait seconds before continuing
+        // Apply forces
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        if (dirRight)
+            rb.AddForce(Vector2.right * horizontalForce, ForceMode2D.Impulse);
+        else
+            rb.AddForce(Vector2.left * horizontalForce, ForceMode2D.Impulse);
+
         yield return new WaitForSeconds(wait);
-        // if we are grounded then we can't jump
-        if (isGrounded) canJump = false;
-        // we set move enabled 
-        moveEnabled = true;
-        // call reset jump so we don't spam jump
         StartCoroutine(resetJump());
     }
 
     IEnumerator resetJump()
     {
-        // wait 1 sec before proceeding
         yield return new WaitForSeconds(1);
-        //set jump to true
         canJump = true;
-        // exit function
+        isJumping = false;
+
+        // Log landing information to console
+        if (DEBUGMODE && showJumpDebugInfo)
+        {
+            Debug.Log($"Jump Completed:\n" +
+                     $"Landed at: {transform.position}\n" +
+                     $"Distance to target: {Vector2.Distance(transform.position, lastJumpTargetPosition):F2}");
+        }
+
         yield return null;
     }
     #endregion
@@ -473,7 +423,6 @@ public class CompanionPlugIn : MonoBehaviour
     {
         if (DEBUGMODE)
         {
-            // Existing debug visuals
             if (rightInfoGround.collider == true)
             {
                 Gizmos.color = Color.red;
@@ -572,22 +521,17 @@ public class CompanionPlugIn : MonoBehaviour
                 Gizmos.DrawWireCube(transform.position, new Vector3(followRange * 2, followRange * 2, 0));
             }
 
-            // New debug visuals for jump calculations
             if (showJumpCalculations)
             {
-                // Draw current platform position
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawSphere(currentPlatformPosition, 0.3f);
 
-                // Draw target platform position
                 Gizmos.color = Color.magenta;
                 Gizmos.DrawSphere(targetPlatformPosition, 0.3f);
 
-                // Draw line between platforms
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(currentPlatformPosition, targetPlatformPosition);
 
-                // Draw calculated jump trajectory
                 if (isGrounded)
                 {
                     int resolution = 20;
@@ -602,11 +546,29 @@ public class CompanionPlugIn : MonoBehaviour
                         Gizmos.DrawLine(prevPoint, point);
                         prevPoint = point;
 
-                        // Stop drawing if we hit the ground
                         if (point.y <= lastJumpStartPosition.y && i > 1)
                             break;
                     }
                 }
+            }
+
+            if (showJumpDebugInfo)
+            {
+                // Draw debug text for jump information
+                Vector3 debugPos = transform.position + Vector3.up * 2f;
+                /*string debugText = $"Jump Debug:\n" +
+                                $"Start: {lastJumpStartPosition.ToString("F1")}\n" +
+                                $"Target: {lastJumpTargetPosition.ToString("F1")}\n" +
+                                $"Horizontal: {lastJumpHorizontalForce.ToString("F1")}\n" +
+                                $"Vertical: {lastJumpVerticalForce.ToString("F1")}\n" +
+                                $"Calc Height: {lastJumpCalculatedHeight.ToString("F1")}";*/
+
+                /*UnityEditor.Handles.Label(debugPos, debugText, new GUIStyle()
+                {
+                    fontSize = 12,
+                    normal = new GUIStyleState() { textColor = Color.white },
+                    alignment = TextAnchor.MiddleCenter
+                });*/
             }
         }
     }
