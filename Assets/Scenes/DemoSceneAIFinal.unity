@@ -2009,7 +2009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modificationType: 0
-  value: 20
+  value: 50
   permanentChange: 1
 --- !u!61 &1887594388
 BoxCollider2D:
@@ -2066,7 +2066,7 @@ Transform:
   m_GameObject: {fileID: 1887594386}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -70.3, y: -66.05, z: -0.65979254}
+  m_LocalPosition: {x: -48.5, y: -66.05, z: -0.65979254}
   m_LocalScale: {x: 1.1204869, y: 12.662247, z: 7.8438}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2232,7 +2232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1428684465012799253, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
       propertyPath: rayHeight
-      value: 24.8
+      value: 51.2
       objectReference: {fileID: 0}
     - target: {fileID: 1428684465012799253, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
       propertyPath: jumpHeight
@@ -2240,7 +2240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1428684465012799253, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
       propertyPath: wallRayLength
-      value: 29.3
+      value: 58.6
       objectReference: {fileID: 0}
     - target: {fileID: 1428684465012799253, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
       propertyPath: groundRayLength
@@ -2248,11 +2248,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1428684465012799253, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
       propertyPath: longGroundRayLength
-      value: 23.5
+      value: 25.4
       objectReference: {fileID: 0}
     - target: {fileID: 1428684465012799253, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
       propertyPath: whatIsGround.m_Bits
       value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 1428684465012799253, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
+      propertyPath: runDistanceThreshold
+      value: 14.78
       objectReference: {fileID: 0}
     - target: {fileID: 3764414925972801264, guid: be522d3ce6dd3a040ab7f864967a7bb0, type: 3}
       propertyPath: m_AnchorMax.x

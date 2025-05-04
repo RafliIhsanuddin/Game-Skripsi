@@ -17,6 +17,12 @@ public class CompanionFinal : MonoBehaviour
     float speed;                                                                        // current speed
     float gravity;
 
+    [Header("Movement Settings")]
+    [SerializeField] private float walkDistanceThreshold = 5f;                          // Distance to switch to walking
+    [SerializeField] private float idleDistanceThreshold = 1f;                          // Distance to switch to idle
+    [SerializeField] private float runSpeed = 14f;                                     // Speed when moving (no distance threshold)
+    [SerializeField] private float walkSpeed = 7f;                                      // Speed when walking
+
     [Header("DEBUGING")]
     public bool DEBUGMODE = false;
     [Header("Booleans")]
@@ -35,9 +41,6 @@ public class CompanionFinal : MonoBehaviour
     [Header("Wall Detection")]
     public float wallRayLength = 30;                                                    // the length for ray casts that face the wall
     public float rayHeight = 22.5f;
-
-    [Header("Ranges")]
-    public float followRange = 40;                                                      // follow distance (kept for debug visuals)
 
     public LayerMask whatIsGround;
     [Header("Transforms")]
@@ -123,6 +126,43 @@ public class CompanionFinal : MonoBehaviour
         distance = (transform.position - nearestTarget.transform.position);
         #endregion
 
+        #region Movement Behavior Based on Distance
+        float distanceToPlayer = Vector2.Distance(transform.position, nearestTarget.transform.position);
+
+        // Always use runSpeed as base movement speed
+        speed = runSpeed;
+
+        if (distanceToPlayer <= walkDistanceThreshold)
+        {
+            // Switch to walk speed when close
+            speed = walkSpeed;
+        }
+
+        if (distanceToPlayer <= idleDistanceThreshold)
+        {
+            // Stop moving when very close
+            speed = 0;
+            moveEnabled = false;
+        }
+        else
+        {
+            moveEnabled = true;
+        }
+
+        // Determine direction based on target position
+        if (nearestTarget != null)
+        {
+            if (distance.x > 0)
+            {
+                movingRight = false;
+            }
+            else
+            {
+                movingRight = true;
+            }
+        }
+        #endregion
+
         #region Ray casts
         leftInfoGround = Physics2D.Raycast(left.position, Vector2.down, groundRayLength, whatIsGround);
         rightInfoGround = Physics2D.Raycast(right.position, Vector2.down, groundRayLength, whatIsGround);
@@ -130,7 +170,7 @@ public class CompanionFinal : MonoBehaviour
         leftInfoLongGround = Physics2D.Raycast(new Vector2(left.position.x - 2, left.position.y), Vector2.down, longGroundRayLength, whatIsGround);
         rightInfoLongGround = Physics2D.Raycast(new Vector2(right.position.x + 2, right.position.y), Vector2.down, longGroundRayLength, whatIsGround);
 
-        targetRay = Physics2D.Raycast(transform.position, nearestTarget.transform.position, 1000f); // Increased to very large value
+        targetRay = Physics2D.Raycast(transform.position, nearestTarget.transform.position, 1000f);
 
         leftInfoUp = Physics2D.Raycast(new Vector2(left.position.x, left.position.y + rayHeight), Vector2.left, wallRayLength, whatIsGround);
         rightInfoUp = Physics2D.Raycast(new Vector2(right.position.x, right.position.y + rayHeight), Vector2.right, wallRayLength, whatIsGround);
@@ -188,24 +228,6 @@ public class CompanionFinal : MonoBehaviour
             if (leftInfo.collider == true && leftInfo.distance <= wallRayLength / 1.5f && leftInfoUp.collider == false &&
                rightInfo.collider == true && rightInfo.distance <= wallRayLength / 1.5f && rightInfoUp.collider == false)
                 return;
-        }
-        #endregion
-
-        #region Follow Logic (Modified)
-        isInFollowRange = true; // Always true now
-        speed = maxSpeed; // Always move at max speed
-
-        // Determine direction based on target position
-        if (nearestTarget != null)
-        {
-            if (distance.x > 0)
-            {
-                movingRight = false;
-            }
-            else
-            {
-                movingRight = true;
-            }
         }
         #endregion
 
@@ -332,12 +354,34 @@ public class CompanionFinal : MonoBehaviour
                 Gizmos.DrawLine(new Vector2(right.position.x, right.position.y + rayHeight),
                                new Vector2(right.position.x + wallRayLength, right.position.y + rayHeight));
             }
+
+            // Draw distance thresholds
+            if (nearestTarget != null)
+            {
+                // Walk threshold
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(nearestTarget.transform.position, walkDistanceThreshold);
+
+                // Idle threshold
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(nearestTarget.transform.position, idleDistanceThreshold);
+            }
             return;
         }
 
         // Only execute the full debug drawing in play mode
         if (left == null || right == null || nearestTarget == null) return;
 
+        // Draw distance thresholds
+        // Walk threshold
+        Gizmos.color = new Color(1, 1, 0, 0.3f); // Yellow with transparency
+        Gizmos.DrawWireSphere(nearestTarget.transform.position, walkDistanceThreshold);
+
+        // Idle threshold
+        Gizmos.color = new Color(0, 1, 0, 0.3f); // Green with transparency
+        Gizmos.DrawWireSphere(nearestTarget.transform.position, idleDistanceThreshold);
+
+        // Rest of the debug drawing remains the same...
         // Ground rays
         if (rightInfoGround.collider == true)
         {
