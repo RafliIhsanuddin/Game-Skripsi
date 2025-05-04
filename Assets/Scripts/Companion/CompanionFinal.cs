@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -27,7 +25,7 @@ public class CompanionFinal : MonoBehaviour
     private bool canJump = true;
     private bool moveEnabled = true;
     private bool isGrounded = false;
-    private bool isInFollowRange = false;
+    private bool isInFollowRange = true; // Always true now
 
     [Header("Raycast Settings")]
     [Header("Ground Detection")]
@@ -39,7 +37,7 @@ public class CompanionFinal : MonoBehaviour
     public float rayHeight = 22.5f;
 
     [Header("Ranges")]
-    public float followRange = 40;                                                      // follow distance
+    public float followRange = 40;                                                      // follow distance (kept for debug visuals)
 
     public LayerMask whatIsGround;
     [Header("Transforms")]
@@ -132,7 +130,7 @@ public class CompanionFinal : MonoBehaviour
         leftInfoLongGround = Physics2D.Raycast(new Vector2(left.position.x - 2, left.position.y), Vector2.down, longGroundRayLength, whatIsGround);
         rightInfoLongGround = Physics2D.Raycast(new Vector2(right.position.x + 2, right.position.y), Vector2.down, longGroundRayLength, whatIsGround);
 
-        targetRay = Physics2D.Raycast(transform.position, nearestTarget.transform.position, followRange);
+        targetRay = Physics2D.Raycast(transform.position, nearestTarget.transform.position, 1000f); // Increased to very large value
 
         leftInfoUp = Physics2D.Raycast(new Vector2(left.position.x, left.position.y + rayHeight), Vector2.left, wallRayLength, whatIsGround);
         rightInfoUp = Physics2D.Raycast(new Vector2(right.position.x, right.position.y + rayHeight), Vector2.right, wallRayLength, whatIsGround);
@@ -141,7 +139,6 @@ public class CompanionFinal : MonoBehaviour
         rightInfo = Physics2D.Raycast(right.position, Vector2.right, wallRayLength, whatIsGround);
         #endregion
 
-        Vector2 range = new Vector2(followRange, followRange);
         #region Ground Raycasts
         if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == false)
         {
@@ -194,31 +191,18 @@ public class CompanionFinal : MonoBehaviour
         }
         #endregion
 
-        #region Follow Range
-        if (distance.x < followRange && distance.y < followRange && distance.x > -followRange && distance.y > -followRange)
-        {
-            isInFollowRange = true;
-            speed += 2;
-        }
-        else
-        {
-            speed -= 2;
-            isInFollowRange = false;
-        }
+        #region Follow Logic (Modified)
+        isInFollowRange = true; // Always true now
+        speed = maxSpeed; // Always move at max speed
 
-        speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-
-        if (distance.x > 0)
+        // Determine direction based on target position
+        if (nearestTarget != null)
         {
-            if (distance.x < followRange && distance.y < followRange)
+            if (distance.x > 0)
             {
                 movingRight = false;
             }
-        }
-
-        if (distance.x < 0)
-        {
-            if (distance.x > -followRange && distance.y > -followRange)
+            else
             {
                 movingRight = true;
             }
@@ -322,106 +306,143 @@ public class CompanionFinal : MonoBehaviour
     #region DEBUGING
     void OnDrawGizmos()
     {
-        if (DEBUGMODE)
+        if (!DEBUGMODE) return;
+
+        // Early exits for edit mode cases
+        if (!Application.isPlaying)
         {
-            Vector2 dir = new Vector2(Mathf.Cos(rayHeight * Mathf.Deg2Rad), Mathf.Sin(rayHeight * Mathf.Deg2Rad)).normalized;
-            if (rightInfoGround.collider == true)
+            // Draw basic ground/wall rays that don't depend on runtime variables
+            Gizmos.color = Color.gray;
+            if (left != null)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(right.position, new Vector2(right.position.x, right.position.y - groundRayLength));
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(right.position, new Vector2(right.position.x, right.position.y - groundRayLength));
-            }
-            if (leftInfoGround.collider == true)
-            {
-                Gizmos.color = Color.red;
                 Gizmos.DrawLine(left.position, new Vector2(left.position.x, left.position.y - groundRayLength));
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(left.position, new Vector2(left.position.x, left.position.y - groundRayLength));
-            }
-            if (rightInfoLongGround.collider == true)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(new Vector2(right.position.x + 2, right.position.y), new Vector2(right.position.x + 2, right.position.y - longGroundRayLength));
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(new Vector2(right.position.x + 2, right.position.y), new Vector2(right.position.x + 2, right.position.y - longGroundRayLength));
-            }
-            if (leftInfoLongGround.collider == true)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(new Vector2(left.position.x - 2, left.position.y), new Vector2(left.position.x - 2, left.position.y - longGroundRayLength));
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(new Vector2(left.position.x - 2, left.position.y), new Vector2(left.position.x - 2, left.position.y - longGroundRayLength));
-            }
-
-            if (leftInfo.collider == true)
-            {
-                Gizmos.color = Color.red;
+                Gizmos.DrawLine(new Vector2(left.position.x - 2, left.position.y),
+                               new Vector2(left.position.x - 2, left.position.y - longGroundRayLength));
                 Gizmos.DrawLine(left.position, new Vector2(left.position.x - wallRayLength, left.position.y));
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(left.position, new Vector2(left.position.x - wallRayLength, left.position.y));
+                Gizmos.DrawLine(new Vector2(left.position.x, left.position.y + rayHeight),
+                               new Vector2(left.position.x - wallRayLength, left.position.y + rayHeight));
             }
 
-            if (rightInfo.collider == true)
+            if (right != null)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(right.position, new Vector2(right.position.x + wallRayLength, left.position.y));
+                Gizmos.DrawLine(right.position, new Vector2(right.position.x, right.position.y - groundRayLength));
+                Gizmos.DrawLine(new Vector2(right.position.x + 2, right.position.y),
+                               new Vector2(right.position.x + 2, right.position.y - longGroundRayLength));
+                Gizmos.DrawLine(right.position, new Vector2(right.position.x + wallRayLength, right.position.y));
+                Gizmos.DrawLine(new Vector2(right.position.x, right.position.y + rayHeight),
+                               new Vector2(right.position.x + wallRayLength, right.position.y + rayHeight));
             }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(right.position, new Vector2(right.position.x + wallRayLength, left.position.y));
-            }
+            return;
+        }
 
-            if (rightInfoUp.collider == true)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(new Vector2(right.position.x, right.position.y + rayHeight), new Vector2(right.position.x + wallRayLength, right.position.y + rayHeight));
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine((new Vector2(right.position.x, right.position.y + rayHeight)), new Vector2(right.position.x + wallRayLength, right.position.y + rayHeight));
-            }
+        // Only execute the full debug drawing in play mode
+        if (left == null || right == null || nearestTarget == null) return;
 
-            if (leftInfoUp.collider == true)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine((new Vector2(left.position.x, left.position.y + rayHeight)), new Vector2(left.position.x + -wallRayLength, left.position.y + rayHeight));
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine((new Vector2(left.position.x, left.position.y + rayHeight)), new Vector2(left.position.x + -wallRayLength, left.position.y + rayHeight));
-            }
+        // Ground rays
+        if (rightInfoGround.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(right.position, new Vector2(right.position.x, right.position.y - groundRayLength));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(right.position, new Vector2(right.position.x, right.position.y - groundRayLength));
+        }
 
-            if (isInFollowRange)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, nearestTarget.transform.position);
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireCube(transform.position, new Vector3(followRange * 2, followRange * 2, 0));
-            }
-            else
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireCube(transform.position, new Vector3(followRange * 2, followRange * 2, 0));
-            }
+        if (leftInfoGround.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(left.position, new Vector2(left.position.x, left.position.y - groundRayLength));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(left.position, new Vector2(left.position.x, left.position.y - groundRayLength));
+        }
+
+        // Long ground rays
+        if (rightInfoLongGround.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(new Vector2(right.position.x + 2, right.position.y),
+                            new Vector2(right.position.x + 2, right.position.y - longGroundRayLength));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(new Vector2(right.position.x + 2, right.position.y),
+                            new Vector2(right.position.x + 2, right.position.y - longGroundRayLength));
+        }
+
+        if (leftInfoLongGround.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(new Vector2(left.position.x - 2, left.position.y),
+                            new Vector2(left.position.x - 2, left.position.y - longGroundRayLength));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(new Vector2(left.position.x - 2, left.position.y),
+                            new Vector2(left.position.x - 2, left.position.y - longGroundRayLength));
+        }
+
+        // Wall rays
+        if (leftInfo.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(left.position, new Vector2(left.position.x - wallRayLength, left.position.y));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(left.position, new Vector2(left.position.x - wallRayLength, left.position.y));
+        }
+
+        if (rightInfo.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(right.position, new Vector2(right.position.x + wallRayLength, right.position.y));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(right.position, new Vector2(right.position.x + wallRayLength, right.position.y));
+        }
+
+        // Upper wall rays
+        if (rightInfoUp.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(new Vector2(right.position.x, right.position.y + rayHeight),
+                            new Vector2(right.position.x + wallRayLength, right.position.y + rayHeight));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(new Vector2(right.position.x, right.position.y + rayHeight),
+                            new Vector2(right.position.x + wallRayLength, right.position.y + rayHeight));
+        }
+
+        if (leftInfoUp.collider == true)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(new Vector2(left.position.x, left.position.y + rayHeight),
+                            new Vector2(left.position.x - wallRayLength, left.position.y + rayHeight));
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(new Vector2(left.position.x, left.position.y + rayHeight),
+                            new Vector2(left.position.x - wallRayLength, left.position.y + rayHeight));
+        }
+
+        // Target line
+        if (isInFollowRange)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, nearestTarget.transform.position);
         }
     }
     #endregion
