@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections; // Required for IEnumerator
 
 public class MovingPlatformHandler : MonoBehaviour
 {
