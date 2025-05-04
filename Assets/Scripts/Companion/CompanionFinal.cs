@@ -28,9 +28,6 @@ public class CompanionFinal : MonoBehaviour
     private bool moveEnabled = true;
     private bool isGrounded = false;
     private bool isInFollowRange = false;
-    private bool isInAttackRange = false;
-    private bool flee = false;
-    private bool hasTargets = false;
 
     [Header("Raycast Settings")]
     [Header("Ground Detection")]
@@ -43,8 +40,6 @@ public class CompanionFinal : MonoBehaviour
 
     [Header("Ranges")]
     public float followRange = 40;                                                      // follow distance
-    public float attackRange = 10;                                                      // attack distance
-    public float fleeRange = 30;                                                        // fleeing distance
 
     public LayerMask whatIsGround;
     [Header("Transforms")]
@@ -199,19 +194,6 @@ public class CompanionFinal : MonoBehaviour
         }
         #endregion
 
-        #region Attack States
-        if (distance.x < attackRange && distance.y * 1.5f < attackRange && distance.x > -attackRange && distance.y * 1.5f > -attackRange)
-        {
-            isInAttackRange = true;
-        }
-        else isInAttackRange = false;
-        #endregion
-
-        #region Flee
-        if (distance.x < fleeRange && distance.y * 1.5f < fleeRange && distance.x > -fleeRange && distance.y * 1.5f > -fleeRange) flee = true;
-        else flee = false;
-        #endregion
-
         #region Follow Range
         if (distance.x < followRange && distance.y < followRange && distance.x > -followRange && distance.y > -followRange)
         {
@@ -230,8 +212,7 @@ public class CompanionFinal : MonoBehaviour
         {
             if (distance.x < followRange && distance.y < followRange)
             {
-                if (flee) movingRight = true;
-                else movingRight = false;
+                movingRight = false;
             }
         }
 
@@ -239,8 +220,7 @@ public class CompanionFinal : MonoBehaviour
         {
             if (distance.x > -followRange && distance.y > -followRange)
             {
-                if (flee) movingRight = false;
-                else movingRight = true;
+                movingRight = true;
             }
         }
         #endregion
@@ -441,26 +421,6 @@ public class CompanionFinal : MonoBehaviour
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawWireCube(transform.position, new Vector3(followRange * 2, followRange * 2, 0));
-            }
-            if (isInAttackRange)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireCube(transform.position, new Vector3(attackRange * 2, attackRange / 1.5f, 0));
-            }
-            else
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireCube(transform.position, new Vector3(attackRange * 2, attackRange / 1.5f, 0));
-            }
-            if (flee)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireCube(transform.position, new Vector3(fleeRange * 2, fleeRange / 1.5f, 0));
-            }
-            else
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireCube(transform.position, new Vector3(fleeRange * 2, fleeRange / 1.5f, 0));
             }
         }
     }
