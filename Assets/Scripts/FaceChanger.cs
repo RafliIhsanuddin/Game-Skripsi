@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class KaelSkinMovement : MonoBehaviour
+public class FaceChanger : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         

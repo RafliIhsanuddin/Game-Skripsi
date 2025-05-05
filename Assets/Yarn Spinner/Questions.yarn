@@ -15,6 +15,7 @@ tags:
 ---
 Puffkin: Siapa ya yang sebaiknya ku ajak bicara saat merasa tertekan?
     -> Teman atau keluarga
+        <<set_anim "SetIdle">>
         Puffkin: Ide bagus! Makasih ya.
     -> Orang asing di jalan
         Puffkin: Yang benar saja.

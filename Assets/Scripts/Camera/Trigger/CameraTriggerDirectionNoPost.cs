@@ -1,6 +1,5 @@
 using Cinemachine;
 using UnityEngine;
-using System; // Include this for Action
 
 public class CameraTriggerDirectionNoPost : MonoBehaviour
 {

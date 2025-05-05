@@ -5,6 +5,8 @@ public class DialogueTrigger : MonoBehaviour
 {
     public LayerMask kael;
     public DialogueRunner dialogueRunner;
+    public GameObject bubble;
+    public PuffkinAnimator puffkinAnim;
     [SerializeField] private string yarnNode;
 
     // Update is called once per frame
@@ -14,25 +16,20 @@ public class DialogueTrigger : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+                EnableOnlyThisPuffkin();
+
                 dialogueRunner.StartDialogue(yarnNode);
+                bubble.SetActive(false);
             }
         }
     }
 
-    // Visualize the raycast in the Scene view
-    private void OnDrawGizmos()
+    void EnableOnlyThisPuffkin()
     {
-        // Set the color of the Gizmo
-        Gizmos.color = Color.red;
+        foreach (var anim in FindObjectsOfType<PuffkinAnimator>())
+            anim.enabled = false;
 
-        // Define the ray's direction and length
-        Vector2 direction = Vector2.left;
-        float rayLength = 2f;
-
-        // Draw the raycast line
-        Gizmos.DrawRay(transform.position, direction * rayLength);
-
-        // Optional: Draw a sphere at the endpoint of the ray
-        Gizmos.DrawSphere((Vector2)transform.position + direction * rayLength, 0.05f);
+        if (puffkinAnim != null)
+            puffkinAnim.enabled = true;
     }
 }
