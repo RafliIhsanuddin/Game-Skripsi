@@ -7,6 +7,10 @@ TagManager:
   - Ground
   - Trap
   - Checkpoint
+  - Enemy
+  - EnemyProjectile
+  - ImpactFX
+  - Companion
   layers:
   - Default
   - TransparentFX

@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent(typeof(Sprite))]
 public class CompanionFinal : MonoBehaviour
 {
     #region Variables
+    // Animation states
+    private const int STATE_IDLE = 0;
+    private const int STATE_WALKING = 1;
+    private const int STATE_RUNNING = 2;
+    private const int STATE_JUMPING = 3;
+
     [Header("Stats")]
     public float minSpeed = 10;                                                         // determine min speed
     public float maxSpeed = 14;                                                         // determine max speed
@@ -32,6 +36,7 @@ public class CompanionFinal : MonoBehaviour
     private bool moveEnabled = true;
     private bool isGrounded = false;
     private bool isInFollowRange = true; // Always true now
+    private bool isIdle = false; // New flag to track idle state
 
     [Header("Raycast Settings")]
     [Header("Ground Detection")]
@@ -52,9 +57,12 @@ public class CompanionFinal : MonoBehaviour
     public Transform right;                                                             // transform for ray casts
     Vector3 lastPos;                                                                    // last postion of this transform
     Vector2 distance;                                                                   // distance from this to nearest target
-    Animator anim;                                                                      // this animator
+
+    [Header("External Components")]
+    [SerializeField] private Animator animator;                                         // Animator from another GameObject
+    [SerializeField] private SpriteRenderer spriteRenderer;                             // SpriteRenderer from another GameObject
+
     Rigidbody2D rb;                                                                     // this rigidbody2d
-    SpriteRenderer spriteRenderer;                                                      // this sprite renderer
 
     // Raycast hits - now all public so they're visible in inspector
     [Header("Raycast Hits (Read Only)")]
@@ -72,16 +80,27 @@ public class CompanionFinal : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Remove the GetComponent fallbacks since we're requiring these to be set in the inspector
+        if (animator == null)
+        {
+            Debug.LogError("Animator reference is missing! Please assign an Animator from another GameObject.");
+            enabled = false;
+            return;
+        }
+
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer reference is missing! Please assign a SpriteRenderer from another GameObject.");
+            enabled = false;
+            return;
+        }
 
         if (right == null) right = this.transform.GetChild(0);
         if (left == null) left = this.transform.GetChild(1);
 
         canJump = true;
         rb.freezeRotation = true;
-
-        anim.SetBool("IsDead", false);
 
         StartCoroutine(removeDupes());
         StartCoroutine(isStanding());
@@ -129,24 +148,36 @@ public class CompanionFinal : MonoBehaviour
         #region Movement Behavior Based on Distance
         float distanceToPlayer = Vector2.Distance(transform.position, nearestTarget.transform.position);
 
-        // Always use runSpeed as base movement speed
-        speed = runSpeed;
-
-        if (distanceToPlayer <= walkDistanceThreshold)
+        // Check for idle state first
+        if (distanceToPlayer <= idleDistanceThreshold && isGrounded)
         {
-            // Switch to walk speed when close
-            speed = walkSpeed;
-        }
-
-        if (distanceToPlayer <= idleDistanceThreshold)
-        {
-            // Stop moving when very close
-            speed = 0;
-            moveEnabled = false;
+            // Immediately set to idle state when in range and grounded
+            if (!isIdle)
+            {
+                isIdle = true;
+                moveEnabled = false;
+                speed = 0;
+                animator.SetInteger("state", STATE_IDLE);
+            }
         }
         else
         {
-            moveEnabled = true;
+            // Only change state if we were previously idle
+            if (isIdle)
+            {
+                isIdle = false;
+                moveEnabled = true;
+            }
+
+            // Set movement speed based on distance
+            if (distanceToPlayer <= walkDistanceThreshold)
+            {
+                speed = walkSpeed;
+            }
+            else
+            {
+                speed = runSpeed;
+            }
         }
 
         // Determine direction based on target position
@@ -180,38 +211,43 @@ public class CompanionFinal : MonoBehaviour
         #endregion
 
         #region Ground Raycasts
-        if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == false)
+        // Only check for jumps if not idle
+        if (!isIdle)
         {
-            movingRight = true;
-            isGrounded = true;
-            if (leftInfo.collider == false && canJump == true) StartCoroutine(Jump("Large", false, 2));
-        }
-        else if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == true)
-        {
-            movingRight = false;
-            StartCoroutine(Jump("Small", false, 2));
-            isGrounded = true;
-        }
+            if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == false)
+            {
+                movingRight = true;
+                isGrounded = true;
+                if (leftInfo.collider == false && canJump == true) StartCoroutine(Jump("Large", false, 2));
+            }
+            else if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == true)
+            {
+                movingRight = false;
+                StartCoroutine(Jump("Small", false, 2));
+                isGrounded = true;
+            }
 
-        if (leftInfoGround.collider == true && rightInfoGround.collider == true) isGrounded = true;
-        else isGrounded = false;
+            if (leftInfoGround.collider == true && rightInfoGround.collider == true) isGrounded = true;
+            else isGrounded = false;
 
-        if (leftInfoGround.collider == true && rightInfoGround.collider == false && rightInfoLongGround.collider == false)
-        {
-            movingRight = false;
-            isGrounded = true;
-            if (rightInfo.collider == false && canJump == true) StartCoroutine(Jump("Large", true, 2));
-        }
-        else if (leftInfoGround.collider == true && rightInfoGround.collider == false && rightInfoLongGround.collider == true)
-        {
-            movingRight = true;
-            StartCoroutine(Jump("Small", true, 2));
-            isGrounded = true;
+            if (leftInfoGround.collider == true && rightInfoGround.collider == false && rightInfoLongGround.collider == false)
+            {
+                movingRight = false;
+                isGrounded = true;
+                if (rightInfo.collider == false && canJump == true) StartCoroutine(Jump("Large", true, 2));
+            }
+            else if (leftInfoGround.collider == true && rightInfoGround.collider == false && rightInfoLongGround.collider == true)
+            {
+                movingRight = true;
+                StartCoroutine(Jump("Small", true, 2));
+                isGrounded = true;
+            }
         }
         #endregion
 
         #region Wall Raycasts
-        if (leftInfoGround.collider == true && rightInfoGround.collider == true)
+        // Only check for wall jumps if not idle
+        if (!isIdle && leftInfoGround.collider == true && rightInfoGround.collider == true)
         {
             if (leftInfo.collider == true && leftInfo.distance <= wallRayLength / 1.5f && leftInfoUp.collider == false && !movingRight)
                 StartCoroutine(Jump("Large", movingRight, 2));
@@ -231,6 +267,19 @@ public class CompanionFinal : MonoBehaviour
         }
         #endregion
 
+        // Handle jumping/falling animation
+        if (!isGrounded)
+        {
+            animator.SetInteger("state", STATE_JUMPING);
+            // If we're in the air, we can't be idle
+            isIdle = false;
+        }
+        // Only set to idle if we're grounded and in range
+        else if (isIdle)
+        {
+            animator.SetInteger("state", STATE_IDLE);
+        }
+
         if (rb.linearVelocity.y < 0) rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (2.5f - 1) * Time.deltaTime;
         else if (rb.linearVelocity.y > 0 && !isGrounded) rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (2 - 1) * Time.deltaTime;
     }
@@ -238,24 +287,50 @@ public class CompanionFinal : MonoBehaviour
     void FixedUpdate()
     {
         #region Movement
-        anim.SetBool("isGrounded", isGrounded);
-        if (movingRight && moveEnabled && isGrounded)
+        if (!isGrounded)
         {
-            anim.SetBool("moveEnabled", true);
-            spriteRenderer.flipX = false;
-            Vector2 direction = ((Vector2)Vector2.right).normalized;
-            Vector2 force = direction * speed * Time.deltaTime;
-            rb.MovePosition(rb.position + force);
-            if (direction.x > 0) jumpRight = true;
+            // Jumping state is already set in Update
+            return;
         }
-        else if (!movingRight && moveEnabled && isGrounded)
+
+        if (!isIdle) // Only move if not idle
         {
-            anim.SetBool("moveEnabled", true);
-            spriteRenderer.flipX = true;
-            Vector2 direction = ((Vector2)Vector2.left).normalized;
-            Vector2 force = direction * speed * Time.deltaTime;
-            rb.MovePosition(rb.position + force);
-            if (direction.x < 0) jumpRight = false;
+            if (movingRight && moveEnabled)
+            {
+                spriteRenderer.flipX = false;
+                Vector2 direction = ((Vector2)Vector2.right).normalized;
+                Vector2 force = direction * speed * Time.deltaTime;
+                rb.MovePosition(rb.position + force);
+                if (direction.x > 0) jumpRight = true;
+
+                // Set animation state based on speed
+                if (speed == walkSpeed)
+                {
+                    animator.SetInteger("state", STATE_WALKING);
+                }
+                else
+                {
+                    animator.SetInteger("state", STATE_RUNNING);
+                }
+            }
+            else if (!movingRight && moveEnabled)
+            {
+                spriteRenderer.flipX = true;
+                Vector2 direction = ((Vector2)Vector2.left).normalized;
+                Vector2 force = direction * speed * Time.deltaTime;
+                rb.MovePosition(rb.position + force);
+                if (direction.x < 0) jumpRight = false;
+
+                // Set animation state based on speed
+                if (speed == walkSpeed)
+                {
+                    animator.SetInteger("state", STATE_WALKING);
+                }
+                else
+                {
+                    animator.SetInteger("state", STATE_RUNNING);
+                }
+            }
         }
         #endregion
     }
@@ -265,35 +340,25 @@ public class CompanionFinal : MonoBehaviour
     {
         lastPos = transform.position;
         yield return new WaitForSeconds(1);
-        if (lastPos.x == transform.position.x && lastPos.y == transform.position.y)
+        if (lastPos.x == transform.position.x && lastPos.y == transform.position.y && isGrounded)
         {
-            anim.SetBool("moveEnabled", false);
-            StartCoroutine(Jump("Small", movingRight, 2));
+            animator.SetInteger("state", STATE_IDLE);
+            // Only jump if not idle and not in idle range
+            if (!isIdle) StartCoroutine(Jump("Small", movingRight, 2));
         }
-        else anim.SetBool("moveEnabled", true);
         StartCoroutine(isStanding());
-    }
-    #endregion
-
-    #region Die
-    IEnumerator Die()
-    {
-        moveEnabled = false;
-        canJump = false;
-        speed = 0;
-        jumpHeight = 0;
-        anim.SetTrigger("Died");
-        anim.SetBool("IsDead", true);
-        Destroy(gameObject, 3);
-        yield return null;
     }
     #endregion
 
     #region Jump
     IEnumerator Jump(string size, bool dirRight, float wait)
     {
+        // Don't jump if we're idle
+        if (isIdle) yield break;
+
         isGrounded = false;
-        anim.SetTrigger("Jump");
+        isIdle = false; // Can't be idle while jumping
+        animator.SetInteger("state", STATE_JUMPING);
         speed += 2;
         movingRight = true;
 
