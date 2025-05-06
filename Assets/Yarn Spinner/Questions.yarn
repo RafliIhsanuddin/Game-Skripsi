@@ -43,6 +43,7 @@ Puffkin: Bagaimana seseorang dengan depresi biasanya merasakan energi mereka?
         Puffkin: Itu kurang tepat, biasanya energi mereka justru menurun.
     -> Energi rendah atau merasa lelah secara terus-menerus
         Puffkin: Betul! Biasanya orang dengan depresi merasa seperti itu.
+        <<set_blueberry_anim "Idle">>
 ===
 
 title: 5
