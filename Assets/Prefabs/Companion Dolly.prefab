@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1615070144402101826}
   - component: {fileID: 8858317684323375176}
   - component: {fileID: 8654425110069475215}
-  - component: {fileID: 6200360487913712658}
+  - component: {fileID: 8577564992541530879}
   m_Layer: 0
   m_Name: Companion Dolly
   m_TagString: Enemy
@@ -112,7 +112,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6200360487913712658
+--- !u!114 &8577564992541530879
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,24 +121,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 2351956510067246416}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b584817d8e34de846aeb560a497873e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 99fe0271ad5ea82449ab9e3366f39052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   minSpeed: 10
   maxSpeed: 14
-  jumpHeight: 50
-  walkDistanceThreshold: 30
-  idleDistanceThreshold: 12
+  jumpHeight: 8
+  walkDistanceThreshold: 5
+  idleDistanceThreshold: 1
   runSpeed: 14
   walkSpeed: 7
-  DEBUGMODE: 1
-  groundRayLength: 4.16
-  longGroundRayLength: 25.4
-  wallRayLength: 58.6
-  rayHeight: 51.2
+  DEBUGMODE: 0
+  groundRayLength: 3.5
+  longGroundRayLength: 14
+  wallRayLength: 30
+  rayHeight: 22.5
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   targets: []
   left: {fileID: 7753650015847493691}
   right: {fileID: 5950029149064608481}
