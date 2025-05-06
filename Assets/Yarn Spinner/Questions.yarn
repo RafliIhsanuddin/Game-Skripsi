@@ -4,6 +4,7 @@ tags:
 Puffkin: Hmm.. Temanku merasa tidak berharga. Seharusmya apa yang kulakukan ya?
     -> Dengarkan dan beri dukungan
         Puffkin: Ide bagus! Makasih ya.
+        <<set_pumpkin_anim "Happy">>
     -> Abaikan saja
         Puffkin: Kok jahat sekali sih.
     -> Bilang bahwa itu tidak masalah
@@ -51,6 +52,7 @@ title: 5
 Puffkin: Langkah pertama yang direkomendasikan untuk mengatasi depresi adalah?
     -> Berbicara dengan profesional kesehatan mental
         Puffkin: Benar! Itu adalah langkah awal yang sangat dianjurkan.
+        <<set_cherry_anim "Happy">>
     -> Membeli suplemen tanpa konsultasi
         Puffkin: Hmm, itu bukan langkah yang disarankan.
 ===
@@ -60,6 +62,7 @@ title: 6
 Puffkin: Apa tujuan utama dari mindfulness?
     -> Menjadi lebih sadar terhadap saat ini
         Puffkin: Betul! Itu adalah inti dari mindfulness.
+        <<set_turnip_anim "Happy">>
     -> Mengabaikan pikiran dan perasaan
         Puffkin: Itu tidak sesuai dengan konsep mindfulness.
 ===
@@ -69,6 +72,7 @@ title: 7
 Puffkin: Apa yang sering digunakan dalam latihan mindfulness?
     -> Perhatian pada pernapasan
         Puffkin: Betul! Pernapasan adalah fokus utama dalam mindfulness.
+        <<set_carrot_anim "Happy">>
     -> Membuat daftar tugas harian
         Puffkin: Itu bukan bagian dari latihan mindfulness.
 ===
