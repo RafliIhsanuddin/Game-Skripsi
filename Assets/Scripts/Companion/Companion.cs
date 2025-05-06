@@ -16,35 +16,41 @@ public class Companion : MonoBehaviour
     private const int STATE_JUMPING = 3;
 
     [Header("Stats")]
-    public float jumpHeight = 8f;                                                       // the height we can jump
-    public float maxJumpHeight = 12f;                                                  // maximum height for upward jumps
+    public float jumpHeight = 8f;
+    public float maxJumpHeight = 12f;
 
     [Header("Movement Settings")]
-    [SerializeField] private float walkDistanceThreshold = 5f;                         // Distance to switch to walking
-    [SerializeField] private float idleDistanceThreshold = 1f;                         // Distance to switch to idle
-    [SerializeField] private float runSpeed = 14f;                                     // Speed when running
-    [SerializeField] private float walkSpeed = 7f;                                     // Speed when walking
+    [SerializeField] private float walkDistanceThreshold = 5f;
+    [SerializeField] private float idleDistanceThreshold = 1f;
+    [SerializeField] private float runSpeed = 14f;
+    [SerializeField] private float walkSpeed = 7f;
+
+    [Header("State Transition Durations")]
+    [SerializeField] private float idleToWalkDuration = 0.2f;
+    [SerializeField] private float walkToRunDuration = 0.3f;
+    [SerializeField] private float runToWalkDuration = 0.2f;
+    [SerializeField] private float walkToIdleDuration = 0.15f;
 
     [Header("Jump Settings")]
-    [SerializeField] private float upwardRayLength = 5f;                               // Length of upward raycast
-    [SerializeField] private float heightDifferenceThreshold = 2f;                     // How much higher Kael needs to be to trigger jump
-    [SerializeField] private float obstacleWaitTime = 1f;                              // Time to wait when obstacle is detected above
-    [SerializeField] private float jumpCooldown = 0.5f;                                // Time between jumps
+    [SerializeField] private float upwardRayLength = 5f;
+    [SerializeField] private float heightDifferenceThreshold = 2f;
+    [SerializeField] private float obstacleWaitTime = 1f;
+    [SerializeField] private float jumpCooldown = 0.5f;
 
     [Header("Ground Detection")]
-    [SerializeField] private float groundRayLength = 3.5f;                             // the length for ray casts that face the ground
-    [SerializeField] private float longGroundRayLength = 14f;                          // the length for long ground ray casts
+    [SerializeField] private float groundRayLength = 3.5f;
+    [SerializeField] private float longGroundRayLength = 14f;
 
     [Header("Wall Detection")]
-    [SerializeField] private float wallRayLength = 30f;                                // the length for ray casts that face the wall
+    [SerializeField] private float wallRayLength = 30f;
     [SerializeField] private float rayHeight = 22.5f;
 
     [Header("DEBUGING")]
     public bool DEBUGMODE = false;
 
     [Header("Components")]
-    [SerializeField] private Animator animator;                                        // Animator from another GameObject
-    [SerializeField] private SpriteRenderer spriteRenderer;                            // SpriteRenderer from another GameObject
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private LayerMask whatIsGround;
 
     // Internal variables
@@ -56,6 +62,9 @@ public class Companion : MonoBehaviour
     private bool isIdle = false;
     private bool waitingForObstacle = false;
     private bool isJumpingUpward = false;
+    private int currentState = STATE_IDLE;
+    private float stateTransitionTimer = 0f;
+    private int targetState = STATE_IDLE;
 
     private Rigidbody2D rb;
     private GameObject nearestTarget;
@@ -112,6 +121,7 @@ public class Companion : MonoBehaviour
         HandleJumpLogic();
         UpdateAnimation();
         ApplyGravityModifiers();
+        HandleStateTransitions();
     }
 
     void FixedUpdate()
@@ -134,6 +144,7 @@ public class Companion : MonoBehaviour
                 isIdle = true;
                 moveEnabled = false;
                 speed = 0;
+                SetTargetState(STATE_IDLE);
             }
         }
         else
@@ -146,7 +157,12 @@ public class Companion : MonoBehaviour
             }
 
             // Set movement speed based on distance
-            speed = distanceToPlayer <= walkDistanceThreshold ? walkSpeed : runSpeed;
+            float newSpeed = distanceToPlayer <= walkDistanceThreshold ? walkSpeed : runSpeed;
+            if (newSpeed != speed)
+            {
+                speed = newSpeed;
+                SetTargetState(speed == walkSpeed ? STATE_WALKING : STATE_RUNNING);
+            }
         }
 
         // Update direction based on target position
@@ -257,18 +273,58 @@ public class Companion : MonoBehaviour
 
     private void UpdateAnimation()
     {
+        // Jumping has highest priority
         if (!isGrounded)
         {
+            currentState = STATE_JUMPING;
             animator.SetInteger("state", STATE_JUMPING);
-            isIdle = false;
+            return;
         }
-        else if (isIdle)
+
+        // Apply the current state (which may be transitioning)
+        animator.SetInteger("state", currentState);
+    }
+
+    private void HandleStateTransitions()
+    {
+        if (currentState == targetState || !isGrounded) return;
+
+        stateTransitionTimer -= Time.deltaTime;
+
+        if (stateTransitionTimer <= 0f)
         {
-            animator.SetInteger("state", STATE_IDLE);
+            currentState = targetState;
+        }
+    }
+
+    private void SetTargetState(int newState)
+    {
+        if (targetState == newState) return;
+
+        targetState = newState;
+
+        // Set appropriate transition time based on current and target states
+        if (currentState == STATE_IDLE && targetState == STATE_WALKING)
+        {
+            stateTransitionTimer = idleToWalkDuration;
+        }
+        else if (currentState == STATE_WALKING && targetState == STATE_RUNNING)
+        {
+            stateTransitionTimer = walkToRunDuration;
+        }
+        else if (currentState == STATE_RUNNING && targetState == STATE_WALKING)
+        {
+            stateTransitionTimer = runToWalkDuration;
+        }
+        else if (currentState == STATE_WALKING && targetState == STATE_IDLE)
+        {
+            stateTransitionTimer = walkToIdleDuration;
         }
         else
         {
-            animator.SetInteger("state", speed == walkSpeed ? STATE_WALKING : STATE_RUNNING);
+            // Default transition (immediate)
+            stateTransitionTimer = 0f;
+            currentState = targetState;
         }
     }
 
@@ -293,7 +349,7 @@ public class Companion : MonoBehaviour
 
         if (Vector3.Distance(lastPos, transform.position) < 0.1f && isGrounded && !waitingForObstacle)
         {
-            animator.SetInteger("state", STATE_IDLE);
+            SetTargetState(STATE_IDLE);
             if (!isIdle) StartCoroutine(Jump("Small", movingRight, jumpHeight / 2));
         }
 
@@ -306,7 +362,7 @@ public class Companion : MonoBehaviour
         isIdle = true;
         moveEnabled = false;
         speed = 0;
-        animator.SetInteger("state", STATE_IDLE);
+        SetTargetState(STATE_IDLE);
 
         yield return new WaitForSeconds(obstacleWaitTime);
 
@@ -331,7 +387,8 @@ public class Companion : MonoBehaviour
         canJump = false;
         isGrounded = false;
         isIdle = false;
-        animator.SetInteger("state", STATE_JUMPING);
+        currentState = STATE_JUMPING;
+        targetState = STATE_JUMPING;
 
         Vector2 jumpVelocity = Vector2.zero;
 
