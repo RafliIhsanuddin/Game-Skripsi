@@ -5,7 +5,6 @@ public class PuffkinAnimator : MonoBehaviour
 {
     public Animator animator;
 
-    [YarnCommand("set_anim")]
     public void SetAnimation(string animTrigger)
     {
         if (animator == null)
@@ -14,6 +13,7 @@ public class PuffkinAnimator : MonoBehaviour
             return;
         }
 
+        Debug.Log($"TRIGGERING: {animTrigger} on {gameObject.name}");
         animator.SetTrigger(animTrigger);
     }
 }

@@ -32,4 +32,20 @@ public class DialogueTrigger : MonoBehaviour
         if (puffkinAnim != null)
             puffkinAnim.enabled = true;
     }
+
+    private void OnEnable()
+    {
+        if (dialogueRunner != null && puffkinAnim != null)
+        {
+            dialogueRunner.AddCommandHandler<string>("set_anim", puffkinAnim.SetAnimation);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (dialogueRunner != null)
+        {
+            dialogueRunner.RemoveCommandHandler("set_anim");
+        }
+    }
 }
