@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(CapsuleCollider2D))]
 public class Companion : MonoBehaviour
 {
     #region Variables
@@ -33,13 +33,16 @@ public class Companion : MonoBehaviour
 
     [Header("Jump Settings")]
     [SerializeField] private float upwardRayLength = 5f;
-    [SerializeField] private float heightDifferenceThreshold = 2f;
     [SerializeField] private float obstacleWaitTime = 1f;
     [SerializeField] private float jumpCooldown = 0.5f;
+    [SerializeField] private float groundCheckDelayAfterJump = 0.2f;
+    [SerializeField] private float upwardRayCircleRadius = 0.5f; // New variable for debug circle radius
 
     [Header("Ground Detection")]
     [SerializeField] private float groundRayLength = 3.5f;
     [SerializeField] private float longGroundRayLength = 14f;
+    [SerializeField] private float groundRayHorizontalOffset = 0.5f;
+    [SerializeField] private float longGroundRayHorizontalOffset = 1f;
 
     [Header("Wall Detection")]
     [SerializeField] private float wallRayLength = 30f;
@@ -65,8 +68,10 @@ public class Companion : MonoBehaviour
     private int currentState = STATE_IDLE;
     private float stateTransitionTimer = 0f;
     private int targetState = STATE_IDLE;
+    private bool wasGroundedLastFrame = false;
 
     private Rigidbody2D rb;
+    private CapsuleCollider2D capsuleCollider;
     private GameObject nearestTarget;
     private Transform left;
     private Transform right;
@@ -86,6 +91,7 @@ public class Companion : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        capsuleCollider = GetComponent<CapsuleCollider2D>();
 
         // Get child transforms for raycasting
         if (right == null) right = transform.GetChild(0);
@@ -118,7 +124,13 @@ public class Companion : MonoBehaviour
 
         HandleMovementState();
         UpdateRaycasts();
-        HandleJumpLogic();
+
+        // Only handle jump logic if we're not in idle state
+        if (!isIdle)
+        {
+            HandleJumpLogic();
+        }
+
         UpdateAnimation();
         ApplyGravityModifiers();
         HandleStateTransitions();
@@ -136,7 +148,7 @@ public class Companion : MonoBehaviour
     {
         float distanceToPlayer = Vector2.Distance(transform.position, nearestTarget.transform.position);
 
-        // Check for idle state
+        // Check for idle state - this now has highest priority
         if (distanceToPlayer <= idleDistanceThreshold && isGrounded && !waitingForObstacle)
         {
             if (!isIdle)
@@ -145,7 +157,12 @@ public class Companion : MonoBehaviour
                 moveEnabled = false;
                 speed = 0;
                 SetTargetState(STATE_IDLE);
+                // Cancel any jump in progress
+                StopAllCoroutines();
+                canJump = true;
+                isJumpingUpward = false;
             }
+            return; // Exit early if we're in idle state
         }
         else
         {
@@ -161,7 +178,7 @@ public class Companion : MonoBehaviour
             if (newSpeed != speed)
             {
                 speed = newSpeed;
-                SetTargetState(speed == walkSpeed ? STATE_WALKING : STATE_RUNNING);
+                SetTargetState(newSpeed == walkSpeed ? STATE_WALKING : STATE_RUNNING);
             }
         }
 
@@ -174,17 +191,25 @@ public class Companion : MonoBehaviour
 
     private void UpdateRaycasts()
     {
+        // Calculate raycast positions with offsets
+        Vector2 leftGroundPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y);
+        Vector2 rightGroundPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y);
+        Vector2 leftLongGroundPos = new Vector2(transform.position.x - longGroundRayHorizontalOffset, transform.position.y);
+        Vector2 rightLongGroundPos = new Vector2(transform.position.x + longGroundRayHorizontalOffset, transform.position.y);
+
         // Ground detection
-        leftInfoGround = Physics2D.Raycast(left.position, Vector2.down, groundRayLength, whatIsGround);
-        rightInfoGround = Physics2D.Raycast(right.position, Vector2.down, groundRayLength, whatIsGround);
-        leftInfoLongGround = Physics2D.Raycast(new Vector2(left.position.x - 2, left.position.y), Vector2.down, longGroundRayLength, whatIsGround);
-        rightInfoLongGround = Physics2D.Raycast(new Vector2(right.position.x + 2, right.position.y), Vector2.down, longGroundRayLength, whatIsGround);
+        leftInfoGround = Physics2D.Raycast(leftGroundPos, Vector2.down, groundRayLength, whatIsGround);
+        rightInfoGround = Physics2D.Raycast(rightGroundPos, Vector2.down, groundRayLength, whatIsGround);
+        leftInfoLongGround = Physics2D.Raycast(leftLongGroundPos, Vector2.down, longGroundRayLength, whatIsGround);
+        rightInfoLongGround = Physics2D.Raycast(rightLongGroundPos, Vector2.down, longGroundRayLength, whatIsGround);
 
         // Wall detection
-        leftInfoUp = Physics2D.Raycast(new Vector2(left.position.x, left.position.y + rayHeight), Vector2.left, wallRayLength, whatIsGround);
-        rightInfoUp = Physics2D.Raycast(new Vector2(right.position.x, right.position.y + rayHeight), Vector2.right, wallRayLength, whatIsGround);
-        leftInfo = Physics2D.Raycast(left.position, Vector2.left, wallRayLength, whatIsGround);
-        rightInfo = Physics2D.Raycast(right.position, Vector2.right, wallRayLength, whatIsGround);
+        Vector2 leftWallPos = new Vector2(transform.position.x, transform.position.y + rayHeight);
+        Vector2 rightWallPos = new Vector2(transform.position.x, transform.position.y + rayHeight);
+        leftInfoUp = Physics2D.Raycast(leftWallPos, Vector2.left, wallRayLength, whatIsGround);
+        rightInfoUp = Physics2D.Raycast(rightWallPos, Vector2.right, wallRayLength, whatIsGround);
+        leftInfo = Physics2D.Raycast(leftGroundPos, Vector2.left, wallRayLength, whatIsGround);
+        rightInfo = Physics2D.Raycast(rightGroundPos, Vector2.right, wallRayLength, whatIsGround);
 
         // Upward detection
         upwardInfo = Physics2D.Raycast(transform.position, Vector2.up, upwardRayLength, whatIsGround);
@@ -197,34 +222,23 @@ public class Companion : MonoBehaviour
     {
         if (isIdle || waitingForObstacle || !canJump || !isGrounded) return;
 
-        // Check if player is significantly above us
-        bool playerIsAbove = nearestTarget.transform.position.y > transform.position.y + heightDifferenceThreshold;
+        // Calculate position of debug circle at end of upward ray
+        Vector2 circleCenter = (Vector2)transform.position + Vector2.up * upwardRayLength;
 
-        if (playerIsAbove)
+        // Check if the debug circle overlaps with the player
+        bool playerInCircle = Vector2.Distance(circleCenter, nearestTarget.transform.position) <= upwardRayCircleRadius;
+
+        // Check if there's an obstacle above AND the debug circle overlaps with the player
+        if (upwardInfo.collider != null && playerInCircle)
         {
-            // Check if there's an obstacle above
-            if (upwardInfo.collider != null)
+            // Wait before attempting to jump over obstacle
+            if (!waitingForObstacle)
             {
-                // Wait before attempting to jump over obstacle
-                if (!waitingForObstacle)
-                {
-                    StartCoroutine(WaitUnderObstacle());
-                }
-            }
-            else
-            {
-                // Calculate required jump height
-                float heightDifference = nearestTarget.transform.position.y - transform.position.y;
-                float requiredJumpHeight = Mathf.Clamp(heightDifference * 1.2f, jumpHeight, maxJumpHeight);
-
-                // Perform upward jump
-                StartCoroutine(Jump("Up", movingRight, requiredJumpHeight));
-                isJumpingUpward = true;
+                StartCoroutine(WaitUnderObstacle());
             }
         }
-
-        // Handle edge jumps
-        if (!isJumpingUpward)
+        // Handle edge jumps (only if not jumping upward)
+        else if (!isJumpingUpward)
         {
             if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == false)
             {
@@ -244,8 +258,8 @@ public class Companion : MonoBehaviour
             }
         }
 
-        // Handle wall jumps
-        if (isGrounded)
+        // Handle wall jumps (only if not jumping upward)
+        if (isGrounded && !isJumpingUpward)
         {
             if (leftInfo.collider == true && leftInfo.distance <= wallRayLength / 1.5f && leftInfoUp.collider == false && !movingRight)
                 StartCoroutine(Jump("Large", movingRight, jumpHeight));
@@ -273,8 +287,8 @@ public class Companion : MonoBehaviour
 
     private void UpdateAnimation()
     {
-        // Jumping has highest priority
-        if (!isGrounded)
+        // Jumping has highest priority, unless we're in idle state
+        if (!isGrounded && !isIdle)
         {
             currentState = STATE_JUMPING;
             animator.SetInteger("state", STATE_JUMPING);
@@ -367,7 +381,10 @@ public class Companion : MonoBehaviour
         yield return new WaitForSeconds(obstacleWaitTime);
 
         // After waiting, check if we still need to jump
-        if (nearestTarget.transform.position.y > transform.position.y + heightDifferenceThreshold &&
+        Vector2 circleCenter = (Vector2)transform.position + Vector2.up * upwardRayLength;
+        bool playerInCircle = Vector2.Distance(circleCenter, nearestTarget.transform.position) <= upwardRayCircleRadius;
+
+        if (upwardInfo.collider != null && playerInCircle &&
             isGrounded && canJump)
         {
             float heightDifference = nearestTarget.transform.position.y - transform.position.y;
@@ -382,7 +399,7 @@ public class Companion : MonoBehaviour
 
     IEnumerator Jump(string size, bool dirRight, float jumpForce)
     {
-        if (!canJump) yield break;
+        if (!canJump || isIdle) yield break; // Don't jump if we're in idle state
 
         canJump = false;
         isGrounded = false;
@@ -401,7 +418,7 @@ public class Companion : MonoBehaviour
                 jumpVelocity = new Vector2(dirRight ? jumpForce / 2 : -jumpForce / 2, jumpForce / 2);
                 break;
             case "Up":
-                jumpVelocity = new Vector2(0, jumpForce);
+                jumpVelocity = new Vector2(0, jumpForce); // Straight up
                 isJumpingUpward = true;
                 break;
         }
@@ -418,7 +435,7 @@ public class Companion : MonoBehaviour
     void OnDrawGizmos()
     {
         if (!DEBUGMODE) return;
-        if (nearestTarget == null || left == null || right == null) return;
+        if (nearestTarget == null) return;
 
         // Draw distance thresholds
         Gizmos.color = new Color(1, 1, 0, 0.3f);
@@ -431,39 +448,47 @@ public class Companion : MonoBehaviour
         Gizmos.color = upwardInfo.collider ? Color.green : Color.red;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.up * upwardRayLength);
 
+        // Draw debug circle at end of upward ray
+        Vector2 circleCenter = (Vector2)transform.position + Vector2.up * upwardRayLength;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(circleCenter, upwardRayCircleRadius);
+
+        // Calculate ray positions for visualization
+        Vector2 leftGroundPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y);
+        Vector2 rightGroundPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y);
+        Vector2 leftLongGroundPos = new Vector2(transform.position.x - longGroundRayHorizontalOffset, transform.position.y);
+        Vector2 rightLongGroundPos = new Vector2(transform.position.x + longGroundRayHorizontalOffset, transform.position.y);
+
         // Ground rays
         Gizmos.color = leftInfoGround.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(left.position, left.position + Vector3.down * groundRayLength);
+        Gizmos.DrawLine(leftGroundPos, leftGroundPos + Vector2.down * groundRayLength);
 
         Gizmos.color = rightInfoGround.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(right.position, right.position + Vector3.down * groundRayLength);
+        Gizmos.DrawLine(rightGroundPos, rightGroundPos + Vector2.down * groundRayLength);
 
         // Long ground rays
-        Vector3 longLeftPos = new Vector3(left.position.x - 2, left.position.y, left.position.z);
-        Vector3 longRightPos = new Vector3(right.position.x + 2, right.position.y, right.position.z);
-
         Gizmos.color = leftInfoLongGround.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(longLeftPos, longLeftPos + Vector3.down * longGroundRayLength);
+        Gizmos.DrawLine(leftLongGroundPos, leftLongGroundPos + Vector2.down * longGroundRayLength);
 
         Gizmos.color = rightInfoLongGround.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(longRightPos, longRightPos + Vector3.down * longGroundRayLength);
+        Gizmos.DrawLine(rightLongGroundPos, rightLongGroundPos + Vector2.down * longGroundRayLength);
 
         // Wall rays
         Gizmos.color = leftInfo.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(left.position, left.position + Vector3.left * wallRayLength);
+        Gizmos.DrawLine(leftGroundPos, leftGroundPos + Vector2.left * wallRayLength);
 
         Gizmos.color = rightInfo.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(right.position, right.position + Vector3.right * wallRayLength);
+        Gizmos.DrawLine(rightGroundPos, rightGroundPos + Vector2.right * wallRayLength);
 
         // Upper wall rays
-        Vector3 upperLeftPos = new Vector3(left.position.x, left.position.y + rayHeight, left.position.z);
-        Vector3 upperRightPos = new Vector3(right.position.x, right.position.y + rayHeight, right.position.z);
+        Vector2 leftWallPos = new Vector2(transform.position.x, transform.position.y + rayHeight);
+        Vector2 rightWallPos = new Vector2(transform.position.x, transform.position.y + rayHeight);
 
         Gizmos.color = leftInfoUp.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(upperLeftPos, upperLeftPos + Vector3.left * wallRayLength);
+        Gizmos.DrawLine(leftWallPos, leftWallPos + Vector2.left * wallRayLength);
 
         Gizmos.color = rightInfoUp.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(upperRightPos, upperRightPos + Vector3.right * wallRayLength);
+        Gizmos.DrawLine(rightWallPos, rightWallPos + Vector2.right * wallRayLength);
 
         // Target line
         Gizmos.color = new Color(0, 1, 1, 0.5f);
