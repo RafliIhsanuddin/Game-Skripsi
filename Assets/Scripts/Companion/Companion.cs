@@ -24,6 +24,7 @@ public class Companion : MonoBehaviour
     [SerializeField] private float idleDistanceThreshold = 1f;
     [SerializeField] private float runSpeed = 14f;
     [SerializeField] private float walkSpeed = 7f;
+    [SerializeField] private float movementSmoothing = 0.05f;
 
     [Header("State Transition Durations")]
     [SerializeField] private float idleToWalkDuration = 0.2f;
@@ -36,7 +37,7 @@ public class Companion : MonoBehaviour
     [SerializeField] private float obstacleWaitTime = 1f;
     [SerializeField] private float jumpCooldown = 0.5f;
     [SerializeField] private float groundCheckDelayAfterJump = 0.2f;
-    [SerializeField] private float upwardRayCircleRadius = 0.5f; // New variable for debug circle radius
+    [SerializeField] private float upwardRayCircleRadius = 0.5f;
 
     [Header("Ground Detection")]
     [SerializeField] private float groundRayLength = 3.5f;
@@ -68,7 +69,7 @@ public class Companion : MonoBehaviour
     private int currentState = STATE_IDLE;
     private float stateTransitionTimer = 0f;
     private int targetState = STATE_IDLE;
-    private bool wasGroundedLastFrame = false;
+    private Vector2 currentVelocity = Vector2.zero;
 
     private Rigidbody2D rb;
     private CapsuleCollider2D capsuleCollider;
@@ -138,7 +139,7 @@ public class Companion : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isGrounded || waitingForObstacle || isIdle) return;
+        if (!isGrounded || waitingForObstacle) return;
 
         HandleMovement();
     }
@@ -161,6 +162,7 @@ public class Companion : MonoBehaviour
                 StopAllCoroutines();
                 canJump = true;
                 isJumpingUpward = false;
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Stop horizontal movement
             }
             return; // Exit early if we're in idle state
         }
@@ -182,10 +184,15 @@ public class Companion : MonoBehaviour
             }
         }
 
-        // Update direction based on target position
-        if (nearestTarget != null)
+        // Only update direction when not idle
+        if (!isIdle && nearestTarget != null)
         {
-            movingRight = (nearestTarget.transform.position.x - transform.position.x) >= 0;
+            bool newDirection = (nearestTarget.transform.position.x - transform.position.x) >= 0;
+            if (newDirection != movingRight)
+            {
+                movingRight = newDirection;
+                spriteRenderer.flipX = !movingRight;
+            }
         }
     }
 
@@ -271,18 +278,14 @@ public class Companion : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (movingRight)
-        {
-            spriteRenderer.flipX = false;
-            Vector2 force = Vector2.right * speed * Time.fixedDeltaTime;
-            rb.MovePosition(rb.position + force);
-        }
-        else
-        {
-            spriteRenderer.flipX = true;
-            Vector2 force = Vector2.left * speed * Time.fixedDeltaTime;
-            rb.MovePosition(rb.position + force);
-        }
+        if (!moveEnabled) return;
+
+        Vector2 targetVelocity = movingRight ?
+            new Vector2(speed, rb.linearVelocity.y) :
+            new Vector2(-speed, rb.linearVelocity.y);
+
+        // Smoothly transition to the target velocity
+        rb.linearVelocity = Vector2.SmoothDamp(rb.linearVelocity, targetVelocity, ref currentVelocity, movementSmoothing);
     }
 
     private void UpdateAnimation()
@@ -377,6 +380,7 @@ public class Companion : MonoBehaviour
         moveEnabled = false;
         speed = 0;
         SetTargetState(STATE_IDLE);
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Stop horizontal movement
 
         yield return new WaitForSeconds(obstacleWaitTime);
 
