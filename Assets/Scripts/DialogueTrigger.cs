@@ -9,7 +9,11 @@ public class DialogueTrigger : MonoBehaviour
     public PuffkinAnimator puffkinAnim;
     [SerializeField] private string yarnNode;
 
-    // Update is called once per frame
+    [Header("Unique ID for this Puffkin")]
+    [SerializeField] private string puffkinID = "corn";  // <- Set this in Inspector
+
+    private string animCommandName => $"set_{puffkinID}_anim";
+
     void Update()
     {
         if (Physics2D.Raycast(transform.position, Vector2.left, 10f, kael))
@@ -37,15 +41,15 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (dialogueRunner != null && puffkinAnim != null)
         {
-            dialogueRunner.AddCommandHandler<string>("set_anim", puffkinAnim.SetAnimation);
+            dialogueRunner.AddCommandHandler<string>(animCommandName, puffkinAnim.SetAnimation);
         }
     }
 
-    private void OnDisable()
+    /*private void OnDisable()
     {
         if (dialogueRunner != null)
         {
-            dialogueRunner.RemoveCommandHandler("set_anim");
+            dialogueRunner.RemoveCommandHandler(animCommandName);
         }
-    }
+    }*/
 }

@@ -15,8 +15,8 @@ tags:
 ---
 Puffkin: Siapa ya yang sebaiknya ku ajak bicara saat merasa tertekan?
     -> Teman atau keluarga
-        <<set_anim "Idle">>
         Puffkin: Ide bagus! Makasih ya.
+        <<set_corn_anim "Idle">>
     -> Orang asing di jalan
         Puffkin: Yang benar saja.
     -> Tidak perlu bicara pada siapa pun
@@ -29,6 +29,7 @@ tags:
 Puffkin: Kenapa ya penting memahami tentang depresi?
     -> Agar bisa membantu diri sendiri dan orang lain
         Puffkin: Iya juga ya!
+        <<set_apple_anim "Idle">>
     -> Itu tidak penting
         Puffkin: Depresi itu penting tau.
     -> Untuk menghindari berbicara soal kesehatan mental
