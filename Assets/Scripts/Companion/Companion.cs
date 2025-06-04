@@ -24,18 +24,20 @@ public class Companion : MonoBehaviour
     [SerializeField] private float idleDistanceThreshold = 1f;
     [SerializeField] private float runSpeed = 14f;
     [SerializeField] private float walkSpeed = 7f;
+    [SerializeField] private float centerAlignSpeed = 20f; // Faster speed for centering
     [SerializeField] private float movementSmoothing = 0.05f;
+    [SerializeField] private float centerPositionTolerance = 0.1f; // How close we need to be to center
 
     [Header("State Transition Durations")]
-    [SerializeField] private float idleToWalkDuration = 0.2f;
-    [SerializeField] private float walkToRunDuration = 0.3f;
-    [SerializeField] private float runToWalkDuration = 0.2f;
-    [SerializeField] private float walkToIdleDuration = 0.15f;
+    [SerializeField] private float idleToWalkDuration = 0.1f; // Faster transitions
+    [SerializeField] private float walkToRunDuration = 0.2f;
+    [SerializeField] private float runToWalkDuration = 0.1f;
+    [SerializeField] private float walkToIdleDuration = 0.1f;
 
     [Header("Jump Settings")]
     [SerializeField] private float upwardRayLength = 5f;
-    [SerializeField] private float obstacleWaitTime = 1f;
-    [SerializeField] private float jumpCooldown = 0.5f;
+    [SerializeField] private float obstacleWaitTime = 0.5f; // Shorter wait time
+    [SerializeField] private float jumpCooldown = 0.3f; // Shorter cooldown
     [SerializeField] private float groundCheckDelayAfterJump = 0.2f;
     [SerializeField] private float upwardRayCircleRadius = 0.5f;
 
@@ -66,6 +68,7 @@ public class Companion : MonoBehaviour
     private bool isIdle = false;
     private bool waitingForObstacle = false;
     private bool isJumpingUpward = false;
+    private bool needsToCenter = false;
     private int currentState = STATE_IDLE;
     private float stateTransitionTimer = 0f;
     private int targetState = STATE_IDLE;
@@ -73,7 +76,7 @@ public class Companion : MonoBehaviour
 
     private Rigidbody2D rb;
     private CapsuleCollider2D capsuleCollider;
-    private GameObject nearestTarget;
+    private GameObject playerTarget;
     private Transform left;
     private Transform right;
 
@@ -89,20 +92,19 @@ public class Companion : MonoBehaviour
     private RaycastHit2D upwardInfo;
     #endregion
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         capsuleCollider = GetComponent<CapsuleCollider2D>();
 
-        // Get child transforms for raycasting
-        if (right == null) right = transform.GetChild(0);
-        if (left == null) left = transform.GetChild(1);
+        
+        
 
-        // Find Kael FBF by name
-        nearestTarget = GameObject.Find("Kael FBF");
-        if (nearestTarget == null)
+        // Find player by tag (more reliable than name)
+        playerTarget = GameObject.FindGameObjectWithTag("Player");
+        if (playerTarget == null)
         {
-            Debug.LogError("Could not find GameObject named 'Kael FBF'!");
+            Debug.LogError("Could not find player GameObject with tag 'Player'!");
             enabled = false;
             return;
         }
@@ -116,17 +118,16 @@ public class Companion : MonoBehaviour
         }
 
         rb.freezeRotation = true;
-        StartCoroutine(CheckIfStanding());
     }
 
     void Update()
     {
-        if (nearestTarget == null) return;
+        if (playerTarget == null) return;
 
-        HandleMovementState();
         UpdateRaycasts();
+        CheckForPlayerAbove();
+        HandleMovementState();
 
-        // Only handle jump logic if we're not in idle state
         if (!isIdle)
         {
             HandleJumpLogic();
@@ -145,11 +146,55 @@ public class Companion : MonoBehaviour
     }
 
     #region Core Logic
+    private void CheckForPlayerAbove()
+    {
+        // Calculate position of debug circle at end of upward ray
+        Vector2 circleCenter = (Vector2)transform.position + Vector2.up * upwardRayLength;
+        bool playerInCircle = Vector2.Distance(circleCenter, playerTarget.transform.position) <= upwardRayCircleRadius;
+
+        // If player is above us and we're not already centering/jumping
+        if (playerInCircle && !needsToCenter && !waitingForObstacle && isGrounded)
+        {
+            needsToCenter = true;
+            moveEnabled = true;
+            isIdle = false;
+        }
+    }
+
     private void HandleMovementState()
     {
-        float distanceToPlayer = Vector2.Distance(transform.position, nearestTarget.transform.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.transform.position);
 
-        // Check for idle state - this now has highest priority
+        // If we need to center beneath the player
+        if (needsToCenter)
+        {
+            // Check if we're centered enough (X position only)
+            if (Mathf.Abs(transform.position.x - playerTarget.transform.position.x) < centerPositionTolerance)
+            {
+                needsToCenter = false;
+                // Immediately jump if there's an obstacle above
+                if (upwardInfo.collider != null)
+                {
+                    StartCoroutine(PerformCenteredJump());
+                }
+                return;
+            }
+
+            // Move quickly to center position
+            speed = centerAlignSpeed;
+            SetTargetState(STATE_RUNNING);
+
+            // Update direction
+            bool newDirection = (playerTarget.transform.position.x - transform.position.x) >= 0;
+            if (newDirection != movingRight)
+            {
+                movingRight = newDirection;
+                spriteRenderer.flipX = !movingRight;
+            }
+            return;
+        }
+
+        // Normal movement states when not centering
         if (distanceToPlayer <= idleDistanceThreshold && isGrounded && !waitingForObstacle)
         {
             if (!isIdle)
@@ -158,24 +203,18 @@ public class Companion : MonoBehaviour
                 moveEnabled = false;
                 speed = 0;
                 SetTargetState(STATE_IDLE);
-                // Cancel any jump in progress
-                StopAllCoroutines();
-                canJump = true;
-                isJumpingUpward = false;
-                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Stop horizontal movement
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             }
-            return; // Exit early if we're in idle state
+            return;
         }
         else
         {
-            // Exit idle state if conditions change
             if (isIdle)
             {
                 isIdle = false;
                 moveEnabled = true;
             }
 
-            // Set movement speed based on distance
             float newSpeed = distanceToPlayer <= walkDistanceThreshold ? walkSpeed : runSpeed;
             if (newSpeed != speed)
             {
@@ -185,9 +224,9 @@ public class Companion : MonoBehaviour
         }
 
         // Only update direction when not idle
-        if (!isIdle && nearestTarget != null)
+        if (!isIdle && playerTarget != null)
         {
-            bool newDirection = (nearestTarget.transform.position.x - transform.position.x) >= 0;
+            bool newDirection = (playerTarget.transform.position.x - transform.position.x) >= 0;
             if (newDirection != movingRight)
             {
                 movingRight = newDirection;
@@ -229,23 +268,8 @@ public class Companion : MonoBehaviour
     {
         if (isIdle || waitingForObstacle || !canJump || !isGrounded) return;
 
-        // Calculate position of debug circle at end of upward ray
-        Vector2 circleCenter = (Vector2)transform.position + Vector2.up * upwardRayLength;
-
-        // Check if the debug circle overlaps with the player
-        bool playerInCircle = Vector2.Distance(circleCenter, nearestTarget.transform.position) <= upwardRayCircleRadius;
-
-        // Check if there's an obstacle above AND the debug circle overlaps with the player
-        if (upwardInfo.collider != null && playerInCircle)
-        {
-            // Wait before attempting to jump over obstacle
-            if (!waitingForObstacle)
-            {
-                StartCoroutine(WaitUnderObstacle());
-            }
-        }
-        // Handle edge jumps (only if not jumping upward)
-        else if (!isJumpingUpward)
+        // Handle edge jumps (only if not jumping upward and not centering)
+        if (!isJumpingUpward && !needsToCenter)
         {
             if (leftInfoGround.collider == false && rightInfoGround.collider == true && leftInfoLongGround.collider == false)
             {
@@ -265,8 +289,8 @@ public class Companion : MonoBehaviour
             }
         }
 
-        // Handle wall jumps (only if not jumping upward)
-        if (isGrounded && !isJumpingUpward)
+        // Handle wall jumps (only if not jumping upward and not centering)
+        if (isGrounded && !isJumpingUpward && !needsToCenter)
         {
             if (leftInfo.collider == true && leftInfo.distance <= wallRayLength / 1.5f && leftInfoUp.collider == false && !movingRight)
                 StartCoroutine(Jump("Large", movingRight, jumpHeight));
@@ -284,13 +308,11 @@ public class Companion : MonoBehaviour
             new Vector2(speed, rb.linearVelocity.y) :
             new Vector2(-speed, rb.linearVelocity.y);
 
-        // Smoothly transition to the target velocity
         rb.linearVelocity = Vector2.SmoothDamp(rb.linearVelocity, targetVelocity, ref currentVelocity, movementSmoothing);
     }
 
     private void UpdateAnimation()
     {
-        // Jumping has highest priority, unless we're in idle state
         if (!isGrounded && !isIdle)
         {
             currentState = STATE_JUMPING;
@@ -298,7 +320,6 @@ public class Companion : MonoBehaviour
             return;
         }
 
-        // Apply the current state (which may be transitioning)
         animator.SetInteger("state", currentState);
     }
 
@@ -320,7 +341,6 @@ public class Companion : MonoBehaviour
 
         targetState = newState;
 
-        // Set appropriate transition time based on current and target states
         if (currentState == STATE_IDLE && targetState == STATE_WALKING)
         {
             stateTransitionTimer = idleToWalkDuration;
@@ -339,7 +359,6 @@ public class Companion : MonoBehaviour
         }
         else
         {
-            // Default transition (immediate)
             stateTransitionTimer = 0f;
             currentState = targetState;
         }
@@ -359,51 +378,29 @@ public class Companion : MonoBehaviour
     #endregion
 
     #region Coroutines
-    IEnumerator CheckIfStanding()
-    {
-        Vector3 lastPos = transform.position;
-        yield return new WaitForSeconds(1);
-
-        if (Vector3.Distance(lastPos, transform.position) < 0.1f && isGrounded && !waitingForObstacle)
-        {
-            SetTargetState(STATE_IDLE);
-            if (!isIdle) StartCoroutine(Jump("Small", movingRight, jumpHeight / 2));
-        }
-
-        StartCoroutine(CheckIfStanding());
-    }
-
-    IEnumerator WaitUnderObstacle()
+    IEnumerator PerformCenteredJump()
     {
         waitingForObstacle = true;
-        isIdle = true;
         moveEnabled = false;
-        speed = 0;
-        SetTargetState(STATE_IDLE);
         rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Stop horizontal movement
 
-        yield return new WaitForSeconds(obstacleWaitTime);
+        // Wait a brief moment to ensure we're properly centered
+        yield return new WaitForSeconds(0.1f);
 
-        // After waiting, check if we still need to jump
-        Vector2 circleCenter = (Vector2)transform.position + Vector2.up * upwardRayLength;
-        bool playerInCircle = Vector2.Distance(circleCenter, nearestTarget.transform.position) <= upwardRayCircleRadius;
+        // Calculate required jump height based on player position
+        float heightDifference = playerTarget.transform.position.y - transform.position.y;
+        float requiredJumpHeight = Mathf.Clamp(heightDifference * 1.2f, jumpHeight, maxJumpHeight);
 
-        if (upwardInfo.collider != null && playerInCircle &&
-            isGrounded && canJump)
-        {
-            float heightDifference = nearestTarget.transform.position.y - transform.position.y;
-            float requiredJumpHeight = Mathf.Clamp(heightDifference * 1.2f, jumpHeight, maxJumpHeight);
-            StartCoroutine(Jump("Up", movingRight, requiredJumpHeight));
-        }
+        // Perform the jump
+        yield return StartCoroutine(Jump("Up", movingRight, requiredJumpHeight));
 
         waitingForObstacle = false;
-        isIdle = false;
         moveEnabled = true;
     }
 
     IEnumerator Jump(string size, bool dirRight, float jumpForce)
     {
-        if (!canJump || isIdle) yield break; // Don't jump if we're in idle state
+        if (!canJump || isIdle) yield break;
 
         canJump = false;
         isGrounded = false;
@@ -422,7 +419,7 @@ public class Companion : MonoBehaviour
                 jumpVelocity = new Vector2(dirRight ? jumpForce / 2 : -jumpForce / 2, jumpForce / 2);
                 break;
             case "Up":
-                jumpVelocity = new Vector2(0, jumpForce); // Straight up
+                jumpVelocity = new Vector2(0, jumpForce);
                 isJumpingUpward = true;
                 break;
         }
@@ -439,14 +436,14 @@ public class Companion : MonoBehaviour
     void OnDrawGizmos()
     {
         if (!DEBUGMODE) return;
-        if (nearestTarget == null) return;
+        if (playerTarget == null) return;
 
         // Draw distance thresholds
         Gizmos.color = new Color(1, 1, 0, 0.3f);
-        Gizmos.DrawWireSphere(nearestTarget.transform.position, walkDistanceThreshold);
+        Gizmos.DrawWireSphere(playerTarget.transform.position, walkDistanceThreshold);
 
         Gizmos.color = new Color(0, 1, 0, 0.3f);
-        Gizmos.DrawWireSphere(nearestTarget.transform.position, idleDistanceThreshold);
+        Gizmos.DrawWireSphere(playerTarget.transform.position, idleDistanceThreshold);
 
         // Draw all rays
         Gizmos.color = upwardInfo.collider ? Color.green : Color.red;
@@ -496,7 +493,7 @@ public class Companion : MonoBehaviour
 
         // Target line
         Gizmos.color = new Color(0, 1, 1, 0.5f);
-        Gizmos.DrawLine(transform.position, nearestTarget.transform.position);
+        Gizmos.DrawLine(transform.position, playerTarget.transform.position);
     }
     #endregion
 }
