@@ -6,6 +6,12 @@ public class Movement : MonoBehaviour
 {
     //public VisualEffect vfxRenderer;
 
+    public bool isWallSliding;
+    public float wallSlideSpeed = 2f;
+
+    [SerializeField] private Transform WallCheck;
+    [SerializeField] private LayerMask wallLayer;
+
     public float speed = 5f; // Kecepatan gerakan karakter
     public float runSpeed = 8f; // Kecepatan lari
     public float jumpForce = 5f; // Kekuatan lompatan
@@ -142,6 +148,8 @@ public class Movement : MonoBehaviour
         // Update collider during jump
         GroundCheck();
 
+        WallSlide();
+
         // Jump animation logic
         if (!isGrounded && !isDashing)
         {
@@ -247,6 +255,25 @@ public class Movement : MonoBehaviour
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
             isGrounded = false;
+        }
+    }
+
+    private bool IsWalled()
+    {
+        return Physics2D.OverlapCircle(WallCheck.position, 0.2f, wallLayer);
+    }
+
+
+    private void WallSlide()
+    {
+        if (IsWalled() && !isGrounded && horizontalDashSpeed != 0f)
+        {
+            isWallSliding = true;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
+        } 
+        else
+        {
+            isWallSliding = false;
         }
     }
 
