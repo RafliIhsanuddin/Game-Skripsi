@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +6,21 @@ public class Movement : MonoBehaviour
 {
     //public VisualEffect vfxRenderer;
 
+
+    //WallSlide variables
     public bool isWallSliding;
     public float wallSlideSpeed = 2f;
 
     [SerializeField] private Transform WallCheck;
     [SerializeField] private LayerMask wallLayer;
+
+    //WallJump variables
+    private bool isWallJumping;
+    private float wallJumpingDirection;
+    private float wallJumpingTime = 0.2f;
+    private float wallJumpingCounter;
+    private float wallJumpingDuration = 0.4f;
+    private Vector2 wallJumpingPower = new Vector2(5f, 10f); // Kekuatan lompatan saat wall jump
 
     public float speed = 5f; // Kecepatan gerakan karakter
     public float runSpeed = 8f; // Kecepatan lari
@@ -38,6 +48,7 @@ public class Movement : MonoBehaviour
     // Jump
     private float jumpDebounceTime = 0.2f;
     private float lastJumpTime = -1f;
+    private bool isJumping = false; // Track if we're in a jump
 
     // Reference for flipping character
     private bool isFacingRight = true; // Status apakah karakter menghadap kanan
@@ -106,9 +117,6 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //record player state
-        //bool grounded = Physics2D.Raycast(transform.position, Vector2.down, 1f, groundLayer);
-
         PlayerState state = new PlayerState
         {
             position = transform.position,
@@ -116,107 +124,87 @@ public class Movement : MonoBehaviour
         };
 
         positionHistory.Insert(0, state);
-
         if (positionHistory.Count > historyLimit)
-        {
             positionHistory.RemoveAt(positionHistory.Count - 1);
-        }
-        //end record player state
 
-        //vfxRenderer.SetVector3("ColliderPos", transform.position);
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
-        // Pengecekan apakah dash sedang dalam cooldown
         if (dashCooldownTimer > 0)
-        {
             dashCooldownTimer -= Time.deltaTime;
-        }
 
-        // Batasi gerakan berdasarkan stopRight dan stopLeft
-        if (stopRight && horizontalInput > 0)
-        {
-            horizontalInput = 0; // Hentikan gerakan ke kanan
-        }
+        if (stopRight && horizontalInput > 0) horizontalInput = 0;
+        if (stopLeft && horizontalInput < 0) horizontalInput = 0;
 
-        if (stopLeft && horizontalInput < 0)
-        {
-            horizontalInput = 0; // Hentikan gerakan ke kiri
-        }
-
-
-        // Update collider during jump
         GroundCheck();
-
         WallSlide();
 
-        // Jump animation logic
-        if (!isGrounded && !isDashing)
+        // Handle jump animation state more reliably
+        if (!isGrounded && !isWallSliding && !isDashing && !isJumping)
         {
-            PlayerAnimationController.SetInteger("state", 3);
+            // Only set to jump state if we're actually moving upward (just left the ground)
+            if (rb.linearVelocity.y > 0.1f)
+            {
+                isJumping = true;
+                PlayerAnimationController.SetInteger("state", 3);
+                UpdateCollider(jumpOffset, jumpSize);
+            }
+        }
+
+        if (isWallSliding)
+        {
+            PlayerAnimationController.SetInteger("state", 5); // State khusus wall slide, ganti animasi nanti
             walkSound.SetActive(false);
             runSound.SetActive(false);
+            isJumping = false;
         }
 
-
-        // Animasi dan collider berdasarkan gerakan horizontal
-        if (isGrounded && !isDashing)
+        if (!isDashing && !isWallSliding)
         {
-            if (Mathf.Abs(horizontalInput) > 0)
+            if (isGrounded)
             {
-                ghost.makeGhost = false;
-                // Berjalan atau berlari berdasarkan input tombol C
-                PlayDustEffect();
-                bool isRunning = Input.GetKey(KeyCode.C);
-                PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
+                isJumping = false; // Reset jump state when grounded
 
-                UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
-
-                walkSound.SetActive(!isRunning);
-                runSound.SetActive(isRunning);
-
-                if (canJump && Input.GetKeyDown(KeyCode.Space))
+                if (Mathf.Abs(horizontalInput) > 0)
                 {
-                    Jump();
-                    PlayDustEffect();
-                    UpdateCollider(jumpOffset, jumpSize);
+                    ghost.makeGhost = false;
+                    bool isRunning = Input.GetKey(KeyCode.C);
+                    PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
+                    UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
+
+                    walkSound.SetActive(!isRunning);
+                    runSound.SetActive(isRunning);
+
+                    if (canJump && Input.GetKeyDown(KeyCode.Space))
+                    {
+                        Jump();
+                        PlayDustEffect();
+                    }
+                }
+                else
+                {
+                    ghost.makeGhost = false;
+                    PlayerAnimationController.SetInteger("state", 0);
+                    UpdateCollider(idleOffset, idleSize);
+                    walkSound.SetActive(false);
+                    runSound.SetActive(false);
+
+                    if (canJump && Input.GetKeyDown(KeyCode.Space))
+                    {
+                        Jump();
+                        PlayDustEffect();
+                    }
                 }
             }
-            else
-            {
-                ghost.makeGhost = false;
-                // Idle
-                PlayerAnimationController.SetInteger("state", 0);
-                UpdateCollider(idleOffset, idleSize);
 
-                walkSound.SetActive(false);
-                runSound.SetActive(false);
-
-                if (canJump && Input.GetKeyDown(KeyCode.Space))
-                {
-                    Jump();
-                    PlayDustEffect();
-                    UpdateCollider(jumpOffset, jumpSize);
-                }
-            }
-        }
-
-        // Gerakan horizontal
-        if (!isDashing)
-        {
             float movementSpeed = Input.GetKey(KeyCode.C) ? runSpeed : speed;
             Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
 
             if (isOnPlatform)
-            {
                 rb.linearVelocity = movement + platformVelocity;
-            }
             else
-            {
                 rb.linearVelocity = movement;
-            }
 
-            // Dash
             if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0)
             {
                 PlayDustEffect();
@@ -224,16 +212,13 @@ public class Movement : MonoBehaviour
                 Dash(horizontalInput, verticalInput);
             }
 
-            // Membalik arah karakter
             if (horizontalInput > 0 && !isFacingRight)
-            {
                 Flip();
-            }
             else if (horizontalInput < 0 && isFacingRight)
-            {
                 Flip();
-            }
         }
+
+        Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
     public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
@@ -266,28 +251,46 @@ public class Movement : MonoBehaviour
 
     private void WallSlide()
     {
-        if (IsWalled() && !isGrounded && horizontalDashSpeed != 0f)
+        bool wallDetected = IsWalled();
+
+        if (wallDetected && !isGrounded)
         {
+            if (isDashing)
+            {
+                isDashing = false;
+                StopCoroutine(EndDash()); // Hentikan dash jika menyentuh wall
+            }
+
             isWallSliding = true;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
-        } 
+
+            // Batasi kecepatan jatuh saat wall slide
+            rb.linearVelocity = new Vector2(0f, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
+
+            // Matikan ghost saat sliding di dinding
+            if (ghost != null)
+            {
+                ghost.makeGhost = false;
+            }
+        }
         else
         {
             isWallSliding = false;
         }
     }
 
+
     private void Jump()
     {
-        if (Time.time - lastJumpTime > jumpDebounceTime)
+        if (Time.time - lastJumpTime > jumpDebounceTime && canJump)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isGrounded = false;
+            isJumping = true;
             lastJumpTime = Time.time;
 
-            // Aktifkan animasi lompat
+            // Set jump animation immediately
             PlayerAnimationController.SetInteger("state", 3);
-            StartCoroutine(EndJumpAnimation());
+            UpdateCollider(jumpOffset, jumpSize);
 
             if (jumpSoundPrefab != null)
             {
