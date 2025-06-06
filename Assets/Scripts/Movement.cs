@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    //public VisualEffect vfxRenderer;
+    
+
+
+    public bool alwaysRunActive = false; // When true, player always runs
 
 
     //WallSlide variables
@@ -139,10 +142,15 @@ public class Movement : MonoBehaviour
         GroundCheck();
         WallSlide();
 
-        // Handle jump animation state more reliably
+        // Stop movement sounds if not grounded
+        if (!isGrounded && !isWallSliding && !isDashing)
+        {
+            StopMovementSounds();
+        }
+
+        // Handle jump animation state
         if (!isGrounded && !isWallSliding && !isDashing && !isJumping)
         {
-            // Only set to jump state if we're actually moving upward (just left the ground)
             if (rb.linearVelocity.y > 0.1f)
             {
                 isJumping = true;
@@ -153,9 +161,8 @@ public class Movement : MonoBehaviour
 
         if (isWallSliding)
         {
-            PlayerAnimationController.SetInteger("state", 5); // State khusus wall slide, ganti animasi nanti
-            walkSound.SetActive(false);
-            runSound.SetActive(false);
+            PlayerAnimationController.SetInteger("state", 5);
+            StopMovementSounds();
             isJumping = false;
         }
 
@@ -163,17 +170,25 @@ public class Movement : MonoBehaviour
         {
             if (isGrounded)
             {
-                isJumping = false; // Reset jump state when grounded
+                isJumping = false;
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
                     ghost.makeGhost = false;
-                    bool isRunning = Input.GetKey(KeyCode.C);
+                    bool isRunning = alwaysRunActive || Input.GetKey(KeyCode.C);
                     PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
                     UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
 
-                    walkSound.SetActive(!isRunning);
-                    runSound.SetActive(isRunning);
+                    if (isRunning)
+                    {
+                        runSound.SetActive(true);
+                        walkSound.SetActive(false);
+                    }
+                    else
+                    {
+                        runSound.SetActive(false);
+                        walkSound.SetActive(true);
+                    }
 
                     if (canJump && Input.GetKeyDown(KeyCode.Space))
                     {
@@ -186,8 +201,7 @@ public class Movement : MonoBehaviour
                     ghost.makeGhost = false;
                     PlayerAnimationController.SetInteger("state", 0);
                     UpdateCollider(idleOffset, idleSize);
-                    walkSound.SetActive(false);
-                    runSound.SetActive(false);
+                    StopMovementSounds();
 
                     if (canJump && Input.GetKeyDown(KeyCode.Space))
                     {
@@ -197,7 +211,7 @@ public class Movement : MonoBehaviour
                 }
             }
 
-            float movementSpeed = Input.GetKey(KeyCode.C) ? runSpeed : speed;
+            float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
             Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
 
             if (isOnPlatform)
@@ -225,6 +239,12 @@ public class Movement : MonoBehaviour
     {
         platformVelocity = velocity;
         isOnPlatform = onPlatform;
+    }
+
+    private void StopMovementSounds()
+    {
+        walkSound.SetActive(false);
+        runSound.SetActive(false);
     }
 
     private void GroundCheck()
