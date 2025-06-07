@@ -20,14 +20,6 @@ public class Movement : MonoBehaviour
     private float inputDisableTimer = 0f;
     private float inputDisableDuration = 0.1f;
 
-    //WallJump variables
-    private bool isWallJumping;
-    private float wallJumpingDirection;
-    private float wallJumpingTime = 0.2f;
-    private float wallJumpingCounter;
-    private float wallJumpingDuration = 0.4f;
-    private Vector2 wallJumpingPower = new Vector2(5f, 10f); // Kekuatan lompatan saat wall jump
-
     public float speed = 5f; // Kecepatan gerakan karakter
     public float runSpeed = 8f; // Kecepatan lari
     public float jumpForce = 5f; // Kekuatan lompatan
@@ -238,7 +230,6 @@ public class Movement : MonoBehaviour
             else if (horizontalInput < 0 && isFacingRight)
                 Flip();
         }
-
         Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
@@ -278,7 +269,6 @@ public class Movement : MonoBehaviour
         }
     }
 
-    // ... [Rest of the code remains exactly the same as in your original version] ...
     public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
     {
         platformVelocity = velocity;
