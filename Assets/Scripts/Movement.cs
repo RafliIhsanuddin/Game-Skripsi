@@ -7,22 +7,21 @@ public class Movement : MonoBehaviour
 
     public float horizontalInput;
     public float verticalInput;
-
     public bool alwaysRunActive = false; // When true, player always runs
 
-    //WallSlide variables
+    // Wall Slide variables
     public bool isWallSliding;
     public float wallSlideSpeed = 2f;
     [SerializeField] private Transform WallCheck;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private float wallCheckRadius = 0.2f; // ← Tambahan ini
 
-    //WallJump variables - Updated values for better diagonal jump
+    // Wall Jump variables - Now flag-based
     [Header("Wall Jump")]
-    public float wallJumpDuration = 0.4f; // Increased duration for longer wall jump
-    public Vector2 wallJumpForce = new Vector2(15f, 15f); // Increased horizontal force
+    public Vector2 wallJumpForce = new Vector2(15f, 15f);
     private bool isWallJumping;
     private float wallJumpDirection;
-    private float wallJumpTimer;
+    private bool wallOnRight;
 
     [Header("Wall Jump Force")]
     [SerializeField] public float wallJumpHorizontalForce = 15f;
@@ -33,41 +32,40 @@ public class Movement : MonoBehaviour
     private float inputDisableTimer = 0f;
     private float inputDisableDuration = 0.1f;
 
-    public float speed = 5f; // Kecepatan gerakan karakter
-    public float runSpeed = 8f; // Kecepatan lari
-    public float jumpForce = 5f; // Kekuatan lompatan
+    public float speed = 5f;
+    public float runSpeed = 8f;
+    public float jumpForce = 5f;
     [SerializeField] private Vector2 groundCheckStartOffset = new Vector2(0f, -0.5f);
     [SerializeField] private float groundCheckRayLength = 1.1f;
-    public LayerMask groundLayer; // Layer untuk tanah
+    public LayerMask groundLayer;
     public LayerMask platformLayer;
-    private bool isGrounded; // Status apakah karakter berada di tanah
-    private Rigidbody2D rb; // Referensi ke komponen Rigidbody2D
+    private bool isGrounded;
+    private Rigidbody2D rb;
 
     public Ghost ghost;
 
-    private float groundTimeBuffer = 0.1f; // Toleransi waktu sebelum menganggap karakter di tanah
+    private float groundTimeBuffer = 0.1f;
     private float timeSinceGrounded = 0f;
 
     // Dash variables
-    [SerializeField] private float horizontalDashSpeed = 10f; // Kecepatan dash horizontal
-    [SerializeField] private float verticalDashSpeed = 7f; // Kecepatan dash vertikal
-    public float dashDuration = 0.1f; // Durasi dash
-    public float dashCooldown = 0.01f; // Waktu cooldown dash
-    private bool isDashing = false; // Status dash
-    private float dashCooldownTimer = 0f; // Timer cooldown dash
+    [SerializeField] private float horizontalDashSpeed = 10f;
+    [SerializeField] private float verticalDashSpeed = 7f;
+    public float dashDuration = 0.1f;
+    public float dashCooldown = 0.01f;
+    private bool isDashing = false;
+    private float dashCooldownTimer = 0f;
 
     // Jump
     private float jumpDebounceTime = 0.2f;
     private float lastJumpTime = -1f;
-    private bool isJumping = false; // Track if we're in a jump
+    private bool isJumping = false;
 
     // Reference for flipping character
-    private bool isFacingRight = true; // Status apakah karakter menghadap kanan
+    private bool isFacingRight = true;
 
     [SerializeField]
     public Animator PlayerAnimationController;
 
-    // Offset for ground check
     public float bodyHeightOffset = 1.0f;
 
     [SerializeField] private CapsuleCollider2D capsuleCollider;
@@ -77,26 +75,22 @@ public class Movement : MonoBehaviour
     // Sound GameObjects
     [SerializeField] private GameObject walkSound;
     [SerializeField] private GameObject runSound;
-
-    [SerializeField] private GameObject jumpSoundPrefab; // Prefab untuk suara lompat
-    [SerializeField] private GameObject dashSoundPrefab; // Prefab untuk suara dash
+    [SerializeField] private GameObject jumpSoundPrefab;
+    [SerializeField] private GameObject dashSoundPrefab;
 
     private Vector2 idleOffset = new Vector2(0.0956296921f, 0.16445756f);
     private Vector2 idleSize = new Vector2(2.33820915f, 15.3902521f);
-
     private Vector2 walkOffset = new Vector2(0.0295305252f, 0.371431112f);
     private Vector2 walkSize = new Vector2(2.15312004f, 14.9763098f);
-
     private Vector2 runOffset = new Vector2(0.0295305252f, 0.454950929f);
     private Vector2 runSize = new Vector2(2.15312004f, 14.8092728f);
-
     private Vector2 jumpOffset = new Vector2(0.0435304642f, 2.14305782f);
     private Vector2 jumpSize = new Vector2(1.83390617f, 10.8472614f);
 
-    private bool isOnPlatform = false; // Status apakah karakter berada di platform
-    private Vector2 platformVelocity = Vector2.zero; // Kecepatan platform
+    private bool isOnPlatform = false;
+    private Vector2 platformVelocity = Vector2.zero;
 
-    private bool stopRight; // Status apakah karakter tidak dapat bergerak ke kanan
+    private bool stopRight;
     private bool stopLeft;
 
     private bool canJump = true;
@@ -113,8 +107,8 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // Mengambil komponen Rigidbody2D dari objek
-        UpdateCollider(idleOffset, idleSize); // Set default collider untuk idle
+        rb = GetComponent<Rigidbody2D>();
+        UpdateCollider(idleOffset, idleSize);
 
         walkSound.SetActive(false);
         runSound.SetActive(false);
@@ -153,15 +147,6 @@ public class Movement : MonoBehaviour
         GroundCheck();
         WallSlide();
 
-        if (isWallJumping)
-        {
-            wallJumpTimer -= Time.deltaTime;
-            if (wallJumpTimer <= 0f)
-            {
-                isWallJumping = false;
-            }
-        }
-
         if (isWallSliding && Input.GetKeyDown(KeyCode.Space))
         {
             WallJump();
@@ -189,11 +174,12 @@ public class Movement : MonoBehaviour
             isJumping = false;
         }
 
-        if (!isDashing && !isWallJumping)
+        if (!isDashing)
         {
             if (isGrounded)
             {
                 isJumping = false;
+                isWallJumping = false; // Reset wall jump when grounded
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
@@ -234,8 +220,8 @@ public class Movement : MonoBehaviour
                 }
             }
 
-            // Only apply horizontal movement if not wall sliding
-            if (!isWallSliding)
+            // Only apply horizontal movement if not wall sliding or wall jumping
+            if (!isWallSliding && !isWallJumping)
             {
                 float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
                 Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
@@ -253,8 +239,8 @@ public class Movement : MonoBehaviour
                 Dash(horizontalInput, verticalInput);
             }
 
-            // Only allow flipping when not wall sliding
-            if (!isWallSliding)
+            // Only allow flipping when not wall sliding or wall jumping
+            if (!isWallSliding && !isWallJumping)
             {
                 if (horizontalInput > 0 && !isFacingRight)
                     Flip();
@@ -262,18 +248,19 @@ public class Movement : MonoBehaviour
                     Flip();
             }
         }
+        Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
     private void WallSlide()
     {
         bool wallDetected = IsWalled();
 
-        if (wallDetected && !isGrounded)
+        if (wallDetected && !isGrounded && !isWallJumping) // Added !isWallJumping condition
         {
             isWallSliding = true;
 
-            // Determine wall direction and force correct facing
-            bool wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
+            // Determine wall direction
+            wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
             bool wallOnLeft = Physics2D.Raycast(WallCheck.position, Vector2.left, 0.2f, wallLayer);
 
             // Force character to face away from the wall
@@ -312,39 +299,29 @@ public class Movement : MonoBehaviour
 
         isWallJumping = true;
         isWallSliding = false;
-        wallJumpTimer = wallJumpDuration;
 
-        // Apply initial jump force
-        Vector2 force = new Vector2(wallJumpHorizontalForce * wallJumpDirection, wallJumpVerticalForce);
+        // Calculate jump direction - push away from wall diagonally
+        Vector2 jumpDirection = new Vector2(wallJumpDirection, 1f).normalized;
+
+        // Apply jump force with more horizontal push
+        Vector2 force = new Vector2(
+            wallJumpHorizontalForce * jumpDirection.x * 1.5f, // Increased horizontal push
+            wallJumpVerticalForce * jumpDirection.y
+        );
+
         rb.linearVelocity = force;
 
-        // Flip character to face away from wall
-        Flip();
+        if ((wallJumpDirection > 0f && !isFacingRight) || (wallJumpDirection < 0f && isFacingRight))
+        {
+            Flip();
+        }
+
+        Debug.Log($"Wall Jump - Direction: {wallJumpDirection}, Force: {force}"); // Debug log
 
         if (jumpSoundPrefab != null)
         {
             Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
         }
-
-        StartCoroutine(SustainWallJump());
-    }
-
-    private IEnumerator SustainWallJump()
-    {
-        float timer = wallJumpDuration;
-        float initialForce = wallJumpHorizontalForce;
-
-        while (timer > 0)
-        {
-            // Gradually reduce horizontal force over time
-            float currentForce = Mathf.Lerp(0, initialForce, timer / wallJumpDuration);
-            rb.linearVelocity = new Vector2(wallJumpDirection * currentForce, rb.linearVelocity.y);
-
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-
-        isWallJumping = false;
     }
 
     public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
@@ -368,6 +345,8 @@ public class Movement : MonoBehaviour
         {
             timeSinceGrounded = Time.time;
             isGrounded = true;
+            isWallJumping = false; // Reset wall jump state when grounded
+            Debug.Log("Grounded - Reset Wall Jump"); // Debug log
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
@@ -377,7 +356,10 @@ public class Movement : MonoBehaviour
 
     private bool IsWalled()
     {
-        return Physics2D.OverlapCircle(WallCheck.position, 0.2f, wallLayer);
+        bool walled = Physics2D.OverlapCircle(WallCheck.position, wallCheckRadius, wallLayer);
+        Debug.DrawRay(WallCheck.position, Vector2.right * wallCheckRadius, Color.blue);
+        Debug.DrawRay(WallCheck.position, Vector2.left * wallCheckRadius, Color.blue);
+        return walled;
     }
 
     private void Jump()
@@ -389,7 +371,6 @@ public class Movement : MonoBehaviour
             isJumping = true;
             lastJumpTime = Time.time;
 
-            // Set jump animation immediately
             PlayerAnimationController.SetInteger("state", 3);
             UpdateCollider(jumpOffset, jumpSize);
 
@@ -495,6 +476,11 @@ public class Movement : MonoBehaviour
         Gizmos.color = Color.red;
         Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
         Gizmos.DrawLine(start, start + Vector3.down * groundCheckRayLength);
+
+        // Draw wall check visualization
+        // Draw wall check sphere
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(WallCheck.position, wallCheckRadius); // ← Pakai variabel
     }
 
     public void SetStopRight(bool value)
