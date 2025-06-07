@@ -5,7 +5,8 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-
+    public float horizontalInput;
+    public float verticalInput;
 
     public bool alwaysRunActive = false; // When true, player always runs
 
@@ -14,6 +15,12 @@ public class Movement : MonoBehaviour
     public float wallSlideSpeed = 2f;
     [SerializeField] private Transform WallCheck;
     [SerializeField] private LayerMask wallLayer;
+
+    //WallJump variables
+    public float wallJumpDuration = 0.2f;
+    public Vector2 wallJumpForce = new Vector2(10f, 15f);
+    private bool isWallJumping;
+    private float wallJumpDirection;
 
     // Input disable variables
     private bool inputsDisabled = false;
@@ -129,8 +136,8 @@ public class Movement : MonoBehaviour
         if (positionHistory.Count > historyLimit)
             positionHistory.RemoveAt(positionHistory.Count - 1);
 
-        float horizontalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Horizontal");
-        float verticalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Vertical");
+        horizontalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Horizontal");
+        verticalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Vertical");
 
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
@@ -140,6 +147,12 @@ public class Movement : MonoBehaviour
 
         GroundCheck();
         WallSlide();
+
+        // Handle wall jump input
+        if (isWallSliding && Input.GetKeyDown(KeyCode.Space))
+        {
+            WallJump();
+        }
 
         // Stop movement sounds if not grounded
         if (!isGrounded && !isWallSliding && !isDashing)
@@ -165,7 +178,7 @@ public class Movement : MonoBehaviour
             isJumping = false;
         }
 
-        if (!isDashing && !isWallSliding)
+        if (!isDashing && !isWallJumping)
         {
             if (isGrounded)
             {
@@ -230,34 +243,20 @@ public class Movement : MonoBehaviour
             else if (horizontalInput < 0 && isFacingRight)
                 Flip();
         }
-        Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
     private void WallSlide()
     {
         bool wallDetected = IsWalled();
 
-        if (wallDetected && !isGrounded)
+        if (wallDetected && !isGrounded && horizontalInput != 0)
         {
-            if (isDashing)
-            {
-                isDashing = false;
-                StopCoroutine(EndDash()); // Hentikan dash jika menyentuh wall
-            }
-
-            if (!isWallSliding)
-            {
-                // Just started wall sliding - disable inputs
-                inputsDisabled = true;
-                inputDisableTimer = inputDisableDuration;
-            }
-
             isWallSliding = true;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
 
-            // Batasi kecepatan jatuh saat wall slide
-            rb.linearVelocity = new Vector2(0f, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
+            // Set wall jump direction based on which side we're sliding on
+            wallJumpDirection = isFacingRight ? -1f : 1f;
 
-            // Matikan ghost saat sliding di dinding
             if (ghost != null)
             {
                 ghost.makeGhost = false;
@@ -267,6 +266,40 @@ public class Movement : MonoBehaviour
         {
             isWallSliding = false;
         }
+    }
+
+    private void WallJump()
+    {
+        if (!canJump) return;
+
+        // Disable input briefly during wall jump
+        inputsDisabled = true;
+        inputDisableTimer = inputDisableDuration;
+
+        isWallJumping = true;
+        isWallSliding = false;
+
+        // Apply wall jump force
+        Vector2 force = new Vector2(wallJumpForce.x * wallJumpDirection, wallJumpForce.y);
+        rb.linearVelocity = new Vector2(0, 0); // Reset velocity before applying jump
+        rb.AddForce(force, ForceMode2D.Impulse);
+
+        // Flip character to face away from wall
+        Flip();
+
+        // Play jump sound
+        if (jumpSoundPrefab != null)
+        {
+            Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
+        }
+
+        // End wall jump after duration
+        Invoke("EndWallJump", wallJumpDuration);
+    }
+
+    private void EndWallJump()
+    {
+        isWallJumping = false;
     }
 
     public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
@@ -284,7 +317,7 @@ public class Movement : MonoBehaviour
     private void GroundCheck()
     {
         Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
-        RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, groundCheckRayLength, groundLayer | platformLayer); // Gunakan OR untuk memeriksa kedua layer
+        RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, groundCheckRayLength, groundLayer | platformLayer);
 
         if (hit.collider != null)
         {
@@ -324,22 +357,20 @@ public class Movement : MonoBehaviour
 
     private IEnumerator EndJumpAnimation()
     {
-        // Tunggu hingga karakter benar-benar mendarat
         while (!isGrounded)
         {
-            yield return null; // Tunggu satu frame
+            yield return null;
         }
 
-        // Setelah mendarat, periksa status gerakan untuk kembali ke animasi yang sesuai
         if (isGrounded)
         {
-            if (Mathf.Abs(rb.linearVelocity.x) > 0.1f) // Jika karakter bergerak horizontal
+            if (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
             {
                 bool isRunning = Input.GetKey(KeyCode.C);
                 PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
                 UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
             }
-            else // Jika karakter diam
+            else
             {
                 PlayerAnimationController.SetInteger("state", 0);
                 UpdateCollider(idleOffset, idleSize);
@@ -350,13 +381,10 @@ public class Movement : MonoBehaviour
     private void Dash(float horizontalInput, float verticalInput)
     {
         isDashing = true;
-        dashCooldownTimer = dashCooldown; // Atur cooldown
+        dashCooldownTimer = dashCooldown;
         Vector2 dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
 
-        // Set animasi dash sesuai arah dash
         PlayerAnimationController.SetInteger("state", 4);
-
-        // Terapkan kecepatan dash
         rb.linearVelocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
 
         if (dashSoundPrefab != null)
@@ -364,37 +392,30 @@ public class Movement : MonoBehaviour
             Instantiate(dashSoundPrefab, transform.position, Quaternion.identity);
         }
 
-        // Cek apakah lompat saat dash
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Jump();
-        }
-
-        // Kembali ke kondisi normal setelah durasi dash
         StartCoroutine(EndDash());
     }
 
     private IEnumerator EndDash()
     {
         yield return new WaitForSeconds(dashDuration);
-        isDashing = false; // Akhiri dash
+        isDashing = false;
         if (isGrounded)
         {
-            PlayerAnimationController.SetInteger("state", 0); // Kembali ke idle jika di tanah
+            PlayerAnimationController.SetInteger("state", 0);
         }
     }
 
     private void Flip()
     {
-        isFacingRight = !isFacingRight; // Balik status arah
-        Vector3 scale = transform.localScale; // Mengambil skala objek
-        scale.x *= -1; // Balik skala di sumbu X
-        transform.localScale = scale; // Terapkan skala baru
+        isFacingRight = !isFacingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
 
         if (dust != null)
         {
             Vector3 dustScale = dust.transform.localScale;
-            dustScale.x *= -1; // Balik sumbu X partikel
+            dustScale.x *= -1;
             dust.transform.localScale = dustScale;
         }
     }
@@ -434,9 +455,7 @@ public class Movement : MonoBehaviour
     public void SetStopRight(bool value)
     {
         stopRight = value;
-        stopLeft = !value; // Jika stopRight true, maka stopLeft false, dan sebaliknya
-
-        // Set animasi idle saat terkena collider
+        stopLeft = !value;
         PlayerAnimationController.SetInteger("state", 0);
     }
 
