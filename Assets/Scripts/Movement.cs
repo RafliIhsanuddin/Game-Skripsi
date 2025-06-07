@@ -17,6 +17,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float wallCheckRadius = 0.2f;
     private float lastWallJumpTime = 0f;
     private float wallJumpCooldown = 0.2f;
+    private float lastWallJumpDirection = 1f; // Track last wall jump direction
 
     // Wall Jump variables
     [Header("Wall Jump")]
@@ -250,6 +251,7 @@ public class Movement : MonoBehaviour
                     Flip();
             }
         }
+
         Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
@@ -257,10 +259,10 @@ public class Movement : MonoBehaviour
     {
         bool wallDetected = IsWalled();
 
-        if (wallDetected && !isGrounded && horizontalInput != 0) // Changed condition to allow immediate reattachment
+        if (wallDetected && !isGrounded && horizontalInput != 0)
         {
             isWallSliding = true;
-            isWallJumping = false; // Reset wall jump state when sliding on a new wall
+            isWallJumping = false;
 
             // Determine wall direction
             wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
@@ -302,6 +304,8 @@ public class Movement : MonoBehaviour
 
         isWallJumping = true;
         isWallSliding = false;
+        lastWallJumpTime = Time.time;
+        lastWallJumpDirection = wallJumpDirection; // Store the wall jump direction
 
         // Calculate jump direction - push away from wall diagonally
         Vector2 jumpDirection = new Vector2(wallJumpDirection, 1f).normalized;
@@ -405,7 +409,18 @@ public class Movement : MonoBehaviour
     {
         isDashing = true;
         dashCooldownTimer = dashCooldown;
-        Vector2 dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
+
+        Vector2 dashDirection;
+
+        // If we're in a wall jump or recently wall jumped (within 0.3 seconds), use wall jump direction
+        if (isWallJumping || (Time.time - lastWallJumpTime < 0.3f))
+        {
+            dashDirection = new Vector2(lastWallJumpDirection, 0.7f).normalized;
+        }
+        else
+        {
+            dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
+        }
 
         PlayerAnimationController.SetInteger("state", 4);
         rb.linearVelocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
