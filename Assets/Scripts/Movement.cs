@@ -16,11 +16,17 @@ public class Movement : MonoBehaviour
     [SerializeField] private Transform WallCheck;
     [SerializeField] private LayerMask wallLayer;
 
-    //WallJump variables
-    public float wallJumpDuration = 0.2f;
-    public Vector2 wallJumpForce = new Vector2(10f, 15f);
+    //WallJump variables - Updated values for better diagonal jump
+    [Header("Wall Jump")]
+    public float wallJumpDuration = 0.4f; // Increased duration for longer wall jump
+    public Vector2 wallJumpForce = new Vector2(15f, 15f); // Increased horizontal force
     private bool isWallJumping;
     private float wallJumpDirection;
+    private float wallJumpTimer;
+
+    [Header("Wall Jump Force")]
+    [SerializeField] public float wallJumpHorizontalForce = 15f;
+    [SerializeField] public float wallJumpVerticalForce = 15f;
 
     // Input disable variables
     private bool inputsDisabled = false;
@@ -147,6 +153,15 @@ public class Movement : MonoBehaviour
         GroundCheck();
         WallSlide();
 
+        if (isWallJumping)
+        {
+            wallJumpTimer -= Time.deltaTime;
+            if (wallJumpTimer <= 0f)
+            {
+                isWallJumping = false;
+            }
+        }
+
         if (isWallSliding && Input.GetKeyDown(KeyCode.Space))
         {
             WallJump();
@@ -247,8 +262,6 @@ public class Movement : MonoBehaviour
                     Flip();
             }
         }
-
-        Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
     private void WallSlide()
@@ -260,8 +273,8 @@ public class Movement : MonoBehaviour
             isWallSliding = true;
 
             // Determine wall direction and force correct facing
-            bool wallOnRight = Physics2D.OverlapCircle(WallCheck.position + Vector3.right * 0.2f, 0.1f, wallLayer);
-            bool wallOnLeft = Physics2D.OverlapCircle(WallCheck.position + Vector3.left * 0.2f, 0.1f, wallLayer);
+            bool wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
+            bool wallOnLeft = Physics2D.Raycast(WallCheck.position, Vector2.left, 0.2f, wallLayer);
 
             // Force character to face away from the wall
             if (wallOnRight && isFacingRight)
@@ -277,7 +290,7 @@ public class Movement : MonoBehaviour
             float currentYVelocity = Mathf.Max(rb.linearVelocity.y, -wallSlideSpeed);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, currentYVelocity);
 
-            wallJumpDirection = isFacingRight ? -1f : 1f;
+            wallJumpDirection = wallOnRight ? -1f : 1f;
 
             if (ghost != null)
             {
@@ -299,11 +312,13 @@ public class Movement : MonoBehaviour
 
         isWallJumping = true;
         isWallSliding = false;
+        wallJumpTimer = wallJumpDuration;
 
-        Vector2 force = new Vector2(wallJumpForce.x * wallJumpDirection, wallJumpForce.y);
-        rb.linearVelocity = Vector2.zero;
-        rb.AddForce(force, ForceMode2D.Impulse);
+        // Apply initial jump force
+        Vector2 force = new Vector2(wallJumpHorizontalForce * wallJumpDirection, wallJumpVerticalForce);
+        rb.linearVelocity = force;
 
+        // Flip character to face away from wall
         Flip();
 
         if (jumpSoundPrefab != null)
@@ -311,11 +326,24 @@ public class Movement : MonoBehaviour
             Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
         }
 
-        Invoke("EndWallJump", wallJumpDuration);
+        StartCoroutine(SustainWallJump());
     }
 
-    private void EndWallJump()
+    private IEnumerator SustainWallJump()
     {
+        float timer = wallJumpDuration;
+        float initialForce = wallJumpHorizontalForce;
+
+        while (timer > 0)
+        {
+            // Gradually reduce horizontal force over time
+            float currentForce = Mathf.Lerp(0, initialForce, timer / wallJumpDuration);
+            rb.linearVelocity = new Vector2(wallJumpDirection * currentForce, rb.linearVelocity.y);
+
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
         isWallJumping = false;
     }
 
@@ -501,5 +529,4 @@ public class Movement : MonoBehaviour
     {
         canDash = true;
     }
-
 }

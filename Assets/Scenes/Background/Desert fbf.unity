@@ -2724,6 +2724,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7956759418907000302, guid: 73e494d51fda79c44aef55ba67cf9cd6, type: 3}
     - target: {fileID: 8897395953648950220, guid: 875a12f3b12ffb344b5a9a2d6097fda8, type: 3}
+      propertyPath: wallJumpForce.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897395953648950220, guid: 875a12f3b12ffb344b5a9a2d6097fda8, type: 3}
+      propertyPath: wallJumpForce.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897395953648950220, guid: 875a12f3b12ffb344b5a9a2d6097fda8, type: 3}
+      propertyPath: wallJumpDuration
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897395953648950220, guid: 875a12f3b12ffb344b5a9a2d6097fda8, type: 3}
       propertyPath: wallLayer.m_Bits
       value: 4096
       objectReference: {fileID: 0}
