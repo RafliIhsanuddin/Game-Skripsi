@@ -116,7 +116,6 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        // Handle input disable timer
         if (inputsDisabled)
         {
             inputDisableTimer -= Time.deltaTime;
@@ -148,19 +147,16 @@ public class Movement : MonoBehaviour
         GroundCheck();
         WallSlide();
 
-        // Handle wall jump input
         if (isWallSliding && Input.GetKeyDown(KeyCode.Space))
         {
             WallJump();
         }
 
-        // Stop movement sounds if not grounded
         if (!isGrounded && !isWallSliding && !isDashing)
         {
             StopMovementSounds();
         }
 
-        // Handle jump animation state
         if (!isGrounded && !isWallSliding && !isDashing && !isJumping)
         {
             if (rb.linearVelocity.y > 0.1f)
@@ -223,13 +219,17 @@ public class Movement : MonoBehaviour
                 }
             }
 
-            float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
-            Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
+            // Only apply horizontal movement if not wall sliding
+            if (!isWallSliding)
+            {
+                float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
+                Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
 
-            if (isOnPlatform)
-                rb.linearVelocity = movement + platformVelocity;
-            else
-                rb.linearVelocity = movement;
+                if (isOnPlatform)
+                    rb.linearVelocity = movement + platformVelocity;
+                else
+                    rb.linearVelocity = movement;
+            }
 
             if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled)
             {
@@ -243,18 +243,22 @@ public class Movement : MonoBehaviour
             else if (horizontalInput < 0 && isFacingRight)
                 Flip();
         }
+
+        Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
     private void WallSlide()
     {
         bool wallDetected = IsWalled();
 
-        if (wallDetected && !isGrounded && horizontalInput != 0)
+        if (wallDetected && !isGrounded)
         {
             isWallSliding = true;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
 
-            // Set wall jump direction based on which side we're sliding on
+            // Always maintain downward slide speed regardless of input
+            float currentYVelocity = Mathf.Max(rb.linearVelocity.y, -wallSlideSpeed);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, currentYVelocity);
+
             wallJumpDirection = isFacingRight ? -1f : 1f;
 
             if (ghost != null)
@@ -272,28 +276,23 @@ public class Movement : MonoBehaviour
     {
         if (!canJump) return;
 
-        // Disable input briefly during wall jump
         inputsDisabled = true;
         inputDisableTimer = inputDisableDuration;
 
         isWallJumping = true;
         isWallSliding = false;
 
-        // Apply wall jump force
         Vector2 force = new Vector2(wallJumpForce.x * wallJumpDirection, wallJumpForce.y);
-        rb.linearVelocity = new Vector2(0, 0); // Reset velocity before applying jump
+        rb.linearVelocity = Vector2.zero;
         rb.AddForce(force, ForceMode2D.Impulse);
 
-        // Flip character to face away from wall
         Flip();
 
-        // Play jump sound
         if (jumpSoundPrefab != null)
         {
             Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
         }
 
-        // End wall jump after duration
         Invoke("EndWallJump", wallJumpDuration);
     }
 
