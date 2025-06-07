@@ -238,10 +238,14 @@ public class Movement : MonoBehaviour
                 Dash(horizontalInput, verticalInput);
             }
 
-            if (horizontalInput > 0 && !isFacingRight)
-                Flip();
-            else if (horizontalInput < 0 && isFacingRight)
-                Flip();
+            // Only allow flipping when not wall sliding
+            if (!isWallSliding)
+            {
+                if (horizontalInput > 0 && !isFacingRight)
+                    Flip();
+                else if (horizontalInput < 0 && isFacingRight)
+                    Flip();
+            }
         }
 
         Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
@@ -254,6 +258,20 @@ public class Movement : MonoBehaviour
         if (wallDetected && !isGrounded)
         {
             isWallSliding = true;
+
+            // Determine wall direction and force correct facing
+            bool wallOnRight = Physics2D.OverlapCircle(WallCheck.position + Vector3.right * 0.2f, 0.1f, wallLayer);
+            bool wallOnLeft = Physics2D.OverlapCircle(WallCheck.position + Vector3.left * 0.2f, 0.1f, wallLayer);
+
+            // Force character to face away from the wall
+            if (wallOnRight && isFacingRight)
+            {
+                Flip();
+            }
+            else if (wallOnLeft && !isFacingRight)
+            {
+                Flip();
+            }
 
             // Always maintain downward slide speed regardless of input
             float currentYVelocity = Mathf.Max(rb.linearVelocity.y, -wallSlideSpeed);
