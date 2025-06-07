@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    
+
 
 
     public bool alwaysRunActive = false; // When true, player always runs
 
-
     //WallSlide variables
     public bool isWallSliding;
     public float wallSlideSpeed = 2f;
-
     [SerializeField] private Transform WallCheck;
     [SerializeField] private LayerMask wallLayer;
+
+    // Input disable variables
+    private bool inputsDisabled = false;
+    private float inputDisableTimer = 0f;
+    private float inputDisableDuration = 0.1f;
 
     //WallJump variables
     private bool isWallJumping;
@@ -88,10 +91,8 @@ public class Movement : MonoBehaviour
     private bool isOnPlatform = false; // Status apakah karakter berada di platform
     private Vector2 platformVelocity = Vector2.zero; // Kecepatan platform
 
-
     private bool stopRight; // Status apakah karakter tidak dapat bergerak ke kanan
     private bool stopLeft;
-
 
     private bool canJump = true;
     private bool canDash = true;
@@ -105,7 +106,6 @@ public class Movement : MonoBehaviour
     public List<PlayerState> positionHistory = new List<PlayerState>();
     public int historyLimit = 100;
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // Mengambil komponen Rigidbody2D dari objek
@@ -115,11 +115,18 @@ public class Movement : MonoBehaviour
         runSound.SetActive(false);
     }
 
-
-
-    // Update is called once per frame
     void Update()
     {
+        // Handle input disable timer
+        if (inputsDisabled)
+        {
+            inputDisableTimer -= Time.deltaTime;
+            if (inputDisableTimer <= 0f)
+            {
+                inputsDisabled = false;
+            }
+        }
+
         PlayerState state = new PlayerState
         {
             position = transform.position,
@@ -130,8 +137,8 @@ public class Movement : MonoBehaviour
         if (positionHistory.Count > historyLimit)
             positionHistory.RemoveAt(positionHistory.Count - 1);
 
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
+        float horizontalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Horizontal");
+        float verticalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Vertical");
 
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;
@@ -219,7 +226,7 @@ public class Movement : MonoBehaviour
             else
                 rb.linearVelocity = movement;
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled)
             {
                 PlayDustEffect();
                 ghost.makeGhost = true;
@@ -235,6 +242,43 @@ public class Movement : MonoBehaviour
         Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
+    private void WallSlide()
+    {
+        bool wallDetected = IsWalled();
+
+        if (wallDetected && !isGrounded)
+        {
+            if (isDashing)
+            {
+                isDashing = false;
+                StopCoroutine(EndDash()); // Hentikan dash jika menyentuh wall
+            }
+
+            if (!isWallSliding)
+            {
+                // Just started wall sliding - disable inputs
+                inputsDisabled = true;
+                inputDisableTimer = inputDisableDuration;
+            }
+
+            isWallSliding = true;
+
+            // Batasi kecepatan jatuh saat wall slide
+            rb.linearVelocity = new Vector2(0f, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
+
+            // Matikan ghost saat sliding di dinding
+            if (ghost != null)
+            {
+                ghost.makeGhost = false;
+            }
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+    }
+
+    // ... [Rest of the code remains exactly the same as in your original version] ...
     public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
     {
         platformVelocity = velocity;
@@ -267,37 +311,6 @@ public class Movement : MonoBehaviour
     {
         return Physics2D.OverlapCircle(WallCheck.position, 0.2f, wallLayer);
     }
-
-
-    private void WallSlide()
-    {
-        bool wallDetected = IsWalled();
-
-        if (wallDetected && !isGrounded)
-        {
-            if (isDashing)
-            {
-                isDashing = false;
-                StopCoroutine(EndDash()); // Hentikan dash jika menyentuh wall
-            }
-
-            isWallSliding = true;
-
-            // Batasi kecepatan jatuh saat wall slide
-            rb.linearVelocity = new Vector2(0f, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
-
-            // Matikan ghost saat sliding di dinding
-            if (ghost != null)
-            {
-                ghost.makeGhost = false;
-            }
-        }
-        else
-        {
-            isWallSliding = false;
-        }
-    }
-
 
     private void Jump()
     {
@@ -394,7 +407,6 @@ public class Movement : MonoBehaviour
             dustScale.x *= -1; // Balik sumbu X partikel
             dust.transform.localScale = dustScale;
         }
-
     }
 
     private void UpdateCollider(Vector2 offset, Vector2 size)
@@ -405,6 +417,7 @@ public class Movement : MonoBehaviour
             capsuleCollider.size = size;
         }
     }
+
     private void PlayDustEffect()
     {
         if (dust != null && !dust.isPlaying)
@@ -421,7 +434,6 @@ public class Movement : MonoBehaviour
         }
     }
 
-    // Menggambar raycast di editor untuk visualisasi
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -449,7 +461,6 @@ public class Movement : MonoBehaviour
         canJump = false;
     }
 
-    // Metode untuk mengaktifkan kembali kemampuan melompat
     public void EnableJump()
     {
         canJump = true;
@@ -460,7 +471,6 @@ public class Movement : MonoBehaviour
         canDash = false;
     }
 
-    // Metode untuk mengaktifkan kembali kemampuan dash
     public void EnableDash()
     {
         canDash = true;
