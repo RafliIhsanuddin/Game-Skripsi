@@ -14,9 +14,11 @@ public class Movement : MonoBehaviour
     public float wallSlideSpeed = 2f;
     [SerializeField] private Transform WallCheck;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private float wallCheckRadius = 0.2f; // ← Tambahan ini
+    [SerializeField] private float wallCheckRadius = 0.2f;
+    private float lastWallJumpTime = 0f;
+    private float wallJumpCooldown = 0.2f;
 
-    // Wall Jump variables - Now flag-based
+    // Wall Jump variables
     [Header("Wall Jump")]
     public Vector2 wallJumpForce = new Vector2(15f, 15f);
     private bool isWallJumping;
@@ -179,7 +181,7 @@ public class Movement : MonoBehaviour
             if (isGrounded)
             {
                 isJumping = false;
-                isWallJumping = false; // Reset wall jump when grounded
+                isWallJumping = false;
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
@@ -255,9 +257,10 @@ public class Movement : MonoBehaviour
     {
         bool wallDetected = IsWalled();
 
-        if (wallDetected && !isGrounded && !isWallJumping) // Added !isWallJumping condition
+        if (wallDetected && !isGrounded && horizontalInput != 0) // Changed condition to allow immediate reattachment
         {
             isWallSliding = true;
+            isWallJumping = false; // Reset wall jump state when sliding on a new wall
 
             // Determine wall direction
             wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
@@ -305,7 +308,7 @@ public class Movement : MonoBehaviour
 
         // Apply jump force with more horizontal push
         Vector2 force = new Vector2(
-            wallJumpHorizontalForce * jumpDirection.x * 1.5f, // Increased horizontal push
+            wallJumpHorizontalForce * jumpDirection.x * 1.5f,
             wallJumpVerticalForce * jumpDirection.y
         );
 
@@ -315,8 +318,6 @@ public class Movement : MonoBehaviour
         {
             Flip();
         }
-
-        Debug.Log($"Wall Jump - Direction: {wallJumpDirection}, Force: {force}"); // Debug log
 
         if (jumpSoundPrefab != null)
         {
@@ -345,8 +346,7 @@ public class Movement : MonoBehaviour
         {
             timeSinceGrounded = Time.time;
             isGrounded = true;
-            isWallJumping = false; // Reset wall jump state when grounded
-            Debug.Log("Grounded - Reset Wall Jump"); // Debug log
+            isWallJumping = false;
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
@@ -356,10 +356,7 @@ public class Movement : MonoBehaviour
 
     private bool IsWalled()
     {
-        bool walled = Physics2D.OverlapCircle(WallCheck.position, wallCheckRadius, wallLayer);
-        Debug.DrawRay(WallCheck.position, Vector2.right * wallCheckRadius, Color.blue);
-        Debug.DrawRay(WallCheck.position, Vector2.left * wallCheckRadius, Color.blue);
-        return walled;
+        return Physics2D.OverlapCircle(WallCheck.position, wallCheckRadius, wallLayer);
     }
 
     private void Jump()
@@ -477,10 +474,8 @@ public class Movement : MonoBehaviour
         Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
         Gizmos.DrawLine(start, start + Vector3.down * groundCheckRayLength);
 
-        // Draw wall check visualization
-        // Draw wall check sphere
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(WallCheck.position, wallCheckRadius); // ← Pakai variabel
+        Gizmos.DrawWireSphere(WallCheck.position, wallCheckRadius);
     }
 
     public void SetStopRight(bool value)
