@@ -176,6 +176,7 @@ public class Movement : MonoBehaviour
             PlayerAnimationController.SetInteger("state", 5);
             StopMovementSounds();
             isJumping = false;
+            hasAirDashed = false; // Reset air dash when wall sliding
         }
 
         if (!isDashing)
@@ -237,11 +238,11 @@ public class Movement : MonoBehaviour
                     rb.linearVelocity = movement;
             }
 
-            // Only allow dash if not already dashed in air or if doing a wall jump
-            bool canAirDash = !hasAirDashed || isWallJumping;
+            // Only allow dash if not already dashed in air or if grounded
+            bool canAirDash = !hasAirDashed;
             if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled && (isGrounded || canAirDash))
             {
-                if (!isGrounded && !isWallJumping)
+                if (!isGrounded)
                 {
                     hasAirDashed = true; // Mark air dash as used
                 }
@@ -444,16 +445,16 @@ public class Movement : MonoBehaviour
     {
         yield return new WaitForSeconds(dashDuration);
         isDashing = false;
-        ghost.makeGhost = false; // Added this line to stop ghost effect immediately after dash
+        ghost.makeGhost = false;
 
         // After dash, check if we're still in air
         if (!isGrounded)
         {
-            PlayerAnimationController.SetInteger("state", 3); // Set to jump/fall state
+            PlayerAnimationController.SetInteger("state", 3);
         }
         else
         {
-            PlayerAnimationController.SetInteger("state", 0); // Set to idle if grounded
+            PlayerAnimationController.SetInteger("state", 0);
         }
     }
 
