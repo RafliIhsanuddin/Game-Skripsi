@@ -1,0 +1,212 @@
+fileFormatVersion: 2
+guid: c731c788f24936346a1dca7f0f724037
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7273724765764080231
+    second: Bush Leaf1_0
+  - first:
+      213: -4841306839738319324
+    second: Bush Leaf1_1
+  - first:
+      213: -907021818962372071
+    second: Bush Leaf1_2
+  - first:
+      213: 224815496223108062
+    second: Bush Leaf1_3
+  - first:
+      213: 2216413681877865150
+    second: Bush Leaf1_4
+  - first:
+      213: 2403649552300251629
+    second: Bush Leaf1_5
+  - first:
+      213: -6146172907426615841
+    second: Bush Leaf1_6
+  - first:
+      213: 6816827705875011536
+    second: Bush Leaf1_7
+  - first:
+      213: -8338266169252676279
+    second: Bush Leaf1_8
+  - first:
+      213: 6771449319367434965
+    second: Bush Leaf1_9
+  - first:
+      213: 3882234050465899156
+    second: Bush Leaf1_10
+  - first:
+      213: -4316366575662946394
+    second: Bush Leaf1_11
+  - first:
+      213: -285459739326666759
+    second: Bush Leaf1_12
+  - first:
+      213: -6269397244421282448
+    second: Bush Leaf1_13
+  - first:
+      213: 2550144999985209014
+    second: Bush Leaf1_14
+  - first:
+      213: 2267114136257931462
+    second: Bush Leaf1_15
+  - first:
+      213: -3810234703709018047
+    second: Bush Leaf1_16
+  - first:
+      213: 6813055900294836571
+    second: Bush Leaf1_17
+  - first:
+      213: 793287673906516242
+    second: Bush Leaf1_18
+  - first:
+      213: 300763950831996894
+    second: Bush Leaf1_19
+  - first:
+      213: -8891645224766929653
+    second: Bush Leaf1_20
+  - first:
+      213: 6199718188276602201
+    second: Bush Leaf1_21
+  - first:
+      213: 6667558065034490259
+    second: Bush Leaf1_22
+  - first:
+      213: 2964978478278979089
+    second: Bush Leaf1_23
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bush Leaf1_0
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 457
+        width: 1001
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99daba60dd98e0b90800000000000000
+      internalID: -7273724765764080231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: fe17d04fe7a6a4449ba17b2a74c92297
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bush Leaf1_0: -7273724765764080231
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

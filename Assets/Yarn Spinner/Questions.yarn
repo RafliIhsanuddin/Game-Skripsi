@@ -1,0 +1,105 @@
+title: 1
+tags:
+---
+Puffkin: Hmm.. Temanku merasa tidak berharga. Seharusmya apa yang kulakukan ya?
+    -> Dengarkan dan beri dukungan
+        Puffkin: Ide bagus! Makasih ya.
+        <<set_pumpkin_anim "Happy">>
+    -> Abaikan saja
+        Puffkin: Kok jahat sekali sih.
+    -> Bilang bahwa itu tidak masalah
+        Puffkin: Kayanya itu tidak bisa membantu dia.
+===
+
+title: 2
+tags:
+---
+Puffkin: Siapa ya yang sebaiknya ku ajak bicara saat merasa tertekan?
+    -> Teman atau keluarga
+        Puffkin: Ide bagus! Makasih ya.
+        <<set_corn_anim "Idle">>
+    -> Orang asing di jalan
+        Puffkin: Yang benar saja.
+    -> Tidak perlu bicara pada siapa pun
+        Puffkin: Kayanya itu tidak bisa membantu aku.
+===
+
+title: 3
+tags:
+---
+Puffkin: Kenapa ya penting memahami tentang depresi?
+    -> Agar bisa membantu diri sendiri dan orang lain
+        Puffkin: Iya juga ya!
+        <<set_apple_anim "Idle">>
+    -> Itu tidak penting
+        Puffkin: Depresi itu penting tau.
+    -> Untuk menghindari berbicara soal kesehatan mental
+        Puffkin: Hmm kedengarannya itu tidak benar.
+===
+
+title: 4
+---
+Puffkin: Bagaimana seseorang dengan depresi biasanya merasakan energi mereka?
+    -> Energi meningkat dan selalu aktif
+        Puffkin: Itu kurang tepat, biasanya energi mereka justru menurun.
+    -> Energi rendah atau merasa lelah secara terus-menerus
+        Puffkin: Betul! Biasanya orang dengan depresi merasa seperti itu.
+        <<set_blueberry_anim "Idle">>
+===
+
+title: 5
+---
+Puffkin: Langkah pertama yang direkomendasikan untuk mengatasi depresi adalah?
+    -> Berbicara dengan profesional kesehatan mental
+        Puffkin: Benar! Itu adalah langkah awal yang sangat dianjurkan.
+        <<set_cherry_anim "Happy">>
+    -> Membeli suplemen tanpa konsultasi
+        Puffkin: Hmm, itu bukan langkah yang disarankan.
+===
+
+title: 6
+---
+Puffkin: Apa tujuan utama dari mindfulness?
+    -> Menjadi lebih sadar terhadap saat ini
+        Puffkin: Betul! Itu adalah inti dari mindfulness.
+        <<set_turnip_anim "Happy">>
+    -> Mengabaikan pikiran dan perasaan
+        Puffkin: Itu tidak sesuai dengan konsep mindfulness.
+===
+
+title: 7
+---
+Puffkin: Apa yang sering digunakan dalam latihan mindfulness?
+    -> Perhatian pada pernapasan
+        Puffkin: Betul! Pernapasan adalah fokus utama dalam mindfulness.
+        <<set_carrot_anim "Happy">>
+    -> Membuat daftar tugas harian
+        Puffkin: Itu bukan bagian dari latihan mindfulness.
+===
+
+title: 8
+---
+Puffkin: Bagaimana seseorang dapat mempraktikkan mindfulness dalam aktivitas sehari-hari?
+    -> Fokus penuh pada apa yang sedang dilakukan
+        Puffkin: Betul! Itu adalah cara yang tepat untuk mempraktikkan mindfulness.
+    -> Melakukan banyak tugas sekaligus
+        Puffkin: Itu justru berlawanan dengan prinsip mindfulness.
+===
+
+title: 9
+---
+Puffkin: Apa manfaat utama dari mindfulness?
+    -> Mengurangi stres dan meningkatkan kesejahteraan mental
+        Puffkin: Benar sekali! Itu adalah manfaat utama mindfulness.
+    -> Menyelesaikan semua masalah dalam waktu singkat
+        Puffkin: Itu bukan manfaat utama dari mindfulness.
+===
+
+title: 10
+---
+Puffkin: Kapan waktu yang baik untuk mempraktikkan mindfulness?
+    -> Kapan saja, sesuai dengan kebutuhan
+        Puffkin: Betul! Mindfulness bisa dipraktikkan kapan saja.
+    -> Hanya di pagi hari
+        Puffkin: Itu tidak benar. Mindfulness bisa dilakukan kapan saja.
+===
