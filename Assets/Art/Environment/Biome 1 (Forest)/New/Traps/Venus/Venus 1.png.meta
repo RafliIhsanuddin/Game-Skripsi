@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Venus 1_0: 7409818734404531361
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

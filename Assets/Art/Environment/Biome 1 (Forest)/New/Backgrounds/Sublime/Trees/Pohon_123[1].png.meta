@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 0700784a447c1f84abd995f617cb12f1
+guid: 5c5613611716e794bb2eb2b78640568f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6443526565757255273
-    second: Venus 2_0
+      213: -4058671979750713677
+    second: Pohon_123[1]_0
+  - first:
+      213: 4181038502929232447
+    second: Pohon_123[1]_1
+  - first:
+      213: -8959886909403039975
+    second: Pohon_123[1]_2
+  - first:
+      213: 5553893084666963335
+    second: Pohon_123[1]_3
+  - first:
+      213: -3920904804489929625
+    second: Pohon_123[1]_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +112,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Venus 2_0
+      name: Pohon_123[1]_0
       rect:
         serializedVersion: 2
-        x: 325
-        y: 0
-        width: 427
-        height: 952
+        x: 211
+        y: 186
+        width: 706
+        height: 866
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +127,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7910f3b4abef396a0800000000000000
-      internalID: -6443526565757255273
+      spriteID: 3b690239653bca7c0800000000000000
+      internalID: -4058671979750713677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pohon_123[1]_1
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 183
+        width: 622
+        height: 864
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f32f357cd58060a30800000000000000
+      internalID: 4181038502929232447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pohon_123[1]_2
+      rect:
+        serializedVersion: 2
+        x: 1583
+        y: 183
+        width: 703
+        height: 786
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 917fb51d35618a380800000000000000
+      internalID: -8959886909403039975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pohon_123[1]_3
+      rect:
+        serializedVersion: 2
+        x: 2379
+        y: 196
+        width: 607
+        height: 835
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 785a210b554631d40800000000000000
+      internalID: 5553893084666963335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pohon_123[1]_4
+      rect:
+        serializedVersion: 2
+        x: 3032
+        y: 209
+        width: 623
+        height: 834
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76c514aaad52699c0800000000000000
+      internalID: -3920904804489929625
       vertices: []
       indices: 
       edges: []
@@ -134,8 +234,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Venus 2_0: -6443526565757255273
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

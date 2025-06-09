@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0700784a447c1f84abd995f617cb12f1
+guid: 69d732a90c4fe06499865a78a10d515c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6443526565757255273
-    second: Venus 2_0
+      213: 2687937751024839124
+    second: Untitled_Artwork-3 4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Venus 2_0
+      name: Untitled_Artwork-3 4_0
       rect:
         serializedVersion: 2
-        x: 325
-        y: 0
-        width: 427
-        height: 952
+        x: 107
+        y: 148
+        width: 706
+        height: 866
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7910f3b4abef396a0800000000000000
-      internalID: -6443526565757255273
+      spriteID: 4d9a23ca4297d4520800000000000000
+      internalID: 2687937751024839124
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Venus 2_0: -6443526565757255273
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
