@@ -251,8 +251,6 @@ public class Movement : MonoBehaviour
                     Flip();
             }
         }
-
-        Debug.Log("Jumping: " + isJumping + ", Wall Sliding: " + isWallSliding + ", Grounded: " + isGrounded + ", Dashing: " + isDashing);
     }
 
     private void WallSlide()
@@ -437,9 +435,16 @@ public class Movement : MonoBehaviour
     {
         yield return new WaitForSeconds(dashDuration);
         isDashing = false;
-        if (isGrounded)
+        ghost.makeGhost = false; // Added this line to stop ghost effect immediately after dash
+
+        // After dash, check if we're still in air
+        if (!isGrounded)
         {
-            PlayerAnimationController.SetInteger("state", 0);
+            PlayerAnimationController.SetInteger("state", 3); // Set to jump/fall state
+        }
+        else
+        {
+            PlayerAnimationController.SetInteger("state", 0); // Set to idle if grounded
         }
     }
 
