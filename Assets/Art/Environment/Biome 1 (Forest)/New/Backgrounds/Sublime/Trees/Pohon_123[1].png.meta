@@ -234,7 +234,12 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Pohon_123[1]_0: -4058671979750713677
+      Pohon_123[1]_1: 4181038502929232447
+      Pohon_123[1]_2: -8959886909403039975
+      Pohon_123[1]_3: 5553893084666963335
+      Pohon_123[1]_4: -3920904804489929625
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
