@@ -57,6 +57,7 @@ public class Movement : MonoBehaviour
     public float dashCooldown = 0.01f;
     private bool isDashing = false;
     private float dashCooldownTimer = 0f;
+    private bool hasAirDashed = false; // Track if player has used their air dash
 
     // Jump
     private float jumpDebounceTime = 0.2f;
@@ -183,6 +184,7 @@ public class Movement : MonoBehaviour
             {
                 isJumping = false;
                 isWallJumping = false;
+                hasAirDashed = false; // Reset air dash when grounded
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
@@ -235,8 +237,15 @@ public class Movement : MonoBehaviour
                     rb.linearVelocity = movement;
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled)
+            // Only allow dash if not already dashed in air or if doing a wall jump
+            bool canAirDash = !hasAirDashed || isWallJumping;
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled && (isGrounded || canAirDash))
             {
+                if (!isGrounded && !isWallJumping)
+                {
+                    hasAirDashed = true; // Mark air dash as used
+                }
+
                 PlayDustEffect();
                 ghost.makeGhost = true;
                 Dash(horizontalInput, verticalInput);
@@ -530,4 +539,5 @@ public class Movement : MonoBehaviour
     {
         canDash = true;
     }
+
 }
