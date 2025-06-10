@@ -70,6 +70,12 @@ public class Movement : MonoBehaviour
     private float lastJumpTime = -1f;
     private bool isJumping = false;
 
+    // Double Jump variables
+    [Header("Double Jump")]
+    public bool doubleJumpEnabled = true; // Toggle for double jump functionality
+    private bool canDoubleJump = false; // Track if player can perform a double jump
+    private bool hasDoubleJumped = false; // Track if player has used their double jump
+
     // Reference for flipping character
     private bool isFacingRight = true;
 
@@ -201,6 +207,8 @@ public class Movement : MonoBehaviour
                 hasAirDashed = false;
                 hasWallDashedInAir = false; // Reset wall dash tracking when grounded
                 isWallDashLocked = false; // Reset lock when grounded
+                canDoubleJump = true; // Reset double jump when grounded
+                hasDoubleJumped = false; // Reset double jump tracking when grounded
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
@@ -238,6 +246,15 @@ public class Movement : MonoBehaviour
                         Jump();
                         PlayDustEffect();
                     }
+                }
+            }
+
+            // Handle double jump when in air and not wall sliding
+            if (!isGrounded && !isWallSliding && !isWallJumping && !isWallDashing && doubleJumpEnabled)
+            {
+                if (canDoubleJump && !hasDoubleJumped && Input.GetKeyDown(KeyCode.Space))
+                {
+                    DoubleJump();
                 }
             }
 
@@ -288,6 +305,8 @@ public class Movement : MonoBehaviour
             isWallSliding = true;
             isWallJumping = false;
             isWallDashing = false;
+            canDoubleJump = true; // Reset double jump when wall sliding
+            hasDoubleJumped = false; // Reset double jump tracking when wall sliding
 
             wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
             bool wallOnLeft = Physics2D.Raycast(WallCheck.position, Vector2.left, 0.2f, wallLayer);
@@ -393,6 +412,54 @@ public class Movement : MonoBehaviour
         }
     }
 
+    private void Jump()
+    {
+        if (Time.time - lastJumpTime > jumpDebounceTime && canJump)
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            isGrounded = false;
+            isJumping = true;
+            lastJumpTime = Time.time;
+
+            // Enable double jump after first jump
+            if (doubleJumpEnabled)
+            {
+                canDoubleJump = true;
+            }
+
+            PlayerAnimationController.SetInteger("state", 3);
+            UpdateCollider(jumpOffset, jumpSize);
+
+            if (jumpSoundPrefab != null)
+            {
+                GameObject jumpSoundInstance = Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
+            }
+        }
+    }
+
+    private void DoubleJump()
+    {
+        if (canDoubleJump && !hasDoubleJumped)
+        {
+            // Reset vertical velocity before applying jump force for consistent height
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+            hasDoubleJumped = true;
+            canDoubleJump = false;
+
+            PlayerAnimationController.SetInteger("state", 3);
+            UpdateCollider(jumpOffset, jumpSize);
+
+            if (jumpSoundPrefab != null)
+            {
+                GameObject jumpSoundInstance = Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
+            }
+
+            PlayDustEffect();
+        }
+    }
+
     public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
     {
         platformVelocity = velocity;
@@ -418,6 +485,8 @@ public class Movement : MonoBehaviour
             isWallDashing = false;
             isWallDashLocked = false; // Reset lock when grounded
             hasWallDashedInAir = false; // Reset wall dash tracking when grounded
+            canDoubleJump = true; // Reset double jump when grounded
+            hasDoubleJumped = false; // Reset double jump tracking when grounded
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
@@ -428,25 +497,6 @@ public class Movement : MonoBehaviour
     private bool IsWalled()
     {
         return Physics2D.OverlapCircle(WallCheck.position, wallCheckRadius, wallLayer);
-    }
-
-    private void Jump()
-    {
-        if (Time.time - lastJumpTime > jumpDebounceTime && canJump)
-        {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            isGrounded = false;
-            isJumping = true;
-            lastJumpTime = Time.time;
-
-            PlayerAnimationController.SetInteger("state", 3);
-            UpdateCollider(jumpOffset, jumpSize);
-
-            if (jumpSoundPrefab != null)
-            {
-                GameObject jumpSoundInstance = Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
-            }
-        }
     }
 
     private IEnumerator EndJumpAnimation()
