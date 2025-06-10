@@ -29,6 +29,7 @@ public class Movement : MonoBehaviour
     // Wall Dash variables
     private bool isWallDashing;
     private float wallDashDirection;
+    private bool isWallDashLocked = false; // New variable to track wall dash direction lock
 
     [Header("Wall Jump Force")]
     [SerializeField] public float wallJumpHorizontalForce = 15f;
@@ -185,6 +186,7 @@ public class Movement : MonoBehaviour
             StopMovementSounds();
             isJumping = false;
             hasAirDashed = false;
+            isWallDashLocked = false; // Reset lock when wall sliding
         }
 
         if (!isDashing && !isWallDashing)
@@ -195,6 +197,7 @@ public class Movement : MonoBehaviour
                 isWallJumping = false;
                 isWallDashing = false;
                 hasAirDashed = false;
+                isWallDashLocked = false; // Reset lock when grounded
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
@@ -240,10 +243,14 @@ public class Movement : MonoBehaviour
                 float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
                 Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
 
-                if (isOnPlatform)
-                    rb.linearVelocity = movement + platformVelocity;
-                else
-                    rb.linearVelocity = movement;
+                // Apply movement only if not in wall dash locked state
+                if (!isWallDashLocked)
+                {
+                    if (isOnPlatform)
+                        rb.linearVelocity = movement + platformVelocity;
+                    else
+                        rb.linearVelocity = movement;
+                }
             }
 
             bool canAirDash = !hasAirDashed;
@@ -259,7 +266,7 @@ public class Movement : MonoBehaviour
                 Dash(horizontalInput, verticalInput);
             }
 
-            if (!isWallSliding && !isWallJumping && !isWallDashing)
+            if (!isWallSliding && !isWallJumping && !isWallDashing && !isWallDashLocked)
             {
                 if (horizontalInput > 0 && !isFacingRight)
                     Flip();
@@ -368,6 +375,9 @@ public class Movement : MonoBehaviour
         isWallDashing = false;
         ghost.makeGhost = false;
 
+        // Set wall dash locked state
+        isWallDashLocked = true;
+
         if (!isGrounded)
         {
             PlayerAnimationController.SetInteger("state", 3);
@@ -375,6 +385,7 @@ public class Movement : MonoBehaviour
         else
         {
             PlayerAnimationController.SetInteger("state", 0);
+            isWallDashLocked = false;
         }
     }
 
@@ -401,6 +412,7 @@ public class Movement : MonoBehaviour
             isGrounded = true;
             isWallJumping = false;
             isWallDashing = false;
+            isWallDashLocked = false; // Reset lock when grounded
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
