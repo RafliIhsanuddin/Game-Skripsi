@@ -30,6 +30,7 @@ public class Movement : MonoBehaviour
     private bool isWallDashing;
     private float wallDashDirection;
     private bool isWallDashLocked = false; // New variable to track wall dash direction lock
+    private bool hasWallDashedInAir = false; // Track if player has wall dashed in air
 
     [Header("Wall Jump Force")]
     [SerializeField] public float wallJumpHorizontalForce = 15f;
@@ -186,6 +187,7 @@ public class Movement : MonoBehaviour
             StopMovementSounds();
             isJumping = false;
             hasAirDashed = false;
+            hasWallDashedInAir = false; // Reset wall dash tracking when wall sliding
             isWallDashLocked = false; // Reset lock when wall sliding
         }
 
@@ -197,6 +199,7 @@ public class Movement : MonoBehaviour
                 isWallJumping = false;
                 isWallDashing = false;
                 hasAirDashed = false;
+                hasWallDashedInAir = false; // Reset wall dash tracking when grounded
                 isWallDashLocked = false; // Reset lock when grounded
 
                 if (Mathf.Abs(horizontalInput) > 0)
@@ -253,7 +256,7 @@ public class Movement : MonoBehaviour
                 }
             }
 
-            bool canAirDash = !hasAirDashed;
+            bool canAirDash = !hasAirDashed && !hasWallDashedInAir; // Modified condition to include wall dash check
             if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled && (isGrounded || canAirDash))
             {
                 if (!isGrounded)
@@ -354,6 +357,7 @@ public class Movement : MonoBehaviour
         isWallDashing = true;
         isWallSliding = false;
         dashCooldownTimer = dashCooldown;
+        hasWallDashedInAir = true; // Mark that we've used a wall dash in air
 
         Vector2 dashDirection = new Vector2(wallDashDirection, 0.7f).normalized;
 
@@ -413,6 +417,7 @@ public class Movement : MonoBehaviour
             isWallJumping = false;
             isWallDashing = false;
             isWallDashLocked = false; // Reset lock when grounded
+            hasWallDashedInAir = false; // Reset wall dash tracking when grounded
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
