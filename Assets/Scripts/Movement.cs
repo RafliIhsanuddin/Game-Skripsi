@@ -182,7 +182,8 @@ public class Movement : MonoBehaviour
             if (rb.linearVelocity.y > 0.1f)
             {
                 isJumping = true;
-                PlayerAnimationController.SetInteger("state", 3);
+                PlayerAnimationController.SetTrigger("Jump");
+                PlayerAnimationController.SetInteger("state", 3); // Set to jump state
                 UpdateCollider(jumpOffset, jumpSize);
             }
         }
@@ -247,6 +248,10 @@ public class Movement : MonoBehaviour
                         PlayDustEffect();
                     }
                 }
+            }
+            else if (isJumping) // Added condition to maintain jump state while airborne
+            {
+                PlayerAnimationController.SetInteger("state", 3);
             }
 
             // Handle double jump when in air and not wall sliding
@@ -362,6 +367,9 @@ public class Movement : MonoBehaviour
             Flip();
         }
 
+        PlayerAnimationController.SetTrigger("Jump");
+        PlayerAnimationController.SetInteger("state", 3);
+
         if (jumpSoundPrefab != null)
         {
             Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
@@ -403,7 +411,7 @@ public class Movement : MonoBehaviour
 
         if (!isGrounded)
         {
-            PlayerAnimationController.SetInteger("state", 3);
+            PlayerAnimationController.SetInteger("state", 3); // Return to jump state after dash
         }
         else
         {
@@ -427,6 +435,7 @@ public class Movement : MonoBehaviour
                 canDoubleJump = true;
             }
 
+            PlayerAnimationController.SetTrigger("Jump");
             PlayerAnimationController.SetInteger("state", 3);
             UpdateCollider(jumpOffset, jumpSize);
 
@@ -448,6 +457,7 @@ public class Movement : MonoBehaviour
             hasDoubleJumped = true;
             canDoubleJump = false;
 
+            PlayerAnimationController.SetTrigger("Jump");
             PlayerAnimationController.SetInteger("state", 3);
             UpdateCollider(jumpOffset, jumpSize);
 
@@ -557,7 +567,7 @@ public class Movement : MonoBehaviour
 
         if (!isGrounded)
         {
-            PlayerAnimationController.SetInteger("state", 3);
+            PlayerAnimationController.SetInteger("state", 3); // Return to jump state after dash
         }
         else
         {
