@@ -26,6 +26,10 @@ public class Movement : MonoBehaviour
     private float wallJumpDirection;
     private bool wallOnRight;
 
+    // Wall Dash variables
+    private bool isWallDashing;
+    private float wallDashDirection;
+
     [Header("Wall Jump Force")]
     [SerializeField] public float wallJumpHorizontalForce = 15f;
     [SerializeField] public float wallJumpVerticalForce = 15f;
@@ -155,13 +159,17 @@ public class Movement : MonoBehaviour
         {
             WallJump();
         }
+        else if (isWallSliding && Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0)
+        {
+            WallDash();
+        }
 
-        if (!isGrounded && !isWallSliding && !isDashing)
+        if (!isGrounded && !isWallSliding && !isDashing && !isWallDashing)
         {
             StopMovementSounds();
         }
 
-        if (!isGrounded && !isWallSliding && !isDashing && !isJumping)
+        if (!isGrounded && !isWallSliding && !isDashing && !isWallDashing && !isJumping)
         {
             if (rb.linearVelocity.y > 0.1f)
             {
@@ -176,16 +184,17 @@ public class Movement : MonoBehaviour
             PlayerAnimationController.SetInteger("state", 5);
             StopMovementSounds();
             isJumping = false;
-            hasAirDashed = false; // Reset air dash when wall sliding
+            hasAirDashed = false;
         }
 
-        if (!isDashing)
+        if (!isDashing && !isWallDashing)
         {
             if (isGrounded)
             {
                 isJumping = false;
                 isWallJumping = false;
-                hasAirDashed = false; // Reset air dash when grounded
+                isWallDashing = false;
+                hasAirDashed = false;
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
@@ -226,8 +235,7 @@ public class Movement : MonoBehaviour
                 }
             }
 
-            // Only apply horizontal movement if not wall sliding or wall jumping
-            if (!isWallSliding && !isWallJumping)
+            if (!isWallSliding && !isWallJumping && !isWallDashing)
             {
                 float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
                 Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
@@ -238,13 +246,12 @@ public class Movement : MonoBehaviour
                     rb.linearVelocity = movement;
             }
 
-            // Only allow dash if not already dashed in air or if grounded
             bool canAirDash = !hasAirDashed;
             if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled && (isGrounded || canAirDash))
             {
                 if (!isGrounded)
                 {
-                    hasAirDashed = true; // Mark air dash as used
+                    hasAirDashed = true;
                 }
 
                 PlayDustEffect();
@@ -252,8 +259,7 @@ public class Movement : MonoBehaviour
                 Dash(horizontalInput, verticalInput);
             }
 
-            // Only allow flipping when not wall sliding or wall jumping
-            if (!isWallSliding && !isWallJumping)
+            if (!isWallSliding && !isWallJumping && !isWallDashing)
             {
                 if (horizontalInput > 0 && !isFacingRight)
                     Flip();
@@ -271,12 +277,11 @@ public class Movement : MonoBehaviour
         {
             isWallSliding = true;
             isWallJumping = false;
+            isWallDashing = false;
 
-            // Determine wall direction
             wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
             bool wallOnLeft = Physics2D.Raycast(WallCheck.position, Vector2.left, 0.2f, wallLayer);
 
-            // Force character to face away from the wall
             if (wallOnRight && isFacingRight)
             {
                 Flip();
@@ -286,11 +291,11 @@ public class Movement : MonoBehaviour
                 Flip();
             }
 
-            // Always maintain downward slide speed regardless of input
             float currentYVelocity = Mathf.Max(rb.linearVelocity.y, -wallSlideSpeed);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, currentYVelocity);
 
             wallJumpDirection = wallOnRight ? -1f : 1f;
+            wallDashDirection = wallJumpDirection;
 
             if (ghost != null)
             {
@@ -313,12 +318,9 @@ public class Movement : MonoBehaviour
         isWallJumping = true;
         isWallSliding = false;
         lastWallJumpTime = Time.time;
-        lastWallJumpDirection = wallJumpDirection; // Store the wall jump direction
+        lastWallJumpDirection = wallJumpDirection;
 
-        // Calculate jump direction - push away from wall diagonally
         Vector2 jumpDirection = new Vector2(wallJumpDirection, 1f).normalized;
-
-        // Apply jump force with more horizontal push
         Vector2 force = new Vector2(
             wallJumpHorizontalForce * jumpDirection.x * 1.5f,
             wallJumpVerticalForce * jumpDirection.y
@@ -334,6 +336,45 @@ public class Movement : MonoBehaviour
         if (jumpSoundPrefab != null)
         {
             Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
+        }
+    }
+
+    private void WallDash()
+    {
+        inputsDisabled = true;
+        inputDisableTimer = inputDisableDuration;
+
+        isWallDashing = true;
+        isWallSliding = false;
+        dashCooldownTimer = dashCooldown;
+
+        Vector2 dashDirection = new Vector2(wallDashDirection, 0.7f).normalized;
+
+        PlayerAnimationController.SetInteger("state", 4);
+        rb.linearVelocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
+        ghost.makeGhost = true;
+
+        if (dashSoundPrefab != null)
+        {
+            Instantiate(dashSoundPrefab, transform.position, Quaternion.identity);
+        }
+
+        StartCoroutine(EndWallDash());
+    }
+
+    private IEnumerator EndWallDash()
+    {
+        yield return new WaitForSeconds(dashDuration);
+        isWallDashing = false;
+        ghost.makeGhost = false;
+
+        if (!isGrounded)
+        {
+            PlayerAnimationController.SetInteger("state", 3);
+        }
+        else
+        {
+            PlayerAnimationController.SetInteger("state", 0);
         }
     }
 
@@ -359,6 +400,7 @@ public class Movement : MonoBehaviour
             timeSinceGrounded = Time.time;
             isGrounded = true;
             isWallJumping = false;
+            isWallDashing = false;
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
@@ -420,7 +462,6 @@ public class Movement : MonoBehaviour
 
         Vector2 dashDirection;
 
-        // If we're in a wall jump or recently wall jumped (within 0.3 seconds), use wall jump direction
         if (isWallJumping || (Time.time - lastWallJumpTime < 0.3f))
         {
             dashDirection = new Vector2(lastWallJumpDirection, 0.7f).normalized;
@@ -447,7 +488,6 @@ public class Movement : MonoBehaviour
         isDashing = false;
         ghost.makeGhost = false;
 
-        // After dash, check if we're still in air
         if (!isGrounded)
         {
             PlayerAnimationController.SetInteger("state", 3);
