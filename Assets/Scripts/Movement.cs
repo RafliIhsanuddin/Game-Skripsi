@@ -177,15 +177,12 @@ public class Movement : MonoBehaviour
             StopMovementSounds();
         }
 
-        if (!isGrounded && !isWallSliding && !isDashing && !isWallDashing && !isJumping)
+        // Automatically set to jump state when in air
+        if (!isGrounded && !isWallSliding && !isDashing && !isWallDashing)
         {
-            if (rb.linearVelocity.y > 0.1f)
-            {
-                isJumping = true;
-                PlayerAnimationController.SetTrigger("Jump");
-                PlayerAnimationController.SetInteger("state", 3); // Set to jump state
-                UpdateCollider(jumpOffset, jumpSize);
-            }
+            PlayerAnimationController.SetInteger("state", 3); // Set to jump state
+            UpdateCollider(jumpOffset, jumpSize);
+            isJumping = true;
         }
 
         if (isWallSliding)
@@ -248,10 +245,6 @@ public class Movement : MonoBehaviour
                         PlayDustEffect();
                     }
                 }
-            }
-            else if (isJumping) // Added condition to maintain jump state while airborne
-            {
-                PlayerAnimationController.SetInteger("state", 3);
             }
 
             // Handle double jump when in air and not wall sliding
