@@ -83,6 +83,13 @@ public class Movement : MonoBehaviour
     private bool hasWallJumpDoubleJumped = false; // Track if player has used their wall jump double jump
     private bool hasWallJumped = false; // New flag to track if we've done a wall jump
 
+    // Wall Dash Double Jump variables
+    [Header("Wall Dash Double Jump")]
+    public bool wallDashDoubleJumpEnabled = true; // Toggle for wall dash double jump functionality
+    private bool canWallDashDoubleJump = false; // Track if player can perform a double jump after wall dash
+    private bool hasWallDashDoubleJumped = false; // Track if player has used their wall dash double jump
+    private bool hasUsedFirstJumpAfterWallDash = false; // Track if first jump after wall dash was used
+
     // Reference for flipping character
     private bool isFacingRight = true;
 
@@ -200,6 +207,7 @@ public class Movement : MonoBehaviour
             hasAirDashed = false;
             hasWallDashedInAir = false; // Reset wall dash tracking when wall sliding
             isWallDashLocked = false; // Reset lock when wall sliding
+            ResetWallDashDoubleJump(); // Reset wall dash double jump when wall sliding
         }
 
         if (!isDashing && !isWallDashing)
@@ -217,6 +225,7 @@ public class Movement : MonoBehaviour
                 hasDoubleJumped = false; // Reset double jump tracking when grounded
                 canWallJumpDoubleJump = false; // Reset wall jump double jump when grounded
                 hasWallJumpDoubleJumped = false; // Reset wall jump double jump tracking when grounded
+                ResetWallDashDoubleJump(); // Reset wall dash double jump when grounded
 
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
@@ -275,6 +284,20 @@ public class Movement : MonoBehaviour
                 }
             }
 
+            // Handle first jump after wall dash
+            if (!isGrounded && !isWallSliding && wallDashDoubleJumpEnabled && hasWallDashedInAir && !IsWalled())
+            {
+                if (canWallDashDoubleJump && !hasUsedFirstJumpAfterWallDash && Input.GetKeyDown(KeyCode.Space))
+                {
+                    FirstJumpAfterWallDash();
+                }
+                // Handle second jump (double jump) after wall dash
+                else if (hasUsedFirstJumpAfterWallDash && !hasWallDashDoubleJumped && Input.GetKeyDown(KeyCode.Space))
+                {
+                    WallDashDoubleJump();
+                }
+            }
+
             if (!isWallSliding && !isWallJumping && !isWallDashing)
             {
                 float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
@@ -326,6 +349,7 @@ public class Movement : MonoBehaviour
             hasDoubleJumped = false; // Reset double jump tracking when wall sliding
             canWallJumpDoubleJump = false; // Reset wall jump double jump when wall sliding
             hasWallJumpDoubleJumped = false; // Reset wall jump double jump tracking when wall sliding
+            ResetWallDashDoubleJump(); // Reset wall dash double jump when wall sliding
 
             wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
             bool wallOnLeft = Physics2D.Raycast(WallCheck.position, Vector2.left, 0.2f, wallLayer);
@@ -421,6 +445,54 @@ public class Movement : MonoBehaviour
         PlayDustEffect();
     }
 
+    private void FirstJumpAfterWallDash()
+    {
+        Debug.Log("First jump after wall dash performed");
+
+        // Regular jump behavior
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        hasUsedFirstJumpAfterWallDash = true;
+
+        PlayerAnimationController.SetTrigger("Jump");
+        PlayerAnimationController.SetInteger("state", 3);
+        UpdateCollider(jumpOffset, jumpSize);
+
+        if (jumpSoundPrefab != null)
+        {
+            GameObject jumpSoundInstance = Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
+        }
+
+        PlayDustEffect();
+    }
+
+    private void WallDashDoubleJump()
+    {
+        Debug.Log("WallDash double jump performed");
+
+        // Reset vertical velocity before applying jump force for consistent height
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        hasWallDashDoubleJumped = true;
+        canWallDashDoubleJump = false;
+
+        // After using wall dash double jump, disable dashing
+        canDash = false;
+
+        PlayerAnimationController.SetTrigger("Jump");
+        PlayerAnimationController.SetInteger("state", 3);
+        UpdateCollider(jumpOffset, jumpSize);
+
+        if (jumpSoundPrefab != null)
+        {
+            GameObject jumpSoundInstance = Instantiate(jumpSoundPrefab, transform.position, Quaternion.identity);
+        }
+
+        PlayDustEffect();
+    }
+
     private void WallDash()
     {
         inputsDisabled = true;
@@ -430,6 +502,14 @@ public class Movement : MonoBehaviour
         isWallSliding = false;
         dashCooldownTimer = dashCooldown;
         hasWallDashedInAir = true; // Mark that we've used a wall dash in air
+
+        // Enable wall dash double jump after wall dash
+        if (wallDashDoubleJumpEnabled)
+        {
+            canWallDashDoubleJump = true;
+            hasWallDashDoubleJumped = false;
+            hasUsedFirstJumpAfterWallDash = false;
+        }
 
         Vector2 dashDirection = new Vector2(wallDashDirection, 0.7f).normalized;
 
@@ -515,6 +595,13 @@ public class Movement : MonoBehaviour
         }
     }
 
+    private void ResetWallDashDoubleJump()
+    {
+        canWallDashDoubleJump = false;
+        hasWallDashDoubleJumped = false;
+        hasUsedFirstJumpAfterWallDash = false;
+    }
+
     public void SetPlatformVelocity(Vector2 velocity, bool onPlatform)
     {
         platformVelocity = velocity;
@@ -545,6 +632,8 @@ public class Movement : MonoBehaviour
             hasDoubleJumped = false; // Reset double jump tracking when grounded
             canWallJumpDoubleJump = false; // Reset wall jump double jump when grounded
             hasWallJumpDoubleJumped = false; // Reset wall jump double jump tracking when grounded
+            ResetWallDashDoubleJump(); // Reset wall dash double jump when grounded
+            canDash = true; // Re-enable dash when grounded
         }
         else if (Time.time - timeSinceGrounded > groundTimeBuffer)
         {
