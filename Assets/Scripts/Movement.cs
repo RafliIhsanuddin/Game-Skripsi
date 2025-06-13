@@ -12,9 +12,11 @@ public class Movement : MonoBehaviour
     // Wall Slide variables
     public bool isWallSliding;
     public float wallSlideSpeed = 2f;
-    [SerializeField] private Transform WallCheck;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private float wallCheckRadius = 0.2f;
+
+    [Header("Wall Detection")]
+    [SerializeField] private float wallCheckRightDistance = 0.2f;
+    [SerializeField] private float wallCheckLeftDistance = 0.2f;
     private float lastWallJumpTime = 0f;
     private float wallJumpCooldown = 0.2f;
     private float lastWallJumpDirection = 1f; // Track last wall jump direction
@@ -24,7 +26,8 @@ public class Movement : MonoBehaviour
     public Vector2 wallJumpForce = new Vector2(15f, 15f);
     private bool isWallJumping;
     private float wallJumpDirection;
-    private bool wallOnRight;
+    public bool wallOnRight;
+    public bool wallOnLeft;
 
     // Wall Dash variables
     private bool isWallDashing;
@@ -114,8 +117,8 @@ public class Movement : MonoBehaviour
     private Vector2 walkSize = new Vector2(2.15312004f, 14.9763098f);
     private Vector2 runOffset = new Vector2(0.0295305252f, 0.454950929f);
     private Vector2 runSize = new Vector2(2.15312004f, 14.8092728f);
-    private Vector2 jumpOffset = new Vector2(0.0435304642f, 2.14305782f);
-    private Vector2 jumpSize = new Vector2(1.83390617f, 10.8472614f);
+    private Vector2 jumpOffset = new Vector2(0.361042f, 2.143058f);
+    private Vector2 jumpSize = new Vector2(8.456917f, 10.84726f);
 
     private bool isOnPlatform = false;
     private Vector2 platformVelocity = Vector2.zero;
@@ -201,7 +204,7 @@ public class Movement : MonoBehaviour
 
         if (isWallSliding)
         {
-            PlayerAnimationController.SetInteger("state", 5);
+            PlayerAnimationController.SetInteger("state", 7);
             StopMovementSounds();
             isJumping = false;
             hasAirDashed = false;
@@ -351,8 +354,8 @@ public class Movement : MonoBehaviour
             hasWallJumpDoubleJumped = false; // Reset wall jump double jump tracking when wall sliding
             ResetWallDashDoubleJump(); // Reset wall dash double jump when wall sliding
 
-            wallOnRight = Physics2D.Raycast(WallCheck.position, Vector2.right, 0.2f, wallLayer);
-            bool wallOnLeft = Physics2D.Raycast(WallCheck.position, Vector2.left, 0.2f, wallLayer);
+            wallOnRight = Physics2D.Raycast(transform.position, Vector2.right, wallCheckRightDistance, wallLayer);
+            wallOnLeft = Physics2D.Raycast(transform.position, Vector2.left, wallCheckLeftDistance, wallLayer);
 
             if (wallOnRight && isFacingRight)
             {
@@ -643,7 +646,9 @@ public class Movement : MonoBehaviour
 
     private bool IsWalled()
     {
-        return Physics2D.OverlapCircle(WallCheck.position, wallCheckRadius, wallLayer);
+        wallOnRight = Physics2D.Raycast(transform.position, Vector2.right, wallCheckRightDistance, wallLayer);
+        wallOnLeft = Physics2D.Raycast(transform.position, Vector2.left, wallCheckLeftDistance, wallLayer);
+        return wallOnRight || wallOnLeft;
     }
 
     private IEnumerator EndJumpAnimation()
@@ -754,12 +759,15 @@ public class Movement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        // Ground check debug
         Gizmos.color = Color.red;
         Vector3 start = transform.position + (Vector3)groundCheckStartOffset;
         Gizmos.DrawLine(start, start + Vector3.down * groundCheckRayLength);
 
+        // Wall check debug
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(WallCheck.position, wallCheckRadius);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * wallCheckRightDistance);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.left * wallCheckLeftDistance);
     }
 
     public void SetStopRight(bool value)
