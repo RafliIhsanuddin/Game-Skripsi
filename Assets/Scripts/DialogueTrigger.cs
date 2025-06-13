@@ -1,55 +1,31 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Yarn.Unity;
 
 public class DialogueTrigger : MonoBehaviour
 {
-    public LayerMask kael;
+    public LayerMask kaelLayer;
     public DialogueRunner dialogueRunner;
     public GameObject bubble;
-    public PuffkinAnimator puffkinAnim;
-    [SerializeField] private string yarnNode;
-
-    [Header("Unique ID for this Puffkin")]
-    [SerializeField] private string puffkinID = "corn";  // <- Set this in Inspector
-
-    private string animCommandName => $"set_{puffkinID}_anim";
+    [SerializeField] public string yarnNode;
 
     void Update()
     {
-        if (Physics2D.Raycast(transform.position, Vector2.left, 10f, kael))
+        Debug.Log("is dialogue running?" + dialogueRunner.IsDialogueRunning);
+
+        // Raycast from Puffkin toward Kael
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left, 7f, kaelLayer);
+        //Debug.DrawRay(transform.position, Vector2.left * 7f, Color.cyan);
+
+        if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                EnableOnlyThisPuffkin();
-
+                //Debug.Log($"[Puffkin] {gameObject.name} starting node: {yarnNode}");
                 dialogueRunner.StartDialogue(yarnNode);
                 bubble.SetActive(false);
             }
         }
+
     }
-
-    void EnableOnlyThisPuffkin()
-    {
-        foreach (var anim in FindObjectsOfType<PuffkinAnimator>())
-            anim.enabled = false;
-
-        if (puffkinAnim != null)
-            puffkinAnim.enabled = true;
-    }
-
-    private void OnEnable()
-    {
-        if (dialogueRunner != null && puffkinAnim != null)
-        {
-            dialogueRunner.AddCommandHandler<string>(animCommandName, puffkinAnim.SetAnimation);
-        }
-    }
-
-    /*private void OnDisable()
-    {
-        if (dialogueRunner != null)
-        {
-            dialogueRunner.RemoveCommandHandler(animCommandName);
-        }
-    }*/
 }
+

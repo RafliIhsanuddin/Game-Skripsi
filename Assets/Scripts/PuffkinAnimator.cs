@@ -5,7 +5,8 @@ public class PuffkinAnimator : MonoBehaviour
 {
     public Animator animator;
 
-    public void SetAnimation(string animTrigger)
+    [YarnCommand("HappyPuffkin")]
+    public void SetAnimation()
     {
         if (animator == null)
         {
@@ -13,7 +14,7 @@ public class PuffkinAnimator : MonoBehaviour
             return;
         }
 
-        Debug.Log($"TRIGGERING: {animTrigger} on {gameObject.name}");
-        animator.SetTrigger(animTrigger);
+        Debug.Log($"TRIGGERING: Happy on {gameObject.name}");
+        animator.SetTrigger("Happy");
     }
 }
