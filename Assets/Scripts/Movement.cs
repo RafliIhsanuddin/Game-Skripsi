@@ -520,6 +520,7 @@ public class Movement : MonoBehaviour
         rb.linearVelocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
         ghost.makeGhost = true;
 
+        StopMovementSounds(); // Stop movement sounds during dash
         if (dashSoundPrefab != null)
         {
             Instantiate(dashSoundPrefab, transform.position, Quaternion.identity);
@@ -693,6 +694,7 @@ public class Movement : MonoBehaviour
         PlayerAnimationController.SetInteger("state", 4);
         rb.linearVelocity = new Vector2(dashDirection.x * horizontalDashSpeed, dashDirection.y * verticalDashSpeed);
 
+        StopMovementSounds(); // Stop movement sounds during dash
         if (dashSoundPrefab != null)
         {
             Instantiate(dashSoundPrefab, transform.position, Quaternion.identity);
