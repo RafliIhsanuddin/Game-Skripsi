@@ -326,7 +326,17 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "42f84a924e627e19a1d3e97c181b04f2f56e2d05"
+      "hash": "eb02501f6ec0bd1b2f2dcaaae257f59a7b06d341"
+    },
+    "dev.yarnspinner.unity.samples": {
+      "version": "https://github.com/YarnSpinnerTool/YarnSpinner-Unity-Samples.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "dev.yarnspinner.unity": "3.*",
+        "com.unity.shadergraph": "14.0.0"
+      },
+      "hash": "163c1aeda1f2d938e6cab8d17bb7599cbd5b7c55"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
