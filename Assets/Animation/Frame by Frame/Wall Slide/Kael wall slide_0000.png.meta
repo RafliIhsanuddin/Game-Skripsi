@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Kael wall slide_0000_0: -498746833719290219
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
