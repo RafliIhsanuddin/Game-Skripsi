@@ -5,6 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     public bool dashLocked = true;
+    public bool dashEnabled = true; // New boolean to toggle dash ability
 
     public float horizontalInput;
     public float verticalInput;
@@ -185,7 +186,7 @@ public class Movement : MonoBehaviour
         {
             WallJump();
         }
-        else if (isWallSliding && Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0)
+        else if (isWallSliding && Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && dashEnabled) // Added dashEnabled check
         {
             WallDash();
         }
@@ -318,7 +319,7 @@ public class Movement : MonoBehaviour
             }
 
             bool canAirDash = !hasAirDashed && !hasWallDashedInAir; // Modified condition to include wall dash check
-            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled && (isGrounded || canAirDash))
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashCooldownTimer <= 0 && !inputsDisabled && (isGrounded || canAirDash) && dashEnabled) // Added dashEnabled check
             {
                 if (!isGrounded)
                 {
