@@ -13,8 +13,9 @@ public class DialogueTrigger : MonoBehaviour
         Debug.Log("is dialogue running?" + dialogueRunner.IsDialogueRunning);
 
         // Raycast from Puffkin toward Kael
+
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left, 7f, kaelLayer);
-        //Debug.DrawRay(transform.position, Vector2.left * 7f, Color.cyan);
+        Debug.DrawRay(transform.position, Vector2.left * 7f, Color.cyan);
 
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {

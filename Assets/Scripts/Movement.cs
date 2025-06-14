@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public bool dashLocked = true;
 
     public float horizontalInput;
     public float verticalInput;
