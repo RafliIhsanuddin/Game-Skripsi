@@ -1,5 +1,6 @@
 title: corn
 ---
+<<once>>
 Puffkin: Hmm.. Temanku merasa tidak berharga. Seharusmya apa yang kulakukan ya?
     -> Dengarkan dan beri dukungan
         Puffkin: Ide bagus! Makasih ya.
@@ -8,10 +9,12 @@ Puffkin: Hmm.. Temanku merasa tidak berharga. Seharusmya apa yang kulakukan ya?
         Puffkin: Kok jahat sekali sih.
     -> Bilang bahwa itu tidak masalah
         Puffkin: Kayanya itu tidak bisa membantu dia.
+<<endonce>>
 ===
 
 title: pumpkin
 ---
+<<once>>
 Puffkin: Siapa ya yang sebaiknya ku ajak bicara saat merasa tertekan?
     -> Teman atau keluarga
         Puffkin: Ide bagus! Makasih ya.
@@ -20,10 +23,12 @@ Puffkin: Siapa ya yang sebaiknya ku ajak bicara saat merasa tertekan?
         Puffkin: Yang benar saja.
     -> Tidak perlu bicara pada siapa pun
         Puffkin: Kayanya itu tidak bisa membantu aku.
+<<endonce>>
 ===
 
 title: turnip
 ---
+<<once>>
 Puffkin: Kenapa ya penting memahami tentang depresi?
     -> Agar bisa membantu diri sendiri dan orang lain
         Puffkin: Iya juga ya!
@@ -32,46 +37,55 @@ Puffkin: Kenapa ya penting memahami tentang depresi?
         Puffkin: Depresi itu penting tau.
     -> Untuk menghindari berbicara soal kesehatan mental
         Puffkin: Hmm kedengarannya itu tidak benar.
+<<endonce>>
 ===
 
 title: blueberry
 ---
+<<once>>
 Puffkin: Bagaimana seseorang dengan depresi biasanya merasakan energi mereka?
     -> Energi meningkat dan selalu aktif
         Puffkin: Itu kurang tepat, biasanya energi mereka justru menurun.
     -> Energi rendah atau merasa lelah secara terus-menerus
         Puffkin: Betul! Biasanya orang dengan depresi merasa seperti itu.
         <<HappyPuffkin BlueberrySprite>>
+<<endonce>>
 ===
 
 title: cherry
 ---
+<<once>>
 Puffkin: Langkah pertama yang direkomendasikan untuk mengatasi depresi adalah?
     -> Berbicara dengan profesional kesehatan mental
         Puffkin: Benar! Itu adalah langkah awal yang sangat dianjurkan.
         <<HappyPuffkin CherrySprite>>
     -> Membeli suplemen tanpa konsultasi
         Puffkin: Hmm, itu bukan langkah yang disarankan.
+<<endonce>>
 ===
 
 title: carrot
 ---
+<<once>>
 Puffkin: Apa tujuan utama dari mindfulness?
     -> Menjadi lebih sadar terhadap saat ini
         Puffkin: Betul! Itu adalah inti dari mindfulness.
         <<HappyPuffkin CarrotSprite>>
     -> Mengabaikan pikiran dan perasaan
         Puffkin: Itu tidak sesuai dengan konsep mindfulness.
+<<endonce>>
 ===
 
 title: apple
 ---
+<<once>>
 Puffkin: Apa yang sering digunakan dalam latihan mindfulness?
     -> Perhatian pada pernapasan
         Puffkin: Betul! Pernapasan adalah fokus utama dalam mindfulness.
         <<HappyPuffkin AppleSprite>>
     -> Membuat daftar tugas harian
         Puffkin: Itu bukan bagian dari latihan mindfulness.
+<<endonce>>
 ===
 
 title: eight
