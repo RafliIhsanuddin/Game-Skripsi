@@ -257,13 +257,26 @@ public class Companion : MonoBehaviour
 
         upwardInfo = Physics2D.Raycast(transform.position, Vector2.up, upwardRayLength, whatIsGround);
 
+        bool wasGrounded = isGrounded;
         isGrounded = leftInfoGround.collider != null || rightInfoGround.collider != null;
 
-        // Debug visualization for wall rays
+        // Reset state when landing
+        if (!wasGrounded && isGrounded)
+        {
+            // Immediately evaluate correct state when landing
+            if (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
+            {
+                float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.transform.position);
+                SetTargetState(distanceToPlayer <= walkDistanceThreshold ? STATE_WALKING : STATE_RUNNING);
+            }
+            else
+            {
+                SetTargetState(STATE_IDLE);
+            }
+        }
+
         Debug.DrawRay(leftGroundPos, Vector2.left * wallRayLength, leftInfo.collider ? Color.green : Color.red);
         Debug.DrawRay(rightGroundPos, Vector2.right * wallRayLength, rightInfo.collider ? Color.green : Color.red);
-
-        // Debug visualization for rayHeight (though not used in logic)
         Debug.DrawRay(transform.position, Vector2.up * rayHeight, Color.blue);
     }
 
@@ -297,7 +310,6 @@ public class Companion : MonoBehaviour
     {
         if (!moveEnabled) return;
 
-        // Check if movement in current direction is restricted
         if ((movingRight && movementRestrictedRight) || (!movingRight && movementRestrictedLeft))
         {
             isIdle = true;
@@ -316,11 +328,13 @@ public class Companion : MonoBehaviour
 
     private void UpdateAnimation()
     {
-        if (!isGrounded && !isIdle)
+        if (!isGrounded)
         {
             currentState = STATE_JUMPING;
-            animator.SetInteger("state", STATE_JUMPING);
-            return;
+        }
+        else if (Mathf.Abs(rb.linearVelocity.x) < 0.1f)
+        {
+            currentState = STATE_IDLE;
         }
 
         animator.SetInteger("state", currentState);
@@ -328,7 +342,7 @@ public class Companion : MonoBehaviour
 
     private void HandleStateTransitions()
     {
-        if (currentState == targetState || !isGrounded) return;
+        if (currentState == targetState) return;
 
         stateTransitionTimer -= Time.deltaTime;
 
