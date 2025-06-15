@@ -9,7 +9,8 @@ public class MovementRestrictor : MonoBehaviour
     {
         LockLeft,
         LockRight,
-        LockAll
+        LockAll,
+        NoRestriction // New option added
     }
 
     [Header("Movement Restrictions")]
@@ -62,12 +63,16 @@ public class MovementRestrictor : MonoBehaviour
         Companion companion = other.GetComponent<Companion>();
         if (companion == null) return;
 
-        companion.ResetMovementRestriction();
+        // Only reset if we were actually restricting movement
+        if (restrictionType != RestrictionType.NoRestriction)
+        {
+            companion.ResetMovementRestriction();
+        }
     }
 
     private void ApplyRestriction(Companion companion)
     {
-        if (companion == null) return;
+        if (companion == null || restrictionType == RestrictionType.NoRestriction) return;
 
         switch (restrictionType)
         {
@@ -80,6 +85,7 @@ public class MovementRestrictor : MonoBehaviour
             case RestrictionType.LockAll:
                 companion.RestrictMovement(left: true, right: true);
                 break;
+                // NoRestriction case doesn't need handling as we return early
         }
     }
 
