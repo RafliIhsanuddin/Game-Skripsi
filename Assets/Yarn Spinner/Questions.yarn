@@ -14,16 +14,22 @@ Puffkin: Hmm.. Temanku merasa tidak berharga. Seharusmya apa yang kulakukan ya?
 
 title: pumpkin
 ---
-<<once>>
+<<declare $pumpkinhappy = false>>
+<<if $pumpkinhappy>>
+Pumpkin: Terima kasih lagi ya!
+<<else>>
 Puffkin: Siapa ya yang sebaiknya ku ajak bicara saat merasa tertekan?
     -> Teman atau keluarga
         Puffkin: Ide bagus! Makasih ya.
+        Puffkin: Sebagai tanda terima kasihku, aku punya sesuatu untukmu. 
+        <<set $pumpkinhappy = true>>
         <<HappyPuffkin PumpkinSprite>>
+        <<UnlockDash DashUnlocker>>
     -> Orang asing di jalan
         Puffkin: Yang benar saja.
     -> Tidak perlu bicara pada siapa pun
         Puffkin: Kayanya itu tidak bisa membantu aku.
-<<endonce>>
+<<endif>>
 ===
 
 title: turnip
