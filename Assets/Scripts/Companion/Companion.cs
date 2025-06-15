@@ -34,7 +34,7 @@ public class Companion : MonoBehaviour
     [SerializeField] private float walkToIdleDuration = 0.1f;
 
     [Header("Jump Settings")]
-    [SerializeField] private float upwardRayLength = 5f;
+    [SerializeField] public float upwardRayLength = 5f;
     [SerializeField] private float obstacleWaitTime = 0.5f;
     [SerializeField] private float jumpCooldown = 0.3f;
     [SerializeField] private float groundCheckDelayAfterJump = 0.2f;
@@ -70,6 +70,8 @@ public class Companion : MonoBehaviour
     private float stateTransitionTimer = 0f;
     private int targetState = STATE_IDLE;
     private Vector2 currentVelocity = Vector2.zero;
+    private bool movementRestrictedLeft = false;
+    private bool movementRestrictedRight = false;
 
     private Rigidbody2D rb;
     private CapsuleCollider2D capsuleCollider;
@@ -130,6 +132,36 @@ public class Companion : MonoBehaviour
 
         HandleMovement();
     }
+
+    #region Public Methods
+    public void RestrictMovement(bool left, bool right)
+    {
+        movementRestrictedLeft = left;
+        movementRestrictedRight = right;
+
+        // If currently moving in a restricted direction, stop
+        if ((movingRight && movementRestrictedRight) || (!movingRight && movementRestrictedLeft))
+        {
+            isIdle = true;
+            moveEnabled = false;
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            SetTargetState(STATE_IDLE);
+        }
+    }
+
+    public void ResetMovementRestriction()
+    {
+        movementRestrictedLeft = false;
+        movementRestrictedRight = false;
+
+        // Re-enable movement if we were forced idle by restrictions
+        if (isIdle && Vector2.Distance(transform.position, playerTarget.transform.position) > idleDistanceThreshold)
+        {
+            isIdle = false;
+            moveEnabled = true;
+        }
+    }
+    #endregion
 
     #region Core Logic
     private void CheckForPlayerAbove()
@@ -264,6 +296,16 @@ public class Companion : MonoBehaviour
     private void HandleMovement()
     {
         if (!moveEnabled) return;
+
+        // Check if movement in current direction is restricted
+        if ((movingRight && movementRestrictedRight) || (!movingRight && movementRestrictedLeft))
+        {
+            isIdle = true;
+            moveEnabled = false;
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            SetTargetState(STATE_IDLE);
+            return;
+        }
 
         Vector2 targetVelocity = movingRight ?
             new Vector2(speed, rb.linearVelocity.y) :

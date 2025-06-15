@@ -119,8 +119,8 @@ public class Movement : MonoBehaviour
     private Vector2 walkSize = new Vector2(2.15312004f, 14.9763098f);
     private Vector2 runOffset = new Vector2(0.0295305252f, 0.454950929f);
     private Vector2 runSize = new Vector2(2.15312004f, 14.8092728f);
-    private Vector2 jumpOffset = new Vector2(0.361042f, 2.143058f);
-    private Vector2 jumpSize = new Vector2(8.456917f, 10.84726f);
+    [SerializeField] public Vector2 jumpOffset = new Vector2(0.361042f, 2.143058f);
+    [SerializeField] public Vector2 jumpSize = new Vector2(8.456917f, 10.84726f);
 
     private bool isOnPlatform = false;
     private Vector2 platformVelocity = Vector2.zero;
