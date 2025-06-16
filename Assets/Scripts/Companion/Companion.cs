@@ -45,8 +45,8 @@ public class Companion : MonoBehaviour
     [SerializeField] private float groundRayHorizontalOffset = 0.5f;
 
     [Header("Wall Detection")]
-    [SerializeField] private float wallRayLength = 30f;
-    [SerializeField] private float rayHeight = 22.5f; // Currently unused in logic
+    [SerializeField] public float wallRayLength = 30f;
+    [SerializeField] public float rayHeight = 22.5f; // Now used for wall detection
 
     [Header("DEBUGING")]
     public bool DEBUGMODE = false;
@@ -252,8 +252,12 @@ public class Companion : MonoBehaviour
         leftInfoGround = Physics2D.Raycast(leftGroundPos, Vector2.down, groundRayLength, whatIsGround);
         rightInfoGround = Physics2D.Raycast(rightGroundPos, Vector2.down, groundRayLength, whatIsGround);
 
-        leftInfo = Physics2D.Raycast(leftGroundPos, Vector2.left, wallRayLength, whatIsGround);
-        rightInfo = Physics2D.Raycast(rightGroundPos, Vector2.right, wallRayLength, whatIsGround);
+        // Modified to use rayHeight for wall detection
+        Vector2 leftWallPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
+        Vector2 rightWallPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
+
+        leftInfo = Physics2D.Raycast(leftWallPos, Vector2.left, wallRayLength, whatIsGround);
+        rightInfo = Physics2D.Raycast(rightWallPos, Vector2.right, wallRayLength, whatIsGround);
 
         upwardInfo = Physics2D.Raycast(transform.position, Vector2.up, upwardRayLength, whatIsGround);
 
@@ -275,9 +279,9 @@ public class Companion : MonoBehaviour
             }
         }
 
-        Debug.DrawRay(leftGroundPos, Vector2.left * wallRayLength, leftInfo.collider ? Color.green : Color.red);
-        Debug.DrawRay(rightGroundPos, Vector2.right * wallRayLength, rightInfo.collider ? Color.green : Color.red);
-        Debug.DrawRay(transform.position, Vector2.up * rayHeight, Color.blue);
+        Debug.DrawRay(leftWallPos, Vector2.left * wallRayLength, leftInfo.collider ? Color.green : Color.red);
+        Debug.DrawRay(rightWallPos, Vector2.right * wallRayLength, rightInfo.collider ? Color.green : Color.red);
+        Debug.DrawRay(transform.position, Vector2.up * upwardRayLength, Color.blue);
     }
 
     private void HandleJumpLogic()
@@ -465,6 +469,14 @@ public class Companion : MonoBehaviour
 
         Gizmos.color = rightInfoGround.collider ? Color.green : Color.red;
         Gizmos.DrawLine(rightGroundPos, rightGroundPos + Vector2.down * groundRayLength);
+
+        // Modified to show wall detection rays at the new height
+        Vector2 leftWallPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
+        Vector2 rightWallPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
+
+        Gizmos.color = new Color(0, 1, 1, 0.5f);
+        Gizmos.DrawLine(leftWallPos, leftWallPos + Vector2.left * wallRayLength);
+        Gizmos.DrawLine(rightWallPos, rightWallPos + Vector2.right * wallRayLength);
 
         Gizmos.color = new Color(0, 1, 1, 0.5f);
         Gizmos.DrawLine(transform.position, playerTarget.transform.position);
