@@ -1,0 +1,27 @@
+﻿title: openingone
+---
+Narrator: Dalam suatu hutan yang gelap, terdapat suku yang terdiri dari makhluk-makhluk kecil bernama Puffkins.
+Narrator: Mereka tinggal bersama dengan damai, sampai suatu hari..
+<<wait 3>>
+<<jump openingtwo>>
+===
+
+title: openingtwo
+---
+Narrator: Seorang manusia misterius berjubah melewati hutan para Puffkins, sesuatu yang jarang sekali dilakukan manusia.
+<<wait 2>>
+<<jump openingthree>>
+===
+
+title: openingthree
+---
+Narrator: Tetapi kedatangan sosok misterius ini membawa penyakit kepada para Puffkins, penyakit yang menyerang mereka dari dalam diri, dan tidak ada ciri berbentuk fisik.
+<<wait 3>>
+<<jump openingfour>>
+===
+
+title: openingfour
+---
+Narrator: Tidak lama dari itu, seorang manusia jatuh melalui portal ke dalam hutan para Puffkins.
+Narrator: Siapa dia? Dan apa yang akan dia lakukan?
+===

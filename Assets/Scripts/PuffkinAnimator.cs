@@ -14,7 +14,6 @@ public class PuffkinAnimator : MonoBehaviour
             return;
         }
 
-        Debug.Log($"TRIGGERING: Happy on {gameObject.name}");
         animator.SetTrigger("Happy");
     }
 }

@@ -129,7 +129,7 @@ public class Movement : MonoBehaviour
     private bool stopLeft;
 
     private bool canJump = true;
-    private bool canDash = true;
+    public bool canDash = true;
 
     public struct PlayerState
     {
@@ -147,6 +147,8 @@ public class Movement : MonoBehaviour
 
         walkSound.SetActive(false);
         runSound.SetActive(false);
+
+        canDash = false;
     }
 
     void Update()
@@ -804,7 +806,8 @@ public class Movement : MonoBehaviour
 
     public void EnableDash()
     {
-        canDash = true;
+        Debug.Log("kong");
+        dashEnabled = true;
     }
 
 
