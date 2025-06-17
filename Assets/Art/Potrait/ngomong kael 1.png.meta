@@ -184,7 +184,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ngomong kael 1_0: 85949031961728975
+      ngomong kael 1_1: -7238356637579166624
+      ngomong kael 1_2: -3250190272025810919
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
