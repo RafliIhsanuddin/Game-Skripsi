@@ -1,0 +1,38 @@
+﻿title: Trial_Cutscene
+---
+This is an example of a Yarn Spinner script. Write your dialogue here!
+<<wait 2>>
+<<jump next_title>>
+===
+
+
+
+
+title: next_title
+---
+ini trial bro
+	-> oke, aku mau budi
+	-> oke, aku mau backflip
+===
+
+
+
+
+
+title: Tes_Cutscene
+---
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+kamu jelek banget goblok
+<<jump Tes_Kotak>>
+===
+
+
+
+
+title: Tes_Kotak
+---
+<<speaker DarkKael>>
+<<setportrait DarkKael buka>>
+apasih kamu freak ya?
+===
