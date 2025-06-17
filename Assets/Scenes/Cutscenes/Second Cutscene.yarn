@@ -1,0 +1,99 @@
+﻿title: second_cutscene_one
+---
+<<speaker Kael>>
+<<setportrait Kael lesu2>>
+Kael: ...
+<<setportrait Kael lesu>>
+Kael: Kenapa aku merasa lebih lemas dari sebelumnya ya?
+<<jump second_cutscene_two>>
+===
+
+title: second_cutscene_two
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_netral>>
+Dolly: Kael? Kamu kenapa?
+<<jump second_cutscene_three>>
+===
+
+title: second_cutscene_three
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: ..Kael!
+<<wait 3>>
+<<jump second_cutscene_four>>
+===
+
+title: second_cutscene_four
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_marah>>
+Dolly: Kael, bangun!!
+<<jump second_cutscene_five>>
+===
+
+title: second_cutscene_five
+---
+<<speaker Kael>>
+<<setportrait Kael lesu2>>
+Kael: Hah? Ada apa??
+<<jump second_cutscene_six>>
+===
+
+title: second_cutscene_six
+---
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: ...
+<<jump second_cutscene_seven>>
+===
+
+title: second_cutscene_seven
+---
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Eh? Siapa ini??
+<<jump second_cutscene_eight>>
+===
+
+title: second_cutscene_eight
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Tidak tahu..
+<<jump second_cutscene_nine>>
+===
+
+title: second_cutscene_nine
+---
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kamu mau pulang kan?
+<<jump second_cutscene_ten>>
+===
+
+title: second_cutscene_ten
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ya, tentu saja aku mau.
+<<jump second_cutscene_eleven>>
+===
+
+title: second_cutscene_eleven
+---
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kalau begitu, ayo kejar aku.
+<<jump second_cutscene_twelve>>
+===
+
+title: second_cutscene_twelve
+---
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Hilang dia!!
+<<setportrait Kael buka>>
+Kael: Ayo kita cari dia, Dolly!
+===
