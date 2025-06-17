@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2756596479481673091}
   - component: {fileID: 8897395953648950220}
   - component: {fileID: 1620564737011133611}
+  - component: {fileID: 1503830383008565364}
   m_Layer: 0
   m_Name: Kael FBF
   m_TagString: Untagged
@@ -115,6 +116,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb65f60d309a694e9a5855a9d6c0e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashLocked: 1
+  dashEnabled: 1
   horizontalInput: 0
   verticalInput: 0
   alwaysRunActive: 0
@@ -157,6 +160,9 @@ MonoBehaviour:
   runSound: {fileID: 0}
   jumpSoundPrefab: {fileID: 0}
   dashSoundPrefab: {fileID: 0}
+  jumpOffset: {x: 0.361042, y: 2.143058}
+  jumpSize: {x: 8.456917, y: 10.84726}
+  canDash: 1
   historyLimit: 100
 --- !u!114 &1620564737011133611
 MonoBehaviour:
@@ -172,6 +178,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 2756596479481673091}
   horizontalSpeed: 0
+--- !u!114 &1503830383008565364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402190424946020847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d532659b5957144e94322e62122565b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3498769541885790303
 GameObject:
   m_ObjectHideFlags: 0
