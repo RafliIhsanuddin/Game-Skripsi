@@ -1,0 +1,102 @@
+﻿title: forest1
+---
+<<flip_dolly CompanionDolly>>
+<<speaker Kael>>
+<<setportrait Kael lesu2>>
+Kael: ..Hah?
+<<setportrait Kael kaget>>
+Kael: Dimana aku?
+<<jump forest2>>
+===
+
+title: forest2
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kamu tidak apa-apa? Kamu jatuh entah dari mana dan tersungkur ke tanah!
+Dolly: Sudah lama tidak ada manusia datang ke hutan ini.. Siapa namamu?
+<<jump forest3>>
+===
+
+title: forest3
+---
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Kucing berbicara! Sedang mimpi apa aku?
+<<setportrait Kael buka>>
+Kael: Namaku Kael, aku tidak tahu bagaimana bisa sampai sini.
+Kael: Aku tidak apa-apa, walau kepalaku terasa aneh. Mungkin itu kenapa aku berhalusinasi seekor kucing sedang berbicara kepadaku.
+<<jump forest4>>
+===
+
+title: forest4
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Aku bukan halusinasimu! Namaku Dolly, aku tinggal di hutan ini bersama para Puffkin.
+<<setportrait Dolly kucing_netral>>
+Dolly: Sudah lama aku tidak melihat manusia memasuki hutan kami. Andai saja kamu datang di saat yang tepat, para Puffkin pasti senang menerimamu sebagai tamu.
+<<jump forest5>>
+===
+
+title: forest5
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Memang sekarang bukan saat yang tepat?
+<<setportrait Kael buka>>
+<<jump forest6>>
+===
+
+title: forest6
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Sayangnya tidak.. Teman-temanku sedang dilanda sebuah penyakit yang mengubah perasaan mereka, hingga mereka tidak bisa beraktivitas.
+Dolly: Aku tidak tahu apa yang terjadi. Kemarin mereka baik-baik saja, tetapi sekarang mereka semua lemas dan tidak berenergi secara serentak.
+Dolly: Aku sedang mencoba mencari tahu apa penyebabnya. Itu ketika aku melihatmu jatuh.
+<<jump forest7>>
+===
+
+title: forest7
+---
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+Kael: <i>(Seperti yang aku rasakan.. Tapi sekarang aku tidak punya pilihan untuk beristirahat.)</i>
+<<setportrait Kael buka>>
+Kael: Mungkin aku bisa ikut kamu membantu teman-temanmu selagi aku mencari jalan keluar. Jadi kita saling menemani! Bagaimana menurutmu?
+<<jump forest8>>
+===
+
+title: forest8
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_netral>>
+Dolly: Ya, itu ide yang bagus, Kael. Kamu membantu teman-temanku, dan aku akan bantu kamu mencari jalan pulang.
+<<jump forest9>>
+===
+
+title: forest9
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Baik kalau begitu! Mari bekerja sama, Dolly.
+<<jump forest10>>
+===
+
+title: forest10
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Sedikit peringatan dulu untukmu Kael, aku dan para Puffkin sudah terbiasa dengan hutan ini.
+Dolly: Perangkap dan rintangan di hutan ini tidak berpengaruh pada kami. Tapi sebagai pendatang, kamu harus lebih berhati-hati.
+<<jump forest11>>
+===
+
+title: forest11
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Terima kasih Dolly, aku akan berhati-hati.
+<<unflip_dolly CompanionDolly>>
+===
