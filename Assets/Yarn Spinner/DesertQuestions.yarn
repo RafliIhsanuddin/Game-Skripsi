@@ -50,7 +50,7 @@ Kael: Dep… depresi?
 <<setportrait Dolly kucing_buka>>
 Dolly: Itu yang teman-temanku rasakan tadi!
 
-///taro command dia pergi disini
+<<WalkAway DarkKaelCloak>>
 
 <<speaker Kael>>
 <<setportrait Kael kaget>>
