@@ -4,7 +4,8 @@ public class DialogueMovements : MonoBehaviour
 {
     public Movement movement;
     public Animator animator;
-    public Rigidbody2D rb;
+    private Rigidbody2D rb;
+    public AudioSource audio;
 
     private void Start()
     {
@@ -16,11 +17,13 @@ public class DialogueMovements : MonoBehaviour
     {
         movement.enabled = false;
         rb.linearVelocity = Vector3.zero;
+        audio.enabled = false;
         animator.SetInteger("state", 0);
     }
 
     public void OffDialogue()
     {
         movement.enabled = true;
+        audio.enabled = true;
     }
 }
