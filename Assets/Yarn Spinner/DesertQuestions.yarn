@@ -66,5 +66,6 @@ Kael: <i>(Aku harus cari dia.. Mungkin dia tahu apa yang sedang aku alami selama
 <<setportrait Kael buka>>
 Kael: Ayo Dolly, kita harus mencarinya!
 
+<<RemoveTrigger definisi>>
 <<stop>>
 ===

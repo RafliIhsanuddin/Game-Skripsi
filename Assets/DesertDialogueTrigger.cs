@@ -21,4 +21,10 @@ public class DesertDialogueTrigger : MonoBehaviour
         }
     }
 
+    [YarnCommand("RemoveTrigger")]
+    public void RemovingTrigger()
+    {
+        this.gameObject.SetActive(false);
+    }
+
 }
