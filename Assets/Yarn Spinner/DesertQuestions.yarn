@@ -50,7 +50,11 @@ Kael: Dep… depresi?
 <<setportrait Dolly kucing_buka>>
 Dolly: Itu yang teman-temanku rasakan tadi!
 
+
 <<WalkAway DarkKaelCloak>>
+
+<<hideall>>
+<<wait 3>>
 
 <<speaker Kael>>
 <<setportrait Kael kaget>>
@@ -67,5 +71,134 @@ Kael: <i>(Aku harus cari dia.. Mungkin dia tahu apa yang sedang aku alami selama
 Kael: Ayo Dolly, kita harus mencarinya!
 
 <<RemoveTrigger definisi>>
+<<stop>>
+===
+
+
+
+
+
+title: tanda
+---
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hei, kamu bilang aku terkena depresi. Memang apa tanda-tandanya?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Saat kamu kehilangan rasa senang, merasa lelah setiap hari, dan tidur tapi tetap merasa hampa... itu bukan hal biasa. Itu adalah tanda bahwa jiwamu sedang terluka—itulah depresi.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Jadi ini bukan suasana hati yang buruk?
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kalau rasa itu tak pergi—hari demi hari—itu berarti depresi.
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Bukankah ini perasaan capek biasa?
+
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Tidak, Kael. Itu bukan sekadar capek. Itu… bisa jadi depresi—yaitu kondisi kelelahan ekstrem dan perasaan kosong yang bertahan hampir setiap hari.
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hampir setiap hari? Berapa lama aku harus merasakan kelelahan ekstrem itu, sehingga bisa dinyatakan depresi?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Selama setidaknya dua minggu, disertai gejala lain seperti kehilangan minat, gangguan tidur, atau perasaan putus asa.
+
+<<hideall>>
+<<wait 3>>
+
+<<WalkAway DarkKaelCloak_1>>
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Hei, jangan pergi lagi, kamu!
+
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+Kael: <i>(Dia kabur lagi...  Aku harus mencari dia. Sebenarnya dia siapa?)</i>
+
+
+
+<<RemoveTrigger tanda>>
+<<stop>>
+===
+
+
+
+
+title: penyebab
+---
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hei, kamu… Memang apa penyebab depresi?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Penyebabnya tak cuma satu, Kael. Banyak hal bisa menarik seseorang masuk ke dalam kegelapan itu.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Apa maksudmu? Aku belum sepenuhnya mengerti.
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kadang, tubuhmu sendiri jadi penyebab—ketika zat di otak seperti serotonin, dopamin, dan norepinefrin tak seimbang, semuanya terasa berat meski tanpa alasan jelas.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Tapi bisa juga dari luka batin—trauma masa lalu, kehilangan orang tercinta, atau tekanan yang tak pernah berhenti bisa mengikis semangatmu perlahan.
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Ada pula faktor genetik. Jika keluargamu pernah mengalami hal yang sama, risikomu ikut meningkat.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Dan lingkungan juga bisa jadi pemicu—hidup dalam tekanan, kesepian berkepanjangan, atau terjebak dalam relasi menyakitkan bisa mempercepat runtuhnya dirimu.
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Jadi… semua itu bisa jadi alasan kenapa aku merasa seperti ini?
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Ya. Tidak semua penyebab bisa kau lihat, tapi dampaknya… selalu terasa.
+
+<<hideall>>
+<<wait 3>>
+
+<<WalkAway DarkKaelCloak_2>>
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Eh, tunggu dulu... jangan kabur lagi.
+
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+Kael: <i>(Kenapa dia menanyakan hal-hal seperti ini? Cukup, aku lelah menjawab pertanyaannya. Aku hanya ingin pulang.)</i>
+
+
+<<RemoveTrigger tanda>>
 <<stop>>
 ===

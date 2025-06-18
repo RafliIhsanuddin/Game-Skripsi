@@ -4,7 +4,7 @@ public class DialogueMovements : MonoBehaviour
 {
     public Movement movement;
     public Animator animator;
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     public AudioSource audio;
 
     private void Start()

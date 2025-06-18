@@ -46,6 +46,11 @@ public class ExpressionCommandRegistrar : MonoBehaviour
                 item.controller.SetPortraitVisible(isActive);
             }
         });
+
+        dialogueRunner.AddCommandHandler("hideall", () =>
+        {
+            HideAllPortraits();
+        });
     }
 
     private void HideAllPortraits()
