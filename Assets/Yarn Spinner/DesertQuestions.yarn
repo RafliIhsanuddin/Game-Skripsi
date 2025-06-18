@@ -1,0 +1,70 @@
+﻿title: definisi
+---
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kael, kamu masih ingin pulang kan?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Iya! Aku ingin Pulang, bukankah kamu tadi bilang tahu caranya?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kalau kamu ingin pulang, kamu harus mulai memahami dirimu sendiri, Kael.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Memahami diri sendiri? Apa maksudmu?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Jawab pertanyaanku, maka setelah itu aku akan memberitahumu jalan pulang.
+
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+Kael : <i>(Sepertinya aku tidak punya pilihan lain..)</i>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Apa pertanyaannya?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Apakah kamu merasa lelah, kehilangan arah? Ini bukan hanya fisik, tetapi suasana hati.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hah? Semua orang pasti pernah merasa lelah seperti itu, kan? 
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Tidak, Kael. Ini bukan sekadar kelelahan. Ini depresi, gangguan mood yang kronis, merusak cara kamu merasa, berpikir, dan bertindak. 
+
+???: Karena itu, kamu terus-menerus merasa letih, bahkan setelah cukup istirahat.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Dep… depresi?
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Itu yang teman-temanku rasakan tadi!
+
+///taro command dia pergi disini
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Hei, jangan pergi!
+
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+Kael: <i>(Bagaimana dia bisa tau tentang kelelahanku ini?)</i>
+
+Kael: <i>(Aku harus cari dia.. Mungkin dia tahu apa yang sedang aku alami selama ini!)</i>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ayo Dolly, kita harus mencarinya!
+
+<<stop>>
+===

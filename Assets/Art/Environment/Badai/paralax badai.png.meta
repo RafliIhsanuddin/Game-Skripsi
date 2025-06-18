@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      paralax badai_0: -7739544841239455232
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

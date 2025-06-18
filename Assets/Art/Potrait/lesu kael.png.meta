@@ -184,7 +184,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      lesu kael_0: -5906140613040274337
+      lesu kael_1: -2337256590780442974
+      lesu kael_2: -1252091728205927366
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
