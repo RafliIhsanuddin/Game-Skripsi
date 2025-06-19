@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public bool isMovementLocked = false; // Digunakan untuk mengunci input saat dialog
     public bool dashLocked = true;
     public bool dashEnabled = true; // New boolean to toggle dash ability
 
@@ -117,8 +118,8 @@ public class Movement : MonoBehaviour
     private Vector2 idleSize = new Vector2(2.33820915f, 15.3902521f);
     private Vector2 walkOffset = new Vector2(0.0295305252f, 0.371431112f);
     private Vector2 walkSize = new Vector2(2.15312004f, 14.9763098f);
-    private Vector2 runOffset = new Vector2(0.0295305252f, 0.454950929f);
-    private Vector2 runSize = new Vector2(2.15312004f, 14.8092728f);
+    public Vector2 runOffset = new Vector2(0.0295305252f, 0.454950929f);
+    public Vector2 runSize = new Vector2(2.15312004f, 14.8092728f);
     [SerializeField] public Vector2 jumpOffset = new Vector2(0.361042f, 2.143058f);
     [SerializeField] public Vector2 jumpSize = new Vector2(8.456917f, 10.84726f);
 
@@ -172,8 +173,17 @@ public class Movement : MonoBehaviour
         if (positionHistory.Count > historyLimit)
             positionHistory.RemoveAt(positionHistory.Count - 1);
 
-        horizontalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Horizontal");
-        verticalInput = inputsDisabled ? 0f : Input.GetAxisRaw("Vertical");
+        horizontalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Horizontal");
+        verticalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Vertical");
+
+        if (isMovementLocked)
+        {
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+            UpdateCollider(idleOffset, idleSize);
+            PlayerAnimationController.SetInteger("state", 0);
+            StopMovementSounds();
+            return;
+        }
 
         if (dashCooldownTimer > 0)
             dashCooldownTimer -= Time.deltaTime;

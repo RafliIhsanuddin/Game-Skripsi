@@ -51,7 +51,7 @@ Kael: Dep… depresi?
 Dolly: Itu yang teman-temanku rasakan tadi!
 
 
-<<WalkAway DarkKaelCloak>>
+<<WalkAway DarkKaelCloakDefinisi>>
 
 <<hideall>>
 <<wait 3>>
@@ -120,9 +120,10 @@ Kael: Hampir setiap hari? Berapa lama aku harus merasakan kelelahan ekstrem itu,
 ???: Selama setidaknya dua minggu, disertai gejala lain seperti kehilangan minat, gangguan tidur, atau perasaan putus asa.
 
 <<hideall>>
-<<wait 3>>
 
-<<WalkAway DarkKaelCloak_1>>
+<<WalkAway DarkKaelCloakTanda>>
+
+<<wait 2>>
 
 <<speaker Kael>>
 <<setportrait Kael kaget>>
@@ -185,10 +186,13 @@ Kael: Jadi… semua itu bisa jadi alasan kenapa aku merasa seperti ini?
 <<setportrait Dolly jubah_netral>>
 ???: Ya. Tidak semua penyebab bisa kau lihat, tapi dampaknya… selalu terasa.
 
-<<hideall>>
-<<wait 3>>
 
-<<WalkAway DarkKaelCloak_2>>
+
+
+<<WalkAway DarkKaelCloakPenyebab>>
+
+<<hideall>>
+<<wait 2>>
 
 <<speaker Kael>>
 <<setportrait Kael kaget>>
@@ -199,6 +203,281 @@ Kael: Eh, tunggu dulu... jangan kabur lagi.
 Kael: <i>(Kenapa dia menanyakan hal-hal seperti ini? Cukup, aku lelah menjawab pertanyaannya. Aku hanya ingin pulang.)</i>
 
 
-<<RemoveTrigger tanda>>
+<<RemoveTrigger penyebab>>
+<<stop>>
+===
+
+
+
+
+
+title: dampak
+---
+
+
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Hei, kamu, sudah cukup. Aku tidak mau membahas perasaanku lagi. Aku cuma ingin pulang—mana jalan pulangnya?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Jangan terburu-buru, Kael. Kamu belum benar-benar mengenal dirimu sendiri.
+
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Hei, sebenarnya siapa kamu?
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Aku akan jawab itu nanti, setelah kamu benar-benar paham siapa dirimu.
+
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+Kael: <i>(Baiklah... sepertinya aku tak punya pilihan selain mengikuti orang ini.)</i>
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kamu pernah merasa hari-harimu begitu melelahkan? Hal-hal yang dulu kamu sukai sekarang justru terasa berat dan kosong?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Iya... bahkan bangun pagi pun rasanya seperti memikul beban besar. Aku tak punya tenaga.
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Itu tanda depresi. Saat motivasi hilang, hal-hal sederhana seperti bicara dengan teman pun terasa jauh dan tak penting.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Iya... bahkan bangun pagi pun rasanya seperti memikul beban besar. Aku tak punya tenaga.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Itu tanda depresi. Saat motivasi hilang, hal-hal sederhana seperti bicara dengan teman pun terasa jauh dan tak penting.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku sering merasa kesepian, bahkan di tengah keramaian. Suara teman pun terdengar hampa.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Betul. Depresi mempersempit duniamu—interaksi sosial berkurang, dan yang negatif terasa jauh lebih kuat daripada yang positif.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku sering terjebak dalam pikiran negatif. Bahkan hal kecil bisa terasa sangat berat. Sampai aku pernah berpikir... apakah lebih baik aku menghilang saja.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Itu dampak nyata dari depresi. Ia mengikis motivasi, merusak koneksi sosial, dan membuat setiap hari terasa seperti perjuangan yang tak berkesudahan.
+
+
+<<WalkAway DarkKaelCloakDampak>>
+
+<<hideall>>
+<<wait 2>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ayolah, jangan pergi gitu aja.
+
+
+
+<<RemoveTrigger dampak>>
+<<stop>>
+===
+
+
+
+
+
+
+title: stigma
+---
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Apa kamu pernah merasa harus pura-pura baik-baik saja?
+
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: <i>( Sepertinya aku masih harus menjawabnya...)</i>
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Setiap hari. Kalau aku bilang aku lelah, mereka tertawa. Mereka anggap aku manja… atau drama. Jadi aku berhenti cerita.
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Banyak orang memang salah paham. Mereka kira depresi itu cuma cari perhatian... padahal tidak sesederhana itu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku juga dulu berpikir begitu. Bahkan pada diriku sendiri.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Dunia terlalu cepat menghakimi, padahal luka yang tak terlihat pun bisa menyakitkan. Depresi bukan kelemahan—itu kondisi nyata.
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Tapi kenapa mereka cuma lihat dari luar?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Karena tidak semua luka terlihat, Kael. Dan banyak yang belum benar-benar paham... mereka pikir kalau kamu masih bisa tersenyum, berarti kamu baik-baik saja.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Padahal dalamnya kosong...
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Iya. Dan itu yang membuat banyak orang memilih diam.
+
+
+<<WalkAway DarkKaelCloakStigma>>
+
+<<hideall>>
+<<wait 2>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hei… jangan pergi lagi…
+
+
+
+<<RemoveTrigger stigma>>
+<<stop>>
+===
+
+
+
+
+
+
+
+
+title: mengenali
+---
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: hei, bagaimana aku tahu ini benar-benar depresi? Bukan cuma aku yang cengeng?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Dengarkan tubuhmu dan suara hatimu.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kamu sering merasa lelah walau tidak banyak bergerak? Tidurmu kacau—terlalu panjang atau malah sulit tidur?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Apakah hal-hal yang biasanya membuatmu senang terasa hambar atau tak menarik lagi?
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Itu bisa jadi tanda depresi, bukan sekadar perasaan cengeng.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Mungkin memang ada yang tidak beres denganku akhir-akhir ini.
+
+
+
+<<WalkAway DarkKaelCloakMengenali>>
+
+<<hideall>>
+<<wait 2>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Dia kenapa pergi terus, ya?
+
+
+
+<<RemoveTrigger mengenali>>
+<<stop>>
+===
+
+
+
+
+
+
+title: langkah
+---
+
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Sekarang kau tahu luka itu ada. Apa yang akan kau lakukan?
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Aku tidak tahu... harus mulai dari mana.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Coba ceritakan, Kael. Kadang, hanya dengan mulai bercerita ke seseorang yang kamu percaya, bebanmu bisa terasa lebih ringan.
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku takut... jika mereka menolak atau tidak mengerti.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Kalau sulit ungkapkan langsung, coba tulis di jurnal — lebih aman, lebih bebas. Kamu bisa menulis apa pun tentang perasaanmu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Tulis? Sepertinya terasa lebih nyaman daripada langsung ngomong.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Benar. Dan setelah itu, carilah seseorang yang bersedia mendengarkan. Tak harus orang yang pernah mengalami hal yang sama. Yang penting... dia peduli dan tidak menghakimi.
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Jadi bukan soal mereka pernah merasa seperti aku... tapi soal mereka cukup peduli untuk diam dan tetap di sampingku.
+
+<<speaker Dolly>>
+<<setportrait Dolly jubah_netral>>
+???: Ya. Kadang, kamu hanya butuh satu orang yang mau duduk bersamamu... tanpa mencoba memperbaiki apa pun. Hanya hadir.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kalau begitu... mungkin aku bisa mulai dari situ. Satu orang. Satu cerita.
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hei, jujur, sebenarnya kamu ini siapa?
+
+
+<<WalkAway DarkKaelCloakLangkah>>
+
+<<hideall>>
+<<wait 2>>
+
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Hei, jangan kabur terus. Jawab aku!
+
+
+
+<<RemoveTrigger langkah>>
 <<stop>>
 ===

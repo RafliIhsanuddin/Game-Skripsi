@@ -15,7 +15,7 @@ public class DialogueMovements : MonoBehaviour
 
     public void OnDialogue()
     {
-        movement.enabled = false;
+        movement.isMovementLocked = true;
         rb.linearVelocity = Vector3.zero;
         audio.enabled = false;
         animator.SetInteger("state", 0);
@@ -23,7 +23,7 @@ public class DialogueMovements : MonoBehaviour
 
     public void OffDialogue()
     {
-        movement.enabled = true;
+        movement.isMovementLocked = false;
         audio.enabled = true;
     }
 }

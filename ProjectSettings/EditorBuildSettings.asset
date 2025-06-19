@@ -8,9 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Background/Forest fbf.unity
     guid: 018c6a0d55a3ae548897b465212bfa49
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Background/Desert fbf.unity
+    guid: 64dd86e20d5c9e249bc57185432930a5
+  - enabled: 1
+    path: Assets/Scenes/Background/Akhir.unity
+    guid: 2c69124228a233c488d454f3df02f899
   - enabled: 0
     path: Assets/Scenes/Game.unity
     guid: fd39920953f1711468549ba7bd15ae47

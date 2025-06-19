@@ -446,13 +446,16 @@ public class Companion : MonoBehaviour
     void OnDrawGizmos()
     {
         if (!DEBUGMODE) return;
-        if (playerTarget == null) return;
 
-        Gizmos.color = new Color(1, 1, 0, 0.3f);
-        Gizmos.DrawWireSphere(playerTarget.transform.position, walkDistanceThreshold);
+        // Draw these even when not playing
+        if (playerTarget != null)
+        {
+            Gizmos.color = new Color(1, 1, 0, 0.3f);
+            Gizmos.DrawWireSphere(playerTarget.transform.position, walkDistanceThreshold);
 
-        Gizmos.color = new Color(0, 1, 0, 0.3f);
-        Gizmos.DrawWireSphere(playerTarget.transform.position, idleDistanceThreshold);
+            Gizmos.color = new Color(0, 1, 0, 0.3f);
+            Gizmos.DrawWireSphere(playerTarget.transform.position, idleDistanceThreshold);
+        }
 
         Gizmos.color = upwardInfo.collider ? Color.green : Color.red;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.up * upwardRayLength);
@@ -470,7 +473,6 @@ public class Companion : MonoBehaviour
         Gizmos.color = rightInfoGround.collider ? Color.green : Color.red;
         Gizmos.DrawLine(rightGroundPos, rightGroundPos + Vector2.down * groundRayLength);
 
-        // Modified to show wall detection rays at the new height
         Vector2 leftWallPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
         Vector2 rightWallPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
 
@@ -478,8 +480,26 @@ public class Companion : MonoBehaviour
         Gizmos.DrawLine(leftWallPos, leftWallPos + Vector2.left * wallRayLength);
         Gizmos.DrawLine(rightWallPos, rightWallPos + Vector2.right * wallRayLength);
 
-        Gizmos.color = new Color(0, 1, 1, 0.5f);
-        Gizmos.DrawLine(transform.position, playerTarget.transform.position);
+        if (playerTarget != null)
+        {
+            Gizmos.color = new Color(0, 1, 1, 0.5f);
+            Gizmos.DrawLine(transform.position, playerTarget.transform.position);
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (DEBUGMODE) return; // Skip if we're already showing debug info
+
+        // Draw a simplified version when not in debug mode but selected
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, 0.5f);
+
+        if (playerTarget != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, playerTarget.transform.position);
+        }
     }
     #endregion
 }
