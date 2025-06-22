@@ -184,7 +184,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      kaget_0: 1049433327213094699
+      kaget_1: 2505613176893980094
+      kaget_2: 3791731036173369553
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
