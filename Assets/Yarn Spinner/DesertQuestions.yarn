@@ -123,7 +123,7 @@ Kael: Hampir setiap hari? Berapa lama aku harus merasakan kelelahan ekstrem itu,
 
 <<WalkAway DarkKaelCloakTanda>>
 
-<<wait 2>>
+<<wait 3>>
 
 <<speaker Kael>>
 <<setportrait Kael kaget>>
@@ -192,7 +192,7 @@ Kael: Jadi… semua itu bisa jadi alasan kenapa aku merasa seperti ini?
 <<WalkAway DarkKaelCloakPenyebab>>
 
 <<hideall>>
-<<wait 2>>
+<<wait 3>>
 
 <<speaker Kael>>
 <<setportrait Kael kaget>>
@@ -278,7 +278,7 @@ Kael: Aku sering terjebak dalam pikiran negatif. Bahkan hal kecil bisa terasa sa
 <<WalkAway DarkKaelCloakDampak>>
 
 <<hideall>>
-<<wait 2>>
+<<wait 3>>
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
@@ -346,7 +346,7 @@ Kael: Padahal dalamnya kosong...
 <<WalkAway DarkKaelCloakStigma>>
 
 <<hideall>>
-<<wait 2>>
+<<wait 3>>
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
@@ -398,7 +398,7 @@ Kael: Mungkin memang ada yang tidak beres denganku akhir-akhir ini.
 <<WalkAway DarkKaelCloakMengenali>>
 
 <<hideall>>
-<<wait 2>>
+<<wait 4>>
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
@@ -470,7 +470,7 @@ Kael: Hei, jujur, sebenarnya kamu ini siapa?
 <<WalkAway DarkKaelCloakLangkah>>
 
 <<hideall>>
-<<wait 2>>
+<<wait 4>>
 
 <<speaker Kael>>
 <<setportrait Kael marah>>
