@@ -17,11 +17,11 @@ public class ExpressionCommandRegistrar : MonoBehaviour
 
     void Awake()
     {
-        dialogueRunner.onDialogueComplete.AddListener(() => {
+        dialogueRunner.onDialogueComplete.AddListener(() =>
+        {
             HideAllPortraits();
         });
 
-        // Tidak butuh hideall command karena otomatis
         // Command untuk mengganti ekspresi
         dialogueRunner.AddCommandHandler<string, string>("setportrait", (characterName, emotion) =>
         {
@@ -36,10 +36,18 @@ public class ExpressionCommandRegistrar : MonoBehaviour
             Debug.LogWarning($"No portrait controller found for {characterName}");
         });
 
-        // Command speaker dengan hide otomatis
+        // Command speaker
         dialogueRunner.AddCommandHandler<string>("speaker", (speakerName) =>
         {
-            HideAllPortraits(); // Setiap speaker baru, sembunyikan semuanya dulu
+            HideAllPortraits();
+
+            // Jika speaker adalah Narator, jangan tampilkan portrait
+            if (speakerName.Equals("Puffkin", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // Selain itu, tampilkan portrait seperti biasa
             foreach (var item in portraitControllers)
             {
                 bool isActive = string.Equals(item.characterName, speakerName, System.StringComparison.OrdinalIgnoreCase);

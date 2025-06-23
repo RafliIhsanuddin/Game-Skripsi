@@ -1,0 +1,534 @@
+title: corn
+---
+<<once>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Jagung!
+
+<<speaker Puffkin>>
+Jagung: Dolly.. Halo. Siapa ini?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Halo, namaku Kael.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kael di sini untuk membantumu, Jagung.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Apa yang kamu rasakan, Jagung?
+
+<<speaker Puffkin>>
+Jagung: Aku merasa dadaku berat sekali, Kael… seperti mau meledak.
+
+-> Ayo kita coba tarik napas dalam dan hembuskan pelan-pelan, Jagung. Aku temani.
+    <<jump corn_right>>
+-> Sudahlah, jangan dipikirkan. Coba lupakan saja perasaanmu itu.
+    <<jump corn_wrong>>
+
+<<endonce>>
+===
+
+title: corn_right
+---
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Aku bisa lihat kau sangat cemas, Jagung. Mau kita coba sesuatu?
+Kael: Coba perhatikan napasmu sejenak. Rasakan udara masuk dan keluar pelan-pelan…
+
+<<speaker Puffkin>>
+Jagung: Aku tidak tahu harus mulai dari mana. Semua terasa terlalu banyak.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Mulailah dari satu tarikan napas. Tarik napas dalam… tahan sebentar… lalu hembuskan.
+Kael: Pelan-pelan, ya? Aku di sini menemanimu.
+
+<<speaker Puffkin>>
+Jagung: Seperti ini? Hmm… dadaku lebih ringan sedikit.
+
+<<HappyPuffkin CornSprite>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Bagus sekali. Napasmu bisa menjadi jangkar untuk kembali saat perasaanmu terlalu berat.
+
+<<speaker Puffkin>>
+Jagung: Terima kasih, Kael. Kamu juga, Dolly…
+===
+
+title: corn_wrong
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Jangan dipikirkan, Jagung. Nanti juga hilang sendiri.
+
+<<speaker Puffkin>>
+Jagung: Tapi aku makin gelisah kalau berpura-pura perasaan ini tidak ada...
+Jagung: Sepertinya tidak ada yang bisa membantu aku.
+
+<<FadePuffkin CornSprite>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_marah>>
+Dolly: Jagung!
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Maafkan aku, Jagung..
+===
+
+title: pumpkin
+---
+<<once>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Labu, ada seseorang di sini untukmu.
+
+<<speaker Puffkin>>
+Labu: Oh… siapa itu, Dolly? Aku belum pernah melihatnya.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Halo, Labu. Namaku Kael.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kael datang untuk mendengarkanmu dan menemani.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku lihat kau tampak murung. Mau cerita padaku, Labu?
+
+<<speaker Puffkin>>
+Labu: Aku sering merasa dikelilingi pikiran-pikiran buruk, Kael. Mereka membuatku yakin bahwa aku gagal dan tidak berguna…
+
+-> Mau kita lihatnya seperti awan di langit, Labu? Datangnya hanya sementara.
+    <<jump pumpkin_right>>
+-> Tidak usah terlalu dipikirkan, nanti juga pasti hilang.
+    <<jump pumpkin_wrong>>
+
+<<endonce>>
+===
+
+title: pumpkin_right
+---
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Aku tahu itu berat, Labu. Mau kita lihat pikiranmu seperti daun hanyut di sungai?
+Kael: Pikiran bukan fakta. Mereka bisa datang dan pergi, dan kau tak harus mempercayainya.
+
+<<speaker Puffkin>>
+Labu: Tapi rasanya benar sekali, Kael…
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ya, aku mengerti. Tapi lama-lama kau bisa belajar hanya mengamati, bukan memegangnya erat-erat.
+
+<<speaker Puffkin>>
+Labu: Hmm… aku mau belajar melakukannya. Terima kasih, Kael.
+
+<<HappyPuffkin PumpkinSprite>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sama-sama, Labu. Ingat, kau lebih besar dari pikiran-pikiran itu.
+
+<<speaker Puffkin>>
+Labu: Aku merasa lebih baik sudah berbicara denganmu, Kael.
+Labu: Sebagai tanda terima kasihku, terimalah ini ya.
+
+<<UnlockDash DashUnlocker>>
+===
+
+title: pumpkin_wrong
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sudahlah, jangan terlalu dipikirkan. Nanti pasti hilang sendiri.
+
+<<speaker Puffkin>>
+Labu: Tapi aku makin cemas kalau berpura-pura perasaan ini tidak ada…
+Labu: Rasanya seperti aku melawan diriku sendiri.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_marah>>
+Dolly: Tidak apa-apa, Labu. Mau mencoba lagi bicara soal perasaanmu?
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Kalau mau, kita bisa mulai lagi dan belajar melihat pikiranmu lebih lembut.
+
+<<jump pumpkin>> 
+===
+
+title: turnip
+---
+<<once>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Lobak, lihat siapa yang datang menemuimu.
+
+<<speaker Puffkin>>
+Lobak: Oh… siapa dia, Dolly? Aku belum kenal.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hai, Lobak. Aku Kael.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kael mau menemanimu dan mendengarkanmu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kau tampak sedih, Lobak. Mau cerita?
+
+<<speaker Puffkin>>
+Lobak: Kadang aku begitu sedih dan ingin melawannya. Aku benci perasaan itu.
+
+-> Mau kita coba memberi ruang untuk rasa sedih itu, Lobak? Kita bisa duduk bersamanya.
+    <<jump turnip_right>>
+-> Lupakan saja, nanti pasti hilang sendiri.
+    <<jump turnip_wrong>>
+
+<<endonce>>
+===
+
+title: turnip_right
+---
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Sedih itu bukan musuhmu, Lobak. Mau kita biarkan perasaan itu hadir dan lihat seperti apa rasanya?
+Kael: Ia hanya ingin diakui, bukan dihindari.
+
+<<speaker Puffkin>>
+Lobak: Apa tidak membuatku makin tenggelam, Kael?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sebaliknya, saat kau berhenti melawan, perasaan itu bisa lebih cepat mereda.
+
+<<speaker Puffkin>>
+Lobak: Hmm… baiklah, aku mau mencoba. Terima kasih, Kael.
+
+<<HappyPuffkin TurnipSprite>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Bagus sekali, Lobak. Kau berani memberi ruang untuk dirimu sendiri.
+===
+
+
+title: turnip_wrong
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sudahlah, jangan terlalu dipikirkan. Nanti pasti hilang sendiri.
+
+<<speaker Puffkin>>
+Lobak: Tapi kalau aku berpura-pura perasaan ini tidak ada, rasanya makin berat…
+
+<<FadePuffkin TurnipSprite>>
+===
+
+title: blueberry
+---
+<<once>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Bluberi, kau baik-baik saja di sini?
+
+<<speaker Puffkin>>
+Bluberi: Ah, Dolly… iya, aku hanya ingin sendiri sebentar.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Maaf mengganggu, Bluberi. Aku Kael.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kael mau menemani dan mendengarkanmu, kalau kau mau.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku lihat kau tampak lesu. Mau cerita padaku?
+
+<<speaker Puffkin>>
+Bluberi: Aku merasa harus selalu kuat. Kalau lemah, aku hanya beban…
+
+-> Mau belajar bahwa lemah itu bagian wajar dari dirimu?
+    <<jump blueberry_right>>
+-> Ah, pura-pura saja baik-baik. Nanti pasti hilang sendiri.
+    <<jump blueberry_wrong>>
+
+<<endonce>>
+===
+
+title: blueberry_right
+---
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Aku tahu rasanya ingin selalu tampak kuat. Tapi kau boleh lelah dan rapuh, Bluberi. Itu bagian alami dari hidup.
+
+<<speaker Puffkin>>
+Bluberi: Jadi, aku boleh mengakui bahwa aku sedang lelah dan sedih?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Tentu. Dengan begitu, kau memberi dirimu kesempatan untuk pulih dan tumbuh. Tidak perlu berpura-pura baik-baik saja.
+
+<<speaker Puffkin>>
+Bluberi: Hmm… aku mau belajar menerimanya. Pelan-pelan.
+
+<<HappyPuffkin BlueberrySprite>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Itu langkah yang berani, Bluberi. Terima kasih mau berbagi.
+===
+
+title: blueberry_wrong
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kalau mau, berpura-pura baik-baik saja bisa membuatmu makin lelah, Bluberi.
+
+<<speaker Puffkin>>
+Bluberi: Tapi aku merasa harus begitu. Kalau lemah, pasti makin merepotkan…
+<<FadePuffkin BlueberrySprite>>
+
+===
+
+title: cherry
+---
+<<once>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Ceri, ada teman baru nih mau ketemu.
+
+<<speaker Puffkin>>
+Ceri: Oh? Siapa, Dolly?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Halo, Ceri. Aku Kael.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kael mau mendengarkanmu dan belajar bersamamu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kau tampak murung, Ceri. Mau cerita padaku?
+
+<<speaker Puffkin>>
+Ceri: Aku sering bicara kasar pada diriku sendiri, seperti, “Dasar payah,” atau “Mengapa aku begini?”
+
+-> Mau belajar bicara lebih lembut pada dirimu sendiri, Ceri?
+    <<jump cherry_right>>
+-> Ah, jangan terlalu dipikirkan. Terima saja, itu kenyataannya.
+    <<jump cherry_wrong>>
+
+<<endonce>>
+===
+
+title: cherry_right
+---
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Kalau itu temanmu, maukah kau bicara begitu padanya?
+
+<<speaker Puffkin>>
+Ceri: Tidak, pasti mau membuatnya lebih nyaman dan percaya diri.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Begitu juga dirimu. Kau layak diberi kelembutan dan pengertian. Mau kau belajar bicara lebih hangat kepada dirimu sendiri?
+
+<<speaker Puffkin>>
+Ceri: Baiklah, Kael. Aku mau belajar lebih baik kepada diriku.
+
+<<HappyPuffkin CherrySprite>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Itu langkah yang berharga, Ceri. Terima kasih mau berusaha.
+
+===
+
+title: cherry_wrong
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ah, kalau begitu ya mau bagaimana lagi. Terima saja perasaan itu, Ceri.
+
+<<speaker Puffkin>>
+Ceri: Tapi rasanya sakit bicara begitu pada diriku sendiri…
+
+<<FadePuffkin CherrySprite>>
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Maafkan aku, Ceri..
+===
+
+title: carrot
+---
+<<once>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Wortel, lihat siapa yang datang menemuimu.
+
+<<speaker Puffkin>>
+Wortel: Oh, Dolly? Ada siapa di sini?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Halo, Wortel. Aku Kael.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kael mau menemanimu dan belajar bersamamu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kau tampak melamun. Mau cerita, Wortel?
+
+<<speaker Puffkin>>
+Wortel: Pikiranku berputar-putar, Kael. Aku terjebak di masa lalu dan khawatir soal nanti…
+
+-> Mau belajar fokus ke saat ini dan memperhatikan sekitarmu, Wortel?
+    <<jump carrot_right>>
+-> Ah, jangan terlalu dipikirkan. Nanti pasti reda sendiri.
+    <<jump carrot_wrong>>
+
+<<endonce>>
+===
+
+title: carrot_right
+---
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Aku tahu itu membuatmu gelisah, Wortel. Mau kau coba merasakan di sini dan sekarang?
+Kael: Coba lihat sekeliling, dengarkan suara di sekitarmu, dan rasakan tanah di bawah kakimu.
+
+<<speaker Puffkin>>
+Wortel: Hmm… aku dengar daun bergesekan dan udara di sini hangat.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Itu dia. Kau baru saja membawa dirimu kembali ke momen ini. Teruslah berlatih, dan itu bisa membuatmu lebih damai.
+
+<<speaker Puffkin>>
+Wortel: Terima kasih, Kael. Aku merasa lebih hadir sekarang.
+
+<<HappyPuffkin CarrotSprite>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sama-sama, Wortel. Ingat, setiap saat kau bisa kembali ke sini dan sekarang.
+
+===
+
+title: carrot_wrong
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ah, jangan terlalu dipikirkan, Wortel. Nanti pasti reda sendiri.
+
+<<speaker Puffkin>>
+Wortel: Tapi semakin aku mencoba melupakannya, makin banyak pikiranku berputar…
+
+<<FadePuffkin CarrotSprite>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_marah>>
+Dolly: Wortel…
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Maafkan aku, Wortel.
+===
+
+title: apple
+---
+<<once>>
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Apel, lihat siapa yang mau bicara denganmu.
+
+<<speaker Puffkin>>
+Apel: Oh, Dolly… siapa dia? Aku baru kali ini lihat.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Hai, Apel. Aku Kael.
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_buka>>
+Dolly: Kael mau mendengarkan dan menemanimu sebentar.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kau tampak tegang dan gelisah. Mau cerita sedikit, Apel?
+
+<<speaker Puffkin>>
+Apel: Rasanya tubuhku kaku dan pikiranku nggak mau tenang. Aku mau lebih rileks, tapi nggak tahu caranya…
+
+-> Mau belajar melemaskan tubuh dan merasakan ketenangan dalam dirimu?
+    <<jump apple_right>>
+-> Ah, jangan terlalu dipikirkan. Nanti pasti hilang sendiri.
+    <<jump apple_wrong>>
+
+<<endonce>>
+===
+
+title: apple_right
+---
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Aku mengerti, Apel. Mau kita coba satu cara? Pejamkan mata sejenak, tarik napas dalam… dan lemaskan tubuhmu saat menghembuskan napas.
+
+<<speaker Puffkin>>
+Apel: Hmm… seperti ini? Rasanya tubuhku lebih longgar, dan napasku lebih dalam.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Itu dia. Dengan memberi tubuh dan pikiranmu ruang untuk beristirahat, kau bisa merasakan ketenangan hadir.
+
+<<speaker Puffkin>>
+Apel: Terima kasih, Kael. Aku mau belajar lebih sering melakukannya.
+
+<<HappyPuffkin AppleSprite>>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sama-sama, Apel. Kau bisa kembali ke latihan ini kapan pun kau mau.
+
+===
+
+title: apple_wrong
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ah, jangan terlalu dipikirkan. Nanti pasti rileks sendiri.
+
+<<speaker Puffkin>>
+Apel: Tapi makin kuabaikan, rasanya makin tegang dan lelah…
+
+<<FadePuffkin AppleSprite>>
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael: Maafkan aku, Apel. 
+===
