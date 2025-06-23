@@ -46,7 +46,7 @@ public class Companion : MonoBehaviour
 
     [Header("Wall Detection")]
     [SerializeField] public float wallRayLength = 30f;
-    [SerializeField] public float rayHeight = 22.5f; // Now used for wall detection
+    [SerializeField] public float rayHeight = 22.5f;
 
     [Header("DEBUGING")]
     public bool DEBUGMODE = false;
@@ -139,13 +139,39 @@ public class Companion : MonoBehaviour
         movementRestrictedLeft = left;
         movementRestrictedRight = right;
 
-        // If currently moving in a restricted direction, stop
-        if ((movingRight && movementRestrictedRight) || (!movingRight && movementRestrictedLeft))
+        // Only force idle if we're actually moving in a restricted direction
+        bool shouldForceIdle = (movingRight && movementRestrictedRight) ||
+                             (!movingRight && movementRestrictedLeft);
+
+        if (shouldForceIdle)
         {
             isIdle = true;
             moveEnabled = false;
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             SetTargetState(STATE_IDLE);
+
+            // Enhanced debug log
+            string restriction = "";
+            if (left && right) restriction = "both directions";
+            else if (left) restriction = "LEFT";
+            else if (right) restriction = "RIGHT";
+
+            string movingDirection = movingRight ? "RIGHT" : "LEFT";
+            Debug.Log($"Movement restricted in {restriction} - Companion was moving {movingDirection} - Forced to idle");
+        }
+        else
+        {
+            // Debug log when restrictions exist but don't affect current movement
+            if (left || right)
+            {
+                string restriction = "";
+                if (left && right) restriction = "both directions";
+                else if (left) restriction = "LEFT";
+                else if (right) restriction = "RIGHT";
+
+                string movingDirection = movingRight ? "RIGHT" : "LEFT";
+                Debug.Log($"Movement restricted in {restriction} but companion is moving {movingDirection} - No idle forced");
+            }
         }
     }
 
@@ -154,11 +180,12 @@ public class Companion : MonoBehaviour
         movementRestrictedLeft = false;
         movementRestrictedRight = false;
 
-        // Re-enable movement if we were forced idle by restrictions
-        if (isIdle && Vector2.Distance(transform.position, playerTarget.transform.position) > idleDistanceThreshold)
+        if (isIdle)
         {
             isIdle = false;
             moveEnabled = true;
+            Debug.Log("Movement restrictions lifted - Re-evaluating state");
+            HandleMovementState(); // Force immediate state re-evaluation
         }
     }
     #endregion
@@ -214,6 +241,7 @@ public class Companion : MonoBehaviour
                 speed = 0;
                 SetTargetState(STATE_IDLE);
                 rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+                Debug.Log("Entered idle range - Switching to idle");
             }
             return;
         }
@@ -223,13 +251,16 @@ public class Companion : MonoBehaviour
             {
                 isIdle = false;
                 moveEnabled = true;
+                Debug.Log("Exited idle range - Re-enabling movement");
             }
 
             float newSpeed = distanceToPlayer <= walkDistanceThreshold ? walkSpeed : runSpeed;
             if (newSpeed != speed)
             {
                 speed = newSpeed;
-                SetTargetState(newSpeed == walkSpeed ? STATE_WALKING : STATE_RUNNING);
+                int newState = newSpeed == walkSpeed ? STATE_WALKING : STATE_RUNNING;
+                SetTargetState(newState);
+                Debug.Log($"Distance changed - New state: {(newState == STATE_WALKING ? "Walking" : "Running")}");
             }
         }
 
@@ -252,7 +283,6 @@ public class Companion : MonoBehaviour
         leftInfoGround = Physics2D.Raycast(leftGroundPos, Vector2.down, groundRayLength, whatIsGround);
         rightInfoGround = Physics2D.Raycast(rightGroundPos, Vector2.down, groundRayLength, whatIsGround);
 
-        // Modified to use rayHeight for wall detection
         Vector2 leftWallPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
         Vector2 rightWallPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
 
@@ -264,18 +294,18 @@ public class Companion : MonoBehaviour
         bool wasGrounded = isGrounded;
         isGrounded = leftInfoGround.collider != null || rightInfoGround.collider != null;
 
-        // Reset state when landing
         if (!wasGrounded && isGrounded)
         {
-            // Immediately evaluate correct state when landing
             if (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
             {
                 float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.transform.position);
                 SetTargetState(distanceToPlayer <= walkDistanceThreshold ? STATE_WALKING : STATE_RUNNING);
+                Debug.Log($"Landed - Setting state to {(distanceToPlayer <= walkDistanceThreshold ? "Walking" : "Running")}");
             }
             else
             {
                 SetTargetState(STATE_IDLE);
+                Debug.Log("Landed with no movement - Switching to idle");
             }
         }
 
@@ -314,7 +344,11 @@ public class Companion : MonoBehaviour
     {
         if (!moveEnabled) return;
 
-        if ((movingRight && movementRestrictedRight) || (!movingRight && movementRestrictedLeft))
+        // Check if we're trying to move in a restricted direction
+        bool tryingToMoveInRestrictedDirection = (movingRight && movementRestrictedRight) ||
+                                              (!movingRight && movementRestrictedLeft);
+
+        if (tryingToMoveInRestrictedDirection)
         {
             isIdle = true;
             moveEnabled = false;
@@ -323,11 +357,20 @@ public class Companion : MonoBehaviour
             return;
         }
 
+        // Only proceed with movement if not restricted in current direction
         Vector2 targetVelocity = movingRight ?
             new Vector2(speed, rb.linearVelocity.y) :
             new Vector2(-speed, rb.linearVelocity.y);
 
         rb.linearVelocity = Vector2.SmoothDamp(rb.linearVelocity, targetVelocity, ref currentVelocity, movementSmoothing);
+
+        // Force animation state update when moving in allowed direction
+        if (!isIdle && isGrounded)
+        {
+            float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.transform.position);
+            int correctState = distanceToPlayer <= walkDistanceThreshold ? STATE_WALKING : STATE_RUNNING;
+            SetTargetState(correctState);
+        }
     }
 
     private void UpdateAnimation()
@@ -340,8 +383,25 @@ public class Companion : MonoBehaviour
         {
             currentState = STATE_IDLE;
         }
+        else
+        {
+            currentState = targetState;
+        }
 
         animator.SetInteger("state", currentState);
+        Debug.Log($"Current animation state: {GetStateName(currentState)}");
+    }
+
+    private string GetStateName(int state)
+    {
+        switch (state)
+        {
+            case STATE_IDLE: return "Idle";
+            case STATE_WALKING: return "Walking";
+            case STATE_RUNNING: return "Running";
+            case STATE_JUMPING: return "Jumping";
+            default: return "Unknown";
+        }
     }
 
     private void HandleStateTransitions()
@@ -353,6 +413,7 @@ public class Companion : MonoBehaviour
         if (stateTransitionTimer <= 0f)
         {
             currentState = targetState;
+            Debug.Log($"State transition complete - Now in {GetStateName(currentState)}");
         }
     }
 
@@ -361,6 +422,7 @@ public class Companion : MonoBehaviour
         if (targetState == newState) return;
 
         targetState = newState;
+        Debug.Log($"Setting target state to {GetStateName(targetState)}");
 
         if (currentState == STATE_IDLE && targetState == STATE_WALKING)
         {
@@ -447,7 +509,6 @@ public class Companion : MonoBehaviour
     {
         if (!DEBUGMODE) return;
 
-        // Draw these even when not playing
         if (playerTarget != null)
         {
             Gizmos.color = new Color(1, 1, 0, 0.3f);
@@ -489,9 +550,8 @@ public class Companion : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        if (DEBUGMODE) return; // Skip if we're already showing debug info
+        if (DEBUGMODE) return;
 
-        // Draw a simplified version when not in debug mode but selected
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, 0.5f);
 
