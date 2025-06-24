@@ -143,7 +143,7 @@ public class Movement : MonoBehaviour
 
     public bool vignetteEnabled = false;
     public VignetteBlack vignetteBlack; // Drag your VignetteBlack script here in Inspector
-    private bool lastVignetteRunState = false;
+    private bool lastVignetteRunState = true;
 
     void Start()
     {
@@ -179,6 +179,11 @@ public class Movement : MonoBehaviour
 
         horizontalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Horizontal");
         verticalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Vertical");
+
+        if (vignetteBlack != null)
+        {
+            vignetteBlack.SetPlayerIdle(PlayerAnimationController.GetInteger("state") == 0);
+        }
 
         if (isMovementLocked)
         {

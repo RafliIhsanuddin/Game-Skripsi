@@ -12,7 +12,7 @@ public class VignetteBlack : MonoBehaviour
     public RawImage rawImage;
 
     [Header("Pengaturan Umum")]
-    [Range(0f, 1f)] public float alpha = 0f; // bisa diakses skrip lain
+    [Range(0f, 1f)] public float alpha = 0f;
     public FadeMode fadeMode;
 
     // ==================== FADE IN ONLY ====================
@@ -41,10 +41,40 @@ public class VignetteBlack : MonoBehaviour
     public float minHoldOutDuration = 0.1f;
     public float maxHoldOutDuration = 1.0f;
 
+    // ==================== IDLE FADE OUT ===================
+    [Header("Pengaturan Idle Fade Out")]
+    public float idleFadeOutDuration = 0.5f;
+    private bool isPlayerIdle = false;
+    private float preIdleAlpha = 0f;
+    private bool needsRestore = false;
+
     private float timer;
     private float targetDuration;
     private bool fadingIn = true;
     private float holdTime;
+
+    public void SetPlayerIdle(bool idle)
+    {
+        if (isPlayerIdle != idle)
+        {
+            if (idle)
+            {
+                // Saat mulai idle, simpan alpha saat ini
+                preIdleAlpha = alpha;
+                needsRestore = true;
+            }
+            else
+            {
+                // Saat berhenti idle, langsung set alpha ke nilai sebelumnya
+                if (needsRestore)
+                {
+                    alpha = preIdleAlpha;
+                    needsRestore = false;
+                }
+            }
+            isPlayerIdle = idle;
+        }
+    }
 
     void Start()
     {
@@ -55,6 +85,16 @@ public class VignetteBlack : MonoBehaviour
     {
         Color c = GetCurrentColor();
 
+        // Handle idle fade out
+        if (isPlayerIdle && alpha > 0f)
+        {
+            alpha = Mathf.MoveTowards(alpha, 0f, Time.deltaTime / idleFadeOutDuration);
+            c.a = alpha;
+            ApplyColor(c);
+            return; // Skip other fade modes while idle
+        }
+
+        // Continue with normal fade modes if not idle
         switch (fadeMode)
         {
             case FadeMode.FadeInOnly:
