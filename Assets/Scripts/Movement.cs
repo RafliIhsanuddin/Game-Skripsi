@@ -148,6 +148,11 @@ public class Movement : MonoBehaviour
 
     public OverlayWithAnimationPicture overlayWithAnimationPicture;
 
+    [Header("Overlay Alpha Running Check")]
+    public bool enableOverlayAlphaRunningCheck = true;
+
+    private bool lastOverlayRunState = true;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -269,6 +274,25 @@ public class Movement : MonoBehaviour
                 {
                     ghost.makeGhost = false;
                     bool isRunning = alwaysRunActive;
+
+                    if (enableOverlayAlphaRunningCheck && overlayWithAnimationPicture != null)
+                    {
+                        string alphaString = overlayWithAnimationPicture.alpha.ToString("G9");
+                        if (alphaString == "0")
+                        {
+                            lastOverlayRunState = true;
+                            isRunning = true;
+                        }
+                        else if (alphaString == "1")
+                        {
+                            lastOverlayRunState = false;
+                            isRunning = false;
+                        }
+                        else
+                        {
+                            isRunning = lastOverlayRunState;
+                        }
+                    }
 
                     if (vignetteEnabled && vignetteBlack != null)
                     {

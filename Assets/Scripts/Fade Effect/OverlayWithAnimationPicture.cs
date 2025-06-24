@@ -8,6 +8,8 @@ public class OverlayWithAnimationPicture : MonoBehaviour
     public GameObject animationGO;
     public VignetteBlack vignetteBlack;
 
+    private float currentFadeOutTotal = 0f;
+
     [Header("Settings")]
     [Range(0f, 1f)] public float alpha = 0f;
     public bool enableOverlayEffect = true;
@@ -21,35 +23,29 @@ public class OverlayWithAnimationPicture : MonoBehaviour
     public bool IsIdle { get; set; } = false;
 
     private float idleTimeWhenFull = 0f;
-    private float totalExtraIdle = 0f;
+    private float extraIdleTime = 0f;
     private bool fadeInComplete = false;
 
     void Update()
     {
         if (!enableOverlayEffect) return;
 
-        HandleFade();
-    }
+        float vignetteAlpha = (vignetteBlack != null) ? vignetteBlack.alpha : 0f;
 
-    void HandleFade()
-    {
-        // 1) Jika VignetteBlack belum selesai fade (alpha != 0), tetap lanjutkan fade-out bila perlu
-        if (vignetteBlack != null && vignetteBlack.alpha.ToString("G9") != "0")
+        // Block BlueOverlay fade-in if Vignette is not zero
+        if (vignetteAlpha != 0f)
         {
-            // Player bergerak, lakukan fade out bila perlu
-            if (!IsIdle && alpha > 0f)
-            {
-                FadeOutSmooth();
-            }
+            // Fade out BlueOverlay
+            if (alpha > 0f) FadeOutSmooth();
             ApplyAlpha();
-            return; // skip fade-in logic
+            return;
         }
 
-        // 2) Kalau Vignette sudah selesai (alpha == 0)
+        // Vignette is 0, BlueOverlay can fade-in
         if (IsIdle)
         {
-            // Fade In
-            if (!fadeInComplete)
+            // Fade-in toward 1 if alpha < 1
+            if (alpha < 1f)
             {
                 alpha += Time.deltaTime / fadeInDuration;
                 if (alpha >= 1f)
@@ -57,25 +53,34 @@ public class OverlayWithAnimationPicture : MonoBehaviour
                     alpha = 1f;
                     fadeInComplete = true;
                     idleTimeWhenFull = 0f;
-                    totalExtraIdle = 0f;
-                    animationGO?.SetActive(true);
+                    extraIdleTime = 0f;
+                    if (animationGO) animationGO.SetActive(true);
+                    Debug.Log("BlueOverlay reached 1");
+                }
+                else
+                {
+                    //Debug.Log("BlueOverlay fading in toward 1");
                 }
             }
             else
             {
-                // Tambah extra idle time
+                // Already full alpha
                 idleTimeWhenFull += Time.deltaTime;
                 if (idleTimeWhenFull > fadeInDuration)
                 {
-                    totalExtraIdle += Time.deltaTime;
-                    totalExtraIdle = Mathf.Clamp(totalExtraIdle, 0f, extraIdleMax);
+                    extraIdleTime += Time.deltaTime;
+                    extraIdleTime = Mathf.Clamp(extraIdleTime, 0f, extraIdleMax);
                 }
             }
         }
         else
         {
-            // Fade Out bila player bergerak
-            if (fadeInComplete || alpha > 0f) FadeOutSmooth();
+            // Fade-out toward 0 if moving
+            if (alpha > 0f)
+            {
+                FadeOutSmooth();
+                //Debug.Log("BlueOverlay fading out toward 0");
+            }
         }
 
         ApplyAlpha();
@@ -83,17 +88,22 @@ public class OverlayWithAnimationPicture : MonoBehaviour
 
     void FadeOutSmooth()
     {
-        if (animationGO != null) animationGO.SetActive(false); // Matikan anim
-        float fadeOutTotal = fadeOutDuration + totalExtraIdle + extraFadeOutDuration;
-        alpha -= Time.deltaTime / fadeOutTotal;
+        if (animationGO) animationGO.SetActive(false);
+
+        currentFadeOutTotal = fadeOutDuration + extraIdleTime + extraFadeOutDuration;
+        alpha -= Time.deltaTime / currentFadeOutTotal;
+
+        Debug.Log($"[FadeOut] Total fade out duration: {currentFadeOutTotal:F2} = base {fadeOutDuration:F2} + extraIdle {extraIdleTime:F2} + extraManual {extraFadeOutDuration:F2}");
+
 
         if (alpha <= 0f)
         {
             alpha = 0f;
             fadeInComplete = false;
-            totalExtraIdle = 0f;
             idleTimeWhenFull = 0f;
+            extraIdleTime = 0f;
             extraFadeOutDuration = 0f;
+            Debug.Log("BlueOverlay reached 0 and reset");
         }
     }
 
@@ -106,4 +116,5 @@ public class OverlayWithAnimationPicture : MonoBehaviour
             blueOverlay.color = new Color(c.r, c.g, c.b, alpha);
         }
     }
+
 }

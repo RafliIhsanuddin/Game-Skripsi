@@ -413,7 +413,7 @@ public class Companion : MonoBehaviour
         if (stateTransitionTimer <= 0f)
         {
             currentState = targetState;
-            Debug.Log($"State transition complete - Now in {GetStateName(currentState)}");
+            //Debug.Log($"State transition complete - Now in {GetStateName(currentState)}");
         }
     }
 
