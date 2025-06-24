@@ -241,7 +241,7 @@ public class Companion : MonoBehaviour
                 speed = 0;
                 SetTargetState(STATE_IDLE);
                 rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-                Debug.Log("Entered idle range - Switching to idle");
+                //Debug.Log("Entered idle range - Switching to idle");
             }
             return;
         }
@@ -251,7 +251,7 @@ public class Companion : MonoBehaviour
             {
                 isIdle = false;
                 moveEnabled = true;
-                Debug.Log("Exited idle range - Re-enabling movement");
+                //Debug.Log("Exited idle range - Re-enabling movement");
             }
 
             float newSpeed = distanceToPlayer <= walkDistanceThreshold ? walkSpeed : runSpeed;
@@ -260,7 +260,7 @@ public class Companion : MonoBehaviour
                 speed = newSpeed;
                 int newState = newSpeed == walkSpeed ? STATE_WALKING : STATE_RUNNING;
                 SetTargetState(newState);
-                Debug.Log($"Distance changed - New state: {(newState == STATE_WALKING ? "Walking" : "Running")}");
+                //Debug.Log($"Distance changed - New state: {(newState == STATE_WALKING ? "Walking" : "Running")}");
             }
         }
 
@@ -389,7 +389,7 @@ public class Companion : MonoBehaviour
         }
 
         animator.SetInteger("state", currentState);
-        Debug.Log($"Current animation state: {GetStateName(currentState)}");
+        //Debug.Log($"Current animation state: {GetStateName(currentState)}");
     }
 
     private string GetStateName(int state)
@@ -422,7 +422,7 @@ public class Companion : MonoBehaviour
         if (targetState == newState) return;
 
         targetState = newState;
-        Debug.Log($"Setting target state to {GetStateName(targetState)}");
+        //Debug.Log($"Setting target state to {GetStateName(targetState)}");
 
         if (currentState == STATE_IDLE && targetState == STATE_WALKING)
         {

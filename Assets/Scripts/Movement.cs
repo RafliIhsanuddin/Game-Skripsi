@@ -141,6 +141,10 @@ public class Movement : MonoBehaviour
     public List<PlayerState> positionHistory = new List<PlayerState>();
     public int historyLimit = 100;
 
+    public bool vignetteEnabled = false;
+    public VignetteBlack vignetteBlack; // Drag your VignetteBlack script here in Inspector
+    private bool lastVignetteRunState = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -247,7 +251,29 @@ public class Movement : MonoBehaviour
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
                     ghost.makeGhost = false;
-                    bool isRunning = alwaysRunActive || Input.GetKey(KeyCode.C);
+                    bool isRunning = alwaysRunActive;
+
+                    if (vignetteEnabled && vignetteBlack != null)
+                    {
+                        float alphaValue = vignetteBlack.alpha;
+                        string alphaString = alphaValue.ToString("G9");
+
+                        if (alphaString == "0")
+                        {
+                            lastVignetteRunState = true;
+                            isRunning = true;
+                        }
+                        else if (alphaString == "1")
+                        {
+                            lastVignetteRunState = false;
+                            isRunning = false;
+                        }
+                        else
+                        {
+                            isRunning = lastVignetteRunState;
+                        }
+                    }
+
                     PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
                     UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
 
