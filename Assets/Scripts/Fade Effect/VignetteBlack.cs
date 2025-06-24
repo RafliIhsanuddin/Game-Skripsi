@@ -48,6 +48,9 @@ public class VignetteBlack : MonoBehaviour
     private float preIdleAlpha = 0f;
     private bool needsRestore = false;
 
+    [Header("Sync with Overlay")]
+    public OverlayWithAnimationPicture overlayScript; // Reference to overlay script
+
     private float timer;
     private float targetDuration;
     private bool fadingIn = true;
@@ -59,13 +62,11 @@ public class VignetteBlack : MonoBehaviour
         {
             if (idle)
             {
-                // Saat mulai idle, simpan alpha saat ini
                 preIdleAlpha = alpha;
                 needsRestore = true;
             }
             else
             {
-                // Saat berhenti idle, langsung set alpha ke nilai sebelumnya
                 if (needsRestore)
                 {
                     alpha = preIdleAlpha;
@@ -85,13 +86,27 @@ public class VignetteBlack : MonoBehaviour
     {
         Color c = GetCurrentColor();
 
+        // Check overlay alpha before allowing Vignette to activate
+        if (overlayScript != null)
+        {
+            string alphaString = overlayScript.alpha.ToString("G9"); // must be exactly "0"
+            if (alphaString != "0")
+            {
+                // Force alpha to 0 and skip all behaviors
+                alpha = 0f;
+                c.a = alpha;
+                ApplyColor(c);
+                return;
+            }
+        }
+
         // Handle idle fade out
         if (isPlayerIdle && alpha > 0f)
         {
             alpha = Mathf.MoveTowards(alpha, 0f, Time.deltaTime / idleFadeOutDuration);
             c.a = alpha;
             ApplyColor(c);
-            return; // Skip other fade modes while idle
+            return;
         }
 
         // Continue with normal fade modes if not idle
@@ -175,7 +190,7 @@ public class VignetteBlack : MonoBehaviour
                 {
                     timer = 0f;
                     fadingIn = false;
-                    SetNextRandom(false); // set next fade-out
+                    SetNextRandom(false);
                 }
             }
         }
@@ -189,7 +204,7 @@ public class VignetteBlack : MonoBehaviour
                 {
                     timer = 0f;
                     fadingIn = true;
-                    SetNextRandom(true); // set next fade-in
+                    SetNextRandom(true);
                 }
             }
         }
@@ -213,7 +228,7 @@ public class VignetteBlack : MonoBehaviour
         }
     }
 
-    // ==================== UI COLOR UTILS ====================
+    // ==================== UTILITY ====================
 
     Color GetCurrentColor()
     {

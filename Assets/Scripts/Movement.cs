@@ -145,6 +145,9 @@ public class Movement : MonoBehaviour
     public VignetteBlack vignetteBlack; // Drag your VignetteBlack script here in Inspector
     private bool lastVignetteRunState = true;
 
+
+    public OverlayWithAnimationPicture overlayWithAnimationPicture;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -179,6 +182,15 @@ public class Movement : MonoBehaviour
 
         horizontalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Horizontal");
         verticalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Vertical");
+
+        if (Mathf.Abs(horizontalInput) < 0.01f)
+        {
+            overlayWithAnimationPicture.IsIdle = true;
+        }
+        else
+        {
+            overlayWithAnimationPicture.IsIdle = false;
+        }
 
         if (vignetteBlack != null)
         {
