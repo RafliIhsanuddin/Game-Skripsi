@@ -45,6 +45,7 @@ Jagung: Aku tidak tahu harus mulai dari mana. Semua terasa terlalu banyak.
 <<speaker Kael>>
 <<setportrait Kael buka>>
 Kael: Mulailah dari satu tarikan napas. Tarik napas dalam… tahan sebentar… lalu hembuskan.
+<<EnableBreathUI BreathUI>>
 Kael: Pelan-pelan, ya? Aku di sini menemanimu.
 
 <<speaker Puffkin>>
