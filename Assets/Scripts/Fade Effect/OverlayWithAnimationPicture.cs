@@ -93,7 +93,7 @@ public class OverlayWithAnimationPicture : MonoBehaviour
         currentFadeOutTotal = fadeOutDuration + extraIdleTime + extraFadeOutDuration;
         alpha -= Time.deltaTime / currentFadeOutTotal;
 
-        Debug.Log($"[FadeOut] Total fade out duration: {currentFadeOutTotal:F2} = base {fadeOutDuration:F2} + extraIdle {extraIdleTime:F2} + extraManual {extraFadeOutDuration:F2}");
+        //Debug.Log($"[FadeOut] Total fade out duration: {currentFadeOutTotal:F2} = base {fadeOutDuration:F2} + extraIdle {extraIdleTime:F2} + extraManual {extraFadeOutDuration:F2}");
 
 
         if (alpha <= 0f)
@@ -103,7 +103,7 @@ public class OverlayWithAnimationPicture : MonoBehaviour
             idleTimeWhenFull = 0f;
             extraIdleTime = 0f;
             extraFadeOutDuration = 0f;
-            Debug.Log("BlueOverlay reached 0 and reset");
+            //Debug.Log("BlueOverlay reached 0 and reset");
         }
     }
 

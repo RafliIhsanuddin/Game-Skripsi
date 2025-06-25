@@ -148,10 +148,14 @@ public class Movement : MonoBehaviour
 
     public OverlayWithAnimationPicture overlayWithAnimationPicture;
 
-    [Header("Overlay Alpha Running Check")]
+    [Header("Overlay Check")]
     public bool enableOverlayAlphaRunningCheck = true;
 
+    private float overlayAlpha;
+
     private bool lastOverlayRunState = true;
+
+    private bool isRunning;
 
     void Start()
     {
@@ -195,6 +199,16 @@ public class Movement : MonoBehaviour
         else
         {
             overlayWithAnimationPicture.IsIdle = false;
+        }
+
+        UpdateRunningState();
+
+        if (overlayWithAnimationPicture != null)
+        {
+            float overlayAlpha = overlayWithAnimationPicture.alpha;
+            string overlayAlphaString = overlayAlpha.ToString("G9");
+
+            Debug.Log("[Overlay Debug] Current alpha: " + overlayAlphaString);
         }
 
         if (vignetteBlack != null)
@@ -273,47 +287,6 @@ public class Movement : MonoBehaviour
                 if (Mathf.Abs(horizontalInput) > 0)
                 {
                     ghost.makeGhost = false;
-                    bool isRunning = alwaysRunActive;
-
-                    if (enableOverlayAlphaRunningCheck && overlayWithAnimationPicture != null)
-                    {
-                        string alphaString = overlayWithAnimationPicture.alpha.ToString("G9");
-                        if (alphaString == "0")
-                        {
-                            lastOverlayRunState = true;
-                            isRunning = true;
-                        }
-                        else if (alphaString == "1")
-                        {
-                            lastOverlayRunState = false;
-                            isRunning = false;
-                        }
-                        else
-                        {
-                            isRunning = lastOverlayRunState;
-                        }
-                    }
-
-                    if (vignetteEnabled && vignetteBlack != null)
-                    {
-                        float alphaValue = vignetteBlack.alpha;
-                        string alphaString = alphaValue.ToString("G9");
-
-                        if (alphaString == "0")
-                        {
-                            lastVignetteRunState = true;
-                            isRunning = true;
-                        }
-                        else if (alphaString == "1")
-                        {
-                            lastVignetteRunState = false;
-                            isRunning = false;
-                        }
-                        else
-                        {
-                            isRunning = lastVignetteRunState;
-                        }
-                    }
 
                     PlayerAnimationController.SetInteger("state", isRunning ? 2 : 1);
                     UpdateCollider(isRunning ? runOffset : walkOffset, isRunning ? runSize : walkSize);
@@ -384,7 +357,7 @@ public class Movement : MonoBehaviour
 
             if (!isWallSliding && !isWallJumping && !isWallDashing)
             {
-                float movementSpeed = (alwaysRunActive || Input.GetKey(KeyCode.C)) ? runSpeed : speed;
+                float movementSpeed = isRunning ? runSpeed : speed;
                 Vector2 movement = new Vector2(horizontalInput * movementSpeed, rb.linearVelocity.y);
 
                 // Apply movement only if not in wall dash locked state
@@ -418,6 +391,94 @@ public class Movement : MonoBehaviour
                     Flip();
             }
         }
+    }
+
+    private void UpdateRunningState()
+    {
+        bool overlayActive = enableOverlayAlphaRunningCheck && overlayWithAnimationPicture != null;
+        bool vignetteActive = vignetteEnabled && vignetteBlack != null;
+
+        // Get current alpha values
+        float overlayAlpha = overlayActive ? overlayWithAnimationPicture.alpha : -1f;
+        float vignetteAlpha = vignetteActive ? vignetteBlack.alpha : -1f;
+
+        // Determine if we're moving (horizontal input)
+        bool isMoving = Mathf.Abs(horizontalInput) > 0.01f;
+
+        // Handle overlay system
+        if (overlayActive)
+        {
+            if (overlayAlpha == 1f)
+            {
+                isRunning = false;
+                lastOverlayRunState = false;
+            }
+            else if (overlayAlpha == 0f)
+            {
+                isRunning = true;
+                lastOverlayRunState = true;
+            }
+            else if (isMoving) // Only use last state when moving
+            {
+                isRunning = lastOverlayRunState;
+            }
+        }
+
+        // Handle vignette system
+        if (vignetteActive)
+        {
+            if (vignetteAlpha == 1f)
+            {
+                isRunning = false;
+                lastVignetteRunState = false;
+            }
+            else if (vignetteAlpha == 0f)
+            {
+                isRunning = true;
+                lastVignetteRunState = true;
+            }
+            else if (isMoving) // Only use last state when moving
+            {
+                isRunning = lastVignetteRunState;
+            }
+        }
+
+        // Handle conflict resolution when both systems are active
+        if (overlayActive && vignetteActive)
+        {
+            // If either system is explicitly setting to false, we walk
+            if ((overlayAlpha == 1f) || (vignetteAlpha == 1f))
+            {
+                isRunning = false;
+            }
+            // If both systems are explicitly setting to true, we run
+            else if ((overlayAlpha == 0f) && (vignetteAlpha == 0f))
+            {
+                isRunning = true;
+            }
+            // In transition states, be more conservative (favor walk)
+            else if (isMoving)
+            {
+                // If either last state was false, we walk
+                if (!lastOverlayRunState || !lastVignetteRunState)
+                {
+                    isRunning = false;
+                }
+            }
+        }
+
+        // Default if neither system is active
+        if (!overlayActive && !vignetteActive)
+        {
+            isRunning = true;
+        }
+
+        // Special case: When idling, we should never run
+        if (!isMoving)
+        {
+            isRunning = false;
+        }
+
     }
 
     private void WallSlide()
@@ -883,7 +944,6 @@ public class Movement : MonoBehaviour
 
     public void EnableDash()
     {
-        Debug.Log("kong");
         dashEnabled = true;
     }
 
