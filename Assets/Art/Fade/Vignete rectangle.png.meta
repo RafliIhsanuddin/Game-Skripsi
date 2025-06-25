@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Vignete rectangle_0: 6111188797032734503
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

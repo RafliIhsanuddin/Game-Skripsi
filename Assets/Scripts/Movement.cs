@@ -145,16 +145,15 @@ public class Movement : MonoBehaviour
     public VignetteBlack vignetteBlack; // Drag your VignetteBlack script here in Inspector
     private bool lastVignetteRunState = true;
 
-
-    public OverlayWithAnimationPicture overlayWithAnimationPicture;
+    [Header("Overlay Settings")]
+    public bool overlayEnabled = false;
+    [SerializeField] private OverlayWithAnimationPicture overlayWithAnimationPicture;
 
     [Header("Overlay Check")]
     public bool enableOverlayAlphaRunningCheck = true;
 
     private float overlayAlpha;
-
     private bool lastOverlayRunState = true;
-
     private bool isRunning;
 
     void Start()
@@ -192,18 +191,18 @@ public class Movement : MonoBehaviour
         horizontalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Horizontal");
         verticalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Vertical");
 
-        if (Mathf.Abs(horizontalInput) < 0.01f)
+        if (overlayEnabled && Mathf.Abs(horizontalInput) < 0.01f)
         {
             overlayWithAnimationPicture.IsIdle = true;
         }
-        else
+        else if (overlayEnabled)
         {
             overlayWithAnimationPicture.IsIdle = false;
         }
 
         UpdateRunningState();
 
-        if (overlayWithAnimationPicture != null)
+        if (overlayEnabled && overlayWithAnimationPicture != null)
         {
             float overlayAlpha = overlayWithAnimationPicture.alpha;
             string overlayAlphaString = overlayAlpha.ToString("G9");
@@ -395,7 +394,7 @@ public class Movement : MonoBehaviour
 
     private void UpdateRunningState()
     {
-        bool overlayActive = enableOverlayAlphaRunningCheck && overlayWithAnimationPicture != null;
+        bool overlayActive = overlayEnabled && enableOverlayAlphaRunningCheck && overlayWithAnimationPicture != null;
         bool vignetteActive = vignetteEnabled && vignetteBlack != null;
 
         // Get current alpha values
@@ -478,7 +477,6 @@ public class Movement : MonoBehaviour
         {
             isRunning = false;
         }
-
     }
 
     private void WallSlide()

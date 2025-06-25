@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      scribble effect 4_0: -8084991149638011412
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

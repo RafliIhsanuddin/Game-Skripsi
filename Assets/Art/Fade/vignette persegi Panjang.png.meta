@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      vignette persegi Panjang_0: -6998504506959068372
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

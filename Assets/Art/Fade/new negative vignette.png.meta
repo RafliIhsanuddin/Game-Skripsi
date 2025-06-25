@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      new negative vignette_0: 8046981699119332577
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
