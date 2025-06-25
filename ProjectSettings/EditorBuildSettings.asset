@@ -5,20 +5,11 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/Background/Forest fbf.unity
-    guid: 018c6a0d55a3ae548897b465212bfa49
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Background/Desert fbf.unity
-    guid: 64dd86e20d5c9e249bc57185432930a5
+    path: Assets/Scenes/Cutscenes/First Cutscene.unity
+    guid: de42adfcb8ebd924ebb7a2d8f74f5db5
   - enabled: 1
-    path: Assets/Scenes/Background/Akhir.unity
-    guid: 2c69124228a233c488d454f3df02f899
-  - enabled: 0
-    path: Assets/Scenes/Game.unity
-    guid: fd39920953f1711468549ba7bd15ae47
+    path: Assets/Scenes/Background/Final Forest.unity
+    guid: 4249990ab518f8947b8afdd714bd10cd
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
