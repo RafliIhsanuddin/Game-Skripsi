@@ -7,6 +7,7 @@ public class Movement : MonoBehaviour
     public bool isMovementLocked = false; // Digunakan untuk mengunci input saat dialog
     public bool dashLocked = true;
     public bool dashEnabled = true; // New boolean to toggle dash ability
+    public bool reverseHorizontalControls = false; // New boolean to toggle reversed controls
 
     public float horizontalInput;
     public float verticalInput;
@@ -188,7 +189,8 @@ public class Movement : MonoBehaviour
         if (positionHistory.Count > historyLimit)
             positionHistory.RemoveAt(positionHistory.Count - 1);
 
-        horizontalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Horizontal");
+        float rawHorizontalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Horizontal");
+        horizontalInput = reverseHorizontalControls ? -rawHorizontalInput : rawHorizontalInput;
         verticalInput = (inputsDisabled || isMovementLocked) ? 0f : Input.GetAxisRaw("Vertical");
 
         if (overlayEnabled && Mathf.Abs(horizontalInput) < 0.01f)
