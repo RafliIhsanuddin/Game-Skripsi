@@ -18,7 +18,7 @@ public class ExpressionCommandRegistrar : MonoBehaviour
 
     void Awake()
     {
-        portraitCanvas.SetActive(true);
+        //portraitCanvas.SetActive(true);
 
         dialogueRunner.onDialogueComplete.AddListener(() =>
         {
