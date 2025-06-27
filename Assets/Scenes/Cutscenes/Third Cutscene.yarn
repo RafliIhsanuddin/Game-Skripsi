@@ -1,0 +1,68 @@
+﻿title: third_cutscene
+---
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Hei! Kamu kan yang tadi menyakiti Puffkin itu?!
+Kael: Kamu juga kan yang menyakiti Puffkin-puffkin di hutan?!
+
+<<speaker DarkKael>>
+<<setportrait DarkKael jubah_netral>>
+???: Ada alasan kenapa aku melakukan ini.
+
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Kenapa?
+
+<<speaker DarkKael>>
+<<setportrait DarkKael jubah_netral>>
+???: Untuk melemahkanmu, Kael.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Darimana kamu tahu namaku?
+
+<<speaker DarkKael>>
+<<setportrait DarkKael jubah_netral>>
+???: Kamu tidak tahu aku siapa?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: ..Tidak.
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+???: Aku adalah kamu, Kael.
+Kael Gelap: Aku sisi gelapmu.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Hah?!
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_marah>>
+Dolly: Kael?!
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Karena keberadaanku hanya bisa ada karenamu, aku akan memberitahu kamu satu hal.
+Kael Gelap: Mungkin kamu bertanya-tanya kenapa aku melakukan ini.
+Kael Gelap: Aku hanya ingin kamu menjadi bagian dariku, seperti aku menjadi bagian darimu selama ini.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Maksudmu.. 
+
+<<speaker Dolly>>
+<<setportrait Dolly kucing_marah>>
+Dolly: Kael, hati-hati!
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_kaget>>
+Kael Gelap: ..Apa?
+<<setportrait DarkKael dark_mingkem>>
+Kael Gelap: ...
+
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Hei! Mau kemana kamu?!
+===
