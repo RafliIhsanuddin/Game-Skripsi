@@ -410,7 +410,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8653719598885068355, guid: 9da413d7073c23245bcfa6fd30a316ca, type: 3}
       propertyPath: m_Name
-      value: dark kael psb
+      value: Dark Kael With IK Bones
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: 9da413d7073c23245bcfa6fd30a316ca, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: 9da413d7073c23245bcfa6fd30a316ca, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: 9da413d7073c23245bcfa6fd30a316ca, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9da413d7073c23245bcfa6fd30a316ca, type: 3}
       propertyPath: m_LocalPosition.x
