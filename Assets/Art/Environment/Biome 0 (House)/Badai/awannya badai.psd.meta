@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 388b0d2446e1bdb4a8af79d804307d05
+guid: e6a0713e099565c41bcc4bc7fa8c5fb4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6609676564034701282
-    second: paralax badai2_0
+      213: -3057660613953686350
+    second: awannya badai_0
+  - first:
+      213: -3057768178943766804
+    second: awannya badai_1
+  - first:
+      213: -4233847078061700962
+    second: awannya badai_2
+  - first:
+      213: 1868700378572214484
+    second: awannya badai_3
+  - first:
+      213: -747906805043964966
+    second: awannya badai_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +112,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: paralax badai2_0
+      name: awannya badai_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 4097
-        height: 1714
+        x: 3123
+        y: 1545
+        width: 8
+        height: 7
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2e7438fb0d94abb50800000000000000
-      internalID: 6609676564034701282
+      spriteID: 2b4769d2fd10195d0800000000000000
+      internalID: -3057660613953686350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: awannya badai_1
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 404
+        width: 2647
+        height: 954
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cee4090ca00a095d0800000000000000
+      internalID: -3057768178943766804
       vertices: []
       indices: 
       edges: []
@@ -125,7 +159,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 993a40c27181aa541a667e96931bc3ae
     internalID: 0
     vertices: []
     indices: 
@@ -134,7 +168,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      awannya badai_0: -3057660613953686350
+      awannya badai_1: -3057768178943766804
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
