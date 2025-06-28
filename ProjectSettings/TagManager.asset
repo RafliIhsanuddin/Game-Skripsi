@@ -11,6 +11,7 @@ TagManager:
   - EnemyProjectile
   - ImpactFX
   - Companion
+  - DarkKaelTarget
   layers:
   - Default
   - TransparentFX

@@ -2,37 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CapsuleCollider2D))]
 public class DarkKaelMovement : MonoBehaviour
 {
     #region Variables
-    // Animation states
     private const int STATE_IDLE = 0;
     private const int STATE_WALKING = 1;
     private const int STATE_RUNNING = 2;
     private const int STATE_JUMPING = 3;
-    private const int STATE_ATTACKING = 4;
 
     [Header("Stats")]
     public float jumpHeight = 10f;
-    public float attackRange = 3f;
-    public float attackCooldown = 2f;
+
+    [Header("Target Settings")]
+    [SerializeField] private string targetTag = "Player";
 
     [Header("Movement Settings")]
     [SerializeField] private float walkDistanceThreshold = 5f;
     [SerializeField] private float idleDistanceThreshold = 2f;
     [SerializeField] private float runSpeed = 16f;
     [SerializeField] private float walkSpeed = 8f;
+    [SerializeField] private float centerAlignSpeed = 20f;
     [SerializeField] private float movementSmoothing = 0.05f;
-    [SerializeField] private float playerTrackingAggression = 0.8f; // How aggressively he tracks the player (0-1)
+    [SerializeField] private float centerPositionTolerance = 0.1f;
     [SerializeField] private bool enableIdleState = true;
     [SerializeField] private bool enableWalkingState = true;
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpCooldown = 0.4f;
     [SerializeField] private float groundCheckDelayAfterJump = 0.2f;
-    [SerializeField] private float jumpPredictionDistance = 2f; // How far ahead to predict jumps
+    [SerializeField] private float jumpPredictionDistance = 2f;
+    [SerializeField] private float upwardRayLength = 5f;
+    [SerializeField] private float upwardRayCircleRadius = 0.5f;
+    [SerializeField] private float obstacleWaitTime = 0.5f;
 
     [Header("Ground Detection")]
     [SerializeField] private float groundRayLength = 3.5f;
@@ -42,218 +46,233 @@ public class DarkKaelMovement : MonoBehaviour
     [SerializeField] private float wallRayLength = 2f;
     [SerializeField] private float rayHeight = 1.5f;
 
-    [Header("DEBUGING")]
+    [Header("Collider Settings - Idle")]
+    [SerializeField] private Vector2 idleColliderOffset = new Vector2(0f, 0f);
+    [SerializeField] private Vector2 idleColliderSize = new Vector2(1f, 2f);
+
+    [Header("Collider Settings - Run")]
+    [SerializeField] private Vector2 runColliderOffset = new Vector2(0f, -0.2f);
+    [SerializeField] private Vector2 runColliderSize = new Vector2(0.9f, 1.8f);
+
+    [Header("Collider Settings - Jump")]
+    [SerializeField] private Vector2 jumpColliderOffset = new Vector2(0f, -0.5f);
+    [SerializeField] private Vector2 jumpColliderSize = new Vector2(0.8f, 1.5f);
+
+    [Header("DEBUG")]
     public bool DEBUGMODE = false;
 
     [Header("Components")]
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private LayerMask whatIsPlayer;
 
-    // Internal variables
-    private float speed;
+    private float speed = 0f;
     private bool movingRight = true;
     private bool canJump = true;
-    private bool canAttack = true;
     private bool moveEnabled = true;
     private bool isGrounded = false;
     private bool isIdle = false;
-    private bool isAttacking = false;
+    private bool waitingForObstacle = false;
+    private bool needsToCenter = false;
+    private bool isJumpingUpward = false;
     private int currentState = STATE_IDLE;
     private int targetState = STATE_IDLE;
     private Vector2 currentVelocity = Vector2.zero;
-    private float lastAttackTime = 0f;
 
     private Rigidbody2D rb;
     private CapsuleCollider2D capsuleCollider;
-    private Transform playerTarget;
+    private Transform target;
 
-    // Raycast hits
     private RaycastHit2D leftInfoGround;
     private RaycastHit2D rightInfoGround;
     private RaycastHit2D leftInfoWall;
     private RaycastHit2D rightInfoWall;
+    private RaycastHit2D upwardInfo;
     #endregion
 
+    #region Unity Callbacks
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         capsuleCollider = GetComponent<CapsuleCollider2D>();
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) playerTarget = player.transform;
-
         if (animator == null || spriteRenderer == null)
         {
-            Debug.LogError("Animator or SpriteRenderer reference is missing!");
+            Debug.LogError("Animator atau SpriteRenderer belum di-assign.");
             enabled = false;
             return;
         }
 
         rb.freezeRotation = true;
+        ResetColliderToIdle();
     }
 
     void Update()
     {
-        if (playerTarget == null) return;
+        if (target == null || !target.gameObject.activeInHierarchy)
+        {
+            FindTargetByTag();
+            if (target == null) return;
+        }
 
         UpdateRaycasts();
-        HandleCombat();
+        CheckForTargetAbove();
         HandleMovementState();
-        HandleJumpLogic();
+
+        if (!isIdle)
+            HandleJumpLogic();
+
         UpdateAnimation();
         ApplyGravityModifiers();
+        UpdateCollider();
     }
 
     void FixedUpdate()
     {
-        if (!isGrounded || isAttacking) return;
+        if (!isGrounded || waitingForObstacle) return;
         HandleMovement();
     }
+    #endregion
 
-    #region Combat
-    private void HandleCombat()
+    #region Target Helpers
+    private void FindTargetByTag()
     {
-        if (!canAttack || Time.time < lastAttackTime + attackCooldown) return;
-
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
-        bool playerInRange = distanceToPlayer <= attackRange;
-        bool facingPlayer = (movingRight && playerTarget.position.x > transform.position.x) ||
-                          (!movingRight && playerTarget.position.x < transform.position.x);
-
-        if (playerInRange && facingPlayer)
+        GameObject obj = GameObject.FindGameObjectWithTag(targetTag);
+        if (obj && obj.activeInHierarchy)
         {
-            StartCoroutine(PerformAttack());
+            target = obj.transform;
+            if (DEBUGMODE)
+            {
+                Debug.Log("DarkKaelMovement: Target ditemukan! Nama target: " + obj.name);
+            }
+        }
+        else
+        {
+            target = null;
+            if (DEBUGMODE)
+            {
+                Debug.LogWarning("DarkKaelMovement: Target TIDAK ditemukan dengan tag: " + targetTag);
+            }
         }
     }
 
-    IEnumerator PerformAttack()
+    private void CheckForTargetAbove()
     {
-        isAttacking = true;
-        canAttack = false;
-        moveEnabled = false;
-        SetTargetState(STATE_ATTACKING);
-        lastAttackTime = Time.time;
+        Vector2 center = (Vector2)transform.position + Vector2.up * upwardRayLength;
+        bool targetInside = target != null && Vector2.Distance(center, target.position) <= upwardRayCircleRadius;
 
-        // Trigger attack animation and logic
-        animator.SetTrigger("Attack");
-
-        // Wait for attack animation to complete (adjust time as needed)
-        yield return new WaitForSeconds(0.8f);
-
-        isAttacking = false;
-        moveEnabled = true;
-        canAttack = true;
+        if (targetInside && !needsToCenter && !waitingForObstacle && isGrounded)
+        {
+            needsToCenter = true;
+            moveEnabled = true;
+            isIdle = false;
+        }
     }
     #endregion
 
     #region Movement
     private void HandleMovementState()
     {
-        if (isAttacking) return;
+        float dist = Vector2.Distance(transform.position, target.position);
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
-
-        if (enableIdleState && distanceToPlayer <= idleDistanceThreshold)
+        bool dir = (target.position.x - transform.position.x) >= 0f;
+        if (dir != movingRight)
         {
-            if (!isIdle)
+            movingRight = dir;
+            spriteRenderer.flipX = !movingRight;
+        }
+
+        if (needsToCenter)
+        {
+            if (Mathf.Abs(transform.position.x - target.position.x) < centerPositionTolerance)
             {
-                isIdle = true;
-                moveEnabled = false;
-                speed = 0;
-                SetTargetState(STATE_IDLE);
-                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+                needsToCenter = false;
+                if (upwardInfo.collider != null)
+                    StartCoroutine(PerformCenteredJump());
+                return;
             }
+
+            speed = centerAlignSpeed;
+            SetTargetState(STATE_RUNNING);
             return;
         }
-        else
-        {
-            if (isIdle)
-            {
-                isIdle = false;
-                moveEnabled = true;
-            }
 
-            float newSpeed = enableWalkingState && distanceToPlayer <= walkDistanceThreshold ? walkSpeed : runSpeed;
-            if (newSpeed != speed)
-            {
-                speed = newSpeed;
-                SetTargetState(enableWalkingState && newSpeed == walkSpeed ? STATE_WALKING : STATE_RUNNING);
-            }
+        if (enableIdleState && dist <= idleDistanceThreshold)
+        {
+            speed = 0f;
+            SetTargetState(STATE_IDLE);
+            return;
         }
 
-        // More aggressive tracking of player position
-        float directionThreshold = playerTrackingAggression * distanceToPlayer;
-        bool newDirection = (playerTarget.position.x - transform.position.x) >= 0;
-
-        if (Mathf.Abs(playerTarget.position.x - transform.position.x) > directionThreshold)
+        if (enableWalkingState && dist <= walkDistanceThreshold)
         {
-            if (newDirection != movingRight)
-            {
-                movingRight = newDirection;
-                spriteRenderer.flipX = !movingRight;
-            }
+            speed = walkSpeed;
+            SetTargetState(STATE_WALKING);
+            return;
         }
+
+        speed = runSpeed;
+        SetTargetState(STATE_RUNNING);
     }
 
     private void HandleMovement()
     {
-        if (!moveEnabled || isAttacking) return;
+        if (!moveEnabled) return;
 
-        Vector2 directionToPlayer = (playerTarget.position - transform.position).normalized;
-        float horizontalMovement = directionToPlayer.x * speed;
+        Vector2 dir = (target.position - transform.position).normalized;
+        float horiz = dir.x * speed;
 
-        // Add some prediction to movement based on player velocity
-        Rigidbody2D playerRB = playerTarget.GetComponent<Rigidbody2D>();
-        if (playerRB != null)
+        Rigidbody2D targetRB = target.GetComponent<Rigidbody2D>();
+        if (targetRB != null)
         {
-            float prediction = playerRB.linearVelocity.x * Time.deltaTime * jumpPredictionDistance;
-            horizontalMovement = Mathf.Clamp(horizontalMovement + prediction, -speed, speed);
+            float prediction = targetRB.linearVelocity.x * Time.deltaTime * jumpPredictionDistance;
+            horiz = Mathf.Clamp(horiz + prediction, -speed, speed);
         }
 
-        Vector2 targetVelocity = new Vector2(horizontalMovement, rb.linearVelocity.y);
-        rb.linearVelocity = Vector2.SmoothDamp(rb.linearVelocity, targetVelocity, ref currentVelocity, movementSmoothing);
+        Vector2 targetVel = new Vector2(horiz, rb.linearVelocity.y);
+        rb.linearVelocity = Vector2.SmoothDamp(rb.linearVelocity, targetVel, ref currentVelocity, movementSmoothing);
     }
     #endregion
 
     #region Jumping
     private void HandleJumpLogic()
     {
-        if (isIdle || !canJump || !isGrounded || isAttacking) return;
+        if (isIdle || !canJump || !isGrounded || waitingForObstacle) return;
 
-        // Jump when player is above and we're close enough
-        bool playerAbove = playerTarget.position.y > transform.position.y + 2f;
-        float horizontalDistance = Mathf.Abs(playerTarget.position.x - transform.position.x);
+        bool targetAbove = target.position.y > transform.position.y + 2f;
+        float horizontalDist = Mathf.Abs(target.position.x - transform.position.x);
 
-        if (playerAbove && horizontalDistance < 3f)
+        if (targetAbove && horizontalDist < 3f && !isJumpingUpward && !needsToCenter)
         {
-            StartCoroutine(Jump(jumpHeight * 1.2f));
+            StartCoroutine(Jump(jumpHeight * 1.2f, true));
             return;
         }
 
-        // Jump over gaps
-        if (leftInfoGround.collider == false && rightInfoGround.collider == true)
+        if (!isJumpingUpward && !needsToCenter)
         {
-            if (leftInfoWall.collider == false) StartCoroutine(Jump(jumpHeight));
-        }
-        else if (leftInfoGround.collider == true && rightInfoGround.collider == false)
-        {
-            if (rightInfoWall.collider == false) StartCoroutine(Jump(jumpHeight));
-        }
+            if (leftInfoGround.collider == null && rightInfoGround.collider != null)
+            {
+                if (leftInfoWall.collider == null)
+                    StartCoroutine(Jump(jumpHeight, false));
+            }
+            else if (leftInfoGround.collider != null && rightInfoGround.collider == null)
+            {
+                if (rightInfoWall.collider == null)
+                    StartCoroutine(Jump(jumpHeight, false));
+            }
 
-        // Jump over walls
-        if (isGrounded)
-        {
-            if (leftInfoWall.collider == true && leftInfoWall.distance <= wallRayLength / 1.5f && !movingRight)
-                StartCoroutine(Jump(jumpHeight));
+            if (isGrounded)
+            {
+                if (leftInfoWall.collider && leftInfoWall.distance <= wallRayLength / 1.5f && !movingRight)
+                    StartCoroutine(Jump(jumpHeight, false));
 
-            if (rightInfoWall.collider == true && rightInfoWall.distance <= wallRayLength / 1.5f && movingRight)
-                StartCoroutine(Jump(jumpHeight));
+                if (rightInfoWall.collider && rightInfoWall.distance <= wallRayLength / 1.5f && movingRight)
+                    StartCoroutine(Jump(jumpHeight, false));
+            }
         }
     }
 
-    IEnumerator Jump(float jumpForce)
+    private IEnumerator Jump(float force, bool upward)
     {
         if (!canJump) yield break;
 
@@ -263,125 +282,164 @@ public class DarkKaelMovement : MonoBehaviour
         currentState = STATE_JUMPING;
         targetState = STATE_JUMPING;
 
-        Vector2 jumpVelocity = new Vector2(movingRight ? jumpForce / 2 : -jumpForce / 2, jumpForce);
-        rb.linearVelocity = jumpVelocity;
+        if (upward)
+        {
+            rb.linearVelocity = new Vector2(0, force);
+            isJumpingUpward = true;
+        }
+        else
+        {
+            rb.linearVelocity = new Vector2(movingRight ? force / 2 : -force / 2, force);
+            isJumpingUpward = false;
+        }
 
         yield return new WaitForSeconds(jumpCooldown);
         canJump = true;
+        isJumpingUpward = false;
+    }
+
+    private IEnumerator PerformCenteredJump()
+    {
+        waitingForObstacle = true;
+        moveEnabled = false;
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+
+        yield return new WaitForSeconds(0.1f);
+
+        float heightDiff = target.position.y - transform.position.y;
+        float required = Mathf.Clamp(heightDiff * 1.2f, jumpHeight, jumpHeight * 1.5f);
+
+        yield return StartCoroutine(Jump(required, true));
+
+        waitingForObstacle = false;
+        moveEnabled = true;
     }
     #endregion
 
-    #region Utility
+    #region Collider Switching
+    private void UpdateCollider()
+    {
+        if (!isGrounded)
+            SetCollider(jumpColliderOffset, jumpColliderSize);
+        else if (currentState == STATE_RUNNING)
+            SetCollider(runColliderOffset, runColliderSize);
+        else
+            ResetColliderToIdle();
+    }
+
+    private void ResetColliderToIdle() => SetCollider(idleColliderOffset, idleColliderSize);
+
+    private void SetCollider(Vector2 offset, Vector2 size)
+    {
+        capsuleCollider.offset = offset;
+        capsuleCollider.size = size;
+    }
+    #endregion
+
+    #region Raycasts and Anim
     private void UpdateRaycasts()
     {
-        Vector2 leftGroundPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y);
-        Vector2 rightGroundPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y);
+        Vector2 leftGround = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y);
+        Vector2 rightGround = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y);
 
-        leftInfoGround = Physics2D.Raycast(leftGroundPos, Vector2.down, groundRayLength, whatIsGround);
-        rightInfoGround = Physics2D.Raycast(rightGroundPos, Vector2.down, groundRayLength, whatIsGround);
+        leftInfoGround = Physics2D.Raycast(leftGround, Vector2.down, groundRayLength, whatIsGround);
+        rightInfoGround = Physics2D.Raycast(rightGround, Vector2.down, groundRayLength, whatIsGround);
 
-        Vector2 leftWallPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
-        Vector2 rightWallPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
+        Vector2 leftWall = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
+        Vector2 rightWall = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
 
-        leftInfoWall = Physics2D.Raycast(leftWallPos, Vector2.left, wallRayLength, whatIsGround);
-        rightInfoWall = Physics2D.Raycast(rightWallPos, Vector2.right, wallRayLength, whatIsGround);
+        leftInfoWall = Physics2D.Raycast(leftWall, Vector2.left, wallRayLength, whatIsGround);
+        rightInfoWall = Physics2D.Raycast(rightWall, Vector2.right, wallRayLength, whatIsGround);
+
+        upwardInfo = Physics2D.Raycast(transform.position, Vector2.up, upwardRayLength, whatIsGround);
 
         bool wasGrounded = isGrounded;
-        isGrounded = leftInfoGround.collider != null || rightInfoGround.collider != null;
+        isGrounded = leftInfoGround.collider || rightInfoGround.collider;
 
         if (!wasGrounded && isGrounded)
         {
-            if (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
-            {
-                float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
-                SetTargetState(distanceToPlayer <= walkDistanceThreshold ? STATE_WALKING : STATE_RUNNING);
-            }
-            else
-            {
-                SetTargetState(STATE_IDLE);
-            }
+            float dist = Vector2.Distance(transform.position, target.position);
+            SetTargetState(dist <= walkDistanceThreshold ? STATE_WALKING : STATE_RUNNING);
         }
 
-        Debug.DrawRay(leftWallPos, Vector2.left * wallRayLength, leftInfoWall.collider ? Color.green : Color.red);
-        Debug.DrawRay(rightWallPos, Vector2.right * wallRayLength, rightInfoWall.collider ? Color.green : Color.red);
+        if (DEBUGMODE)
+        {
+            Debug.DrawRay(leftWall, Vector2.left * wallRayLength, leftInfoWall.collider ? Color.green : Color.red);
+            Debug.DrawRay(rightWall, Vector2.right * wallRayLength, rightInfoWall.collider ? Color.green : Color.red);
+            Debug.DrawRay(transform.position, Vector2.up * upwardRayLength, upwardInfo.collider ? Color.green : Color.red);
+        }
     }
 
     private void UpdateAnimation()
     {
-        if (isAttacking)
-        {
-            currentState = STATE_ATTACKING;
-        }
-        else if (!isGrounded)
-        {
+        if (!isGrounded)
             currentState = STATE_JUMPING;
-        }
         else if (Mathf.Abs(rb.linearVelocity.x) < 0.1f)
-        {
             currentState = STATE_IDLE;
-        }
         else
-        {
             currentState = targetState;
-        }
 
         animator.SetInteger("state", currentState);
     }
 
     private void SetTargetState(int newState)
     {
-        if (targetState == newState) return;
-        targetState = newState;
+        if (targetState != newState)
+            targetState = newState;
     }
 
     private void ApplyGravityModifiers()
     {
         if (rb.linearVelocity.y < 0)
-        {
-            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (2.8f - 1) * Time.deltaTime;
-        }
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (2.8f - 1f) * Time.deltaTime;
         else if (rb.linearVelocity.y > 0 && !isGrounded)
-        {
-            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (2.2f - 1) * Time.deltaTime;
-        }
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (2.2f - 1f) * Time.deltaTime;
     }
     #endregion
 
-    #region Debugging
+    #region Gizmos
     void OnDrawGizmos()
     {
         if (!DEBUGMODE) return;
 
-        if (playerTarget != null)
+        if (target == null)
         {
-            Gizmos.color = new Color(1, 0, 0, 0.3f);
-            Gizmos.DrawWireSphere(playerTarget.position, walkDistanceThreshold);
-            Gizmos.DrawWireSphere(playerTarget.position, attackRange);
-
-            Gizmos.color = new Color(0, 1, 0, 0.3f);
-            Gizmos.DrawWireSphere(playerTarget.position, idleDistanceThreshold);
+            FindTargetByTag();
         }
 
-        Vector2 leftGroundPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y);
-        Vector2 rightGroundPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y);
+        if (target)
+        {
+            Gizmos.color = new Color(1f, 0f, 0f, 0.25f);
+            Gizmos.DrawWireSphere(target.position, walkDistanceThreshold);
+
+            Gizmos.color = new Color(0f, 1f, 0f, 0.25f);
+            Gizmos.DrawWireSphere(target.position, idleDistanceThreshold);
+        }
+
+        Vector2 center = (Vector2)transform.position + Vector2.up * upwardRayLength;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(center, upwardRayCircleRadius);
+
+        Vector2 leftGround = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y);
+        Vector2 rightGround = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y);
 
         Gizmos.color = leftInfoGround.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(leftGroundPos, leftGroundPos + Vector2.down * groundRayLength);
+        Gizmos.DrawLine(leftGround, leftGround + Vector2.down * groundRayLength);
 
         Gizmos.color = rightInfoGround.collider ? Color.green : Color.red;
-        Gizmos.DrawLine(rightGroundPos, rightGroundPos + Vector2.down * groundRayLength);
+        Gizmos.DrawLine(rightGround, rightGround + Vector2.down * groundRayLength);
 
-        Vector2 leftWallPos = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
-        Vector2 rightWallPos = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
+        Vector2 leftWall = new Vector2(transform.position.x - groundRayHorizontalOffset, transform.position.y + rayHeight);
+        Vector2 rightWall = new Vector2(transform.position.x + groundRayHorizontalOffset, transform.position.y + rayHeight);
 
-        Gizmos.color = new Color(0, 1, 1, 0.5f);
-        Gizmos.DrawLine(leftWallPos, leftWallPos + Vector2.left * wallRayLength);
-        Gizmos.DrawLine(rightWallPos, rightWallPos + Vector2.right * wallRayLength);
+        Gizmos.color = new Color(0f, 1f, 1f, 0.5f);
+        Gizmos.DrawLine(leftWall, leftWall + Vector2.left * wallRayLength);
+        Gizmos.DrawLine(rightWall, rightWall + Vector2.right * wallRayLength);
 
-        if (playerTarget != null)
+        if (target)
         {
-            Gizmos.color = new Color(1, 0, 0, 0.5f);
-            Gizmos.DrawLine(transform.position, playerTarget.position);
+            Gizmos.color = new Color(1f, 0f, 0f, 0.5f);
+            Gizmos.DrawLine(transform.position, target.position);
         }
     }
     #endregion
