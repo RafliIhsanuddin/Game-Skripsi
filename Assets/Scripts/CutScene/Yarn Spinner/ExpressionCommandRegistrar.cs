@@ -7,7 +7,6 @@ public class ExpressionCommandRegistrar : MonoBehaviour
 {
     public DialogueRunner dialogueRunner;
     public List<NamedPortraitController> portraitControllers;
-    public GameObject portraitCanvas;
 
     [System.Serializable]
     public class NamedPortraitController
@@ -18,8 +17,6 @@ public class ExpressionCommandRegistrar : MonoBehaviour
 
     void Awake()
     {
-        //portraitCanvas.SetActive(true);
-
         dialogueRunner.onDialogueComplete.AddListener(() =>
         {
             HideAllPortraits();

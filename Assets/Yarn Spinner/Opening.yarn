@@ -15,7 +15,7 @@ Narrator: Seorang manusia misterius berjubah melewati hutan para Puffkins, sesua
 
 title: openingthree
 ---
-Narrator: Tetapi kedatangan sosok misterius ini membawa penyakit kepada para Puffkins, penyakit yang menyerang mereka dari dalam diri, dan tidak ada ciri berbentuk fisik.
+Narrator: Tetapi kedatangan sosok misterius ini membawa penyakit kepada para Puffkins, penyakit yang menyerang mereka dari dalam diri, dan tidak ada ciri berbentuk fisik. Penyakit ini bernama depresi.
 <<wait 3>>
 <<jump openingfour>>
 ===
@@ -23,5 +23,5 @@ Narrator: Tetapi kedatangan sosok misterius ini membawa penyakit kepada para Puf
 title: openingfour
 ---
 Narrator: Tidak lama dari itu, seorang manusia jatuh melalui portal ke dalam hutan para Puffkins.
-Narrator: Siapa dia? Dan apa yang akan dia lakukan?
+Narrator: Bagaimana cara dia pulang? Dan bisakah dia membantu para Puffkins?
 ===
