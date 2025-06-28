@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Idle Breath_0026_0: -4501717108903010182
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

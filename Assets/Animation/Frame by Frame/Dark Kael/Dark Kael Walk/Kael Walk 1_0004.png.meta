@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Kael Walk 1_0004_0: -2806275368134387147
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

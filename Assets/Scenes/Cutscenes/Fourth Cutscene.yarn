@@ -1,0 +1,75 @@
+﻿title: fourth_cutscene
+---
+<<speaker Dolly>>
+<<setportrait Dolly kucing_marah>>
+Dolly: Kael, hati-hati! 
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Hampir saja!
+<<setportrait Kael marah>>
+Kael: Hei! Jangan pergi kamu!
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Aku tidak akan pergi. Aku akan berbicara denganmu selagi ada batu sebagai penengah kita, dan kamu tidak akan melompati batu itu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kenapa kamu melakukan hal ini sebenarnya? Kenapa kamu bisa lahir?
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Aku adalah kekuatan depresimu yang terkumpul, setiap kamu dicemooh atau dibully oleh orang.
+Kael Gelap: Aku adalah sifat depresi itu yang bertahan di tubuhmu, dan tidak kamu sembuhkan.
+Kael Gelap: Aku sudah lama hidup di dalam tubuhmu, hanya saja aku belum punya cukup kekuatan untuk keluar.
+<<setportrait DarkKael dark_mingkem>>
+Kael Gelap: Saat depresimu sudah terlalu parah, maka wujudku tercipta. Maka dari itu aku keluar dari tubuhmu saat kamu tidur.
+Kael Gelap: Aku yang membuat badai berwarna merah itu, agar semua orang merasakan apa yang kita rasakan.
+
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Tidak! Aku menahan rasa sakit itu agar orang lain tidak merasakannya. Kenapa kamu sekejam ini?
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Sayangnya, menahan rasa sakit itu tidak selalu menyembuhkan rasa sakit tersebut.
+Kael Gelap: Kalau kamu bilang kenapa aku sekejam ini, aku adalah lawan darimu. Dimana kamu tidak mau orang merasakannya, aku akan membuat semua orang merasakan perasaan itu.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Kalau kamu yang membuat badai itu, berarti kamu juga yang membuat portal itu. Apakah aku bisa pulang kalau aku sudah mengambil kekuatanmu dan kita bergabung kembali?
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Kamu lumayan pintar, Kael. Aku memang yang membuat portal itu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Lalu kenapa kamu tidak menggunakan portal itu saja tadi saat aku kejar kamu?
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Kekuatanku melemah saat aku dekat denganmu. Makanya kamu hanya melihat aku lari dan lompat, karena aku tidak bisa membuka kekuatan portalku.
+
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Berarti aku bisa pulang kalau aku sudah bergabung denganmu. Aku bisa membuat portal dan pulang!
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Tentu saja. Tetapi kamu harus belajar lagi untuk bisa membuat portal.
+Kael Gelap: Dan kamu harus menangkap aku. Selama aku masih bebas dan berkeliaran, aku akan membuat semua orang merasa depresi.
+
+<<speaker Kael>>
+<<setportrait Kael marah>>
+Kael: Tidak! Aku akan menangkapmu, Kael! Aku tidak akan membiarkanmu menyakiti siapapun lagi!
+
+<<speaker DarkKael>>
+<<setportrait DarkKael dark_buka>>
+Kael Gelap: Coba saja kalau bisa.
+
+<<speaker Kael>>
+<<setportrait Kael lesu2>>
+Kael: Oh tidak, Dolly.. Kita kehilangan dia.
+===
