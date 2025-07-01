@@ -103,74 +103,8 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 1333
-      y: 5789
-      width: 711
-      height: 494
-    spriteID: 8590dc87890c5f046b7c63ae88c175fe
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 1333, y: 5789}
-    spritePosition: {x: 1675, y: 1286}
-  - name: Layer 2
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 2892
-      y: 2154
-      width: 711
-      height: 614
-    spriteID: 37ac7722f5e6f904aa4834f22fe4388e
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 2892, y: 2154}
-    spritePosition: {x: 1674, y: 1202}
-  - name: Layer 2
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 1333
-      y: 5211
-      width: 711
-      height: 570
-    spriteID: 954d71360c4efdb48bd391695179b36f
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 1333, y: 5211}
-    spritePosition: {x: 1675, y: 1216}
-  - name: Layer 2
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 2892
-      y: 2776
+      x: 4
+      y: 4
       width: 711
       height: 579
     spriteID: 711faf477b202e046910cd8297578084
@@ -181,118 +115,8 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 2892, y: 2776}
-    spritePosition: {x: 1668, y: 1585}
-  - name: Cheese
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 1333
-      y: 2154
-      width: 1551
-      height: 1614
-    spriteID: 7c7d1a8941912884b8b316147309363c
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 1333, y: 2154}
-    spritePosition: {x: 1228, y: 622}
-  - name: Carrot
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 4
-      width: 1321
-      height: 2729
-    spriteID: c14f5f82b512aa547a6f02a7cfbe3061
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-    spritePosition: {x: 1344, y: 556}
-  - name: Cherry
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 2818
-      y: 4
-      width: 1218
-      height: 1871
-    spriteID: 6d898f5f2382f5144805ef7b0049f2c2
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 2818, y: 4}
-    spritePosition: {x: 1399, y: 841}
-  - name: Egg
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 1333
-      y: 4
-      width: 1477
-      height: 2142
-    spriteID: f6346182d1bfe8243805ee46d6e40888
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 1333, y: 4}
-    spritePosition: {x: 1309, y: 554}
-  - name: Blueberry
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 1333
-      y: 3776
-      width: 1218
-      height: 1427
-    spriteID: e7cd2df0250af6b42be0dd9ce95a7c56
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 1333, y: 3776}
-    spritePosition: {x: 1399, y: 841}
+    spritePosition: {x: 1668, y: 1585}
   spriteImportData: []
   rigSpriteImportData: []
   sharedRigSpriteImportData: []
@@ -350,8 +174,8 @@ ScriptedImporter:
     layerID: 11
     mosaicPosition: {x: 1333, y: 5789}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Layer 2
     spriteName: Layer 2
     isGroup: 0
@@ -360,8 +184,8 @@ ScriptedImporter:
     layerID: 10
     mosaicPosition: {x: 2892, y: 2154}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Layer 2
     spriteName: Layer 2
     isGroup: 0
@@ -370,15 +194,15 @@ ScriptedImporter:
     layerID: 9
     mosaicPosition: {x: 1333, y: 5211}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Layer 2
     spriteName: Layer 2
     isGroup: 0
     parentIndex: 0
     spriteID: 711faf477b202e046910cd8297578084
     layerID: 8
-    mosaicPosition: {x: 2892, y: 2776}
+    mosaicPosition: {x: 4, y: 4}
     flatten: 0
     isImported: 1
     isVisible: 1
@@ -390,8 +214,8 @@ ScriptedImporter:
     layerID: 6
     mosaicPosition: {x: 1333, y: 2154}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Carrot
     spriteName: Carrot
     isGroup: 0
@@ -400,8 +224,8 @@ ScriptedImporter:
     layerID: 5
     mosaicPosition: {x: 4, y: 4}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Cherry
     spriteName: Cherry
     isGroup: 0
@@ -410,8 +234,8 @@ ScriptedImporter:
     layerID: 4
     mosaicPosition: {x: 2818, y: 4}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Egg
     spriteName: Egg
     isGroup: 0
@@ -420,8 +244,8 @@ ScriptedImporter:
     layerID: 3
     mosaicPosition: {x: 1333, y: 4}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Blueberry
     spriteName: Blueberry
     isGroup: 0
@@ -430,8 +254,8 @@ ScriptedImporter:
     layerID: 2
     mosaicPosition: {x: 1333, y: 3776}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Background
     spriteName: 
     isGroup: 0

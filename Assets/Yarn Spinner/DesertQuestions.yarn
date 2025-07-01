@@ -1,78 +1,135 @@
 ﻿title: definisi
 ---
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Kael, kamu masih ingin pulang kan?
+<<speaker Puffkin>>
+hexagon : Hei! Kamu kelihatan lelah sekali.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Iya! Aku ingin Pulang, bukankah kamu tadi bilang tahu caranya?
+Kael: Hah? Siapa kamu?
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Kalau kamu ingin pulang, kamu harus mulai memahami dirimu sendiri, Kael.
+<<speaker Puffkin>>
+hexagon : Namaku hexagon, Aku salah satu Puffkin di padang pasir ini. 
 
-<<speaker Kael>>
-<<setportrait Kael kaget>>
-Kael: Memahami diri sendiri? Apa maksudmu?
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Jawab pertanyaanku, maka setelah itu aku akan memberitahumu jalan pulang.
+<<speaker Puffkin>>
+hexagon : Kenapa kamu berjalan seperti menanggung beban berat?
 
 <<speaker Kael>>
-<<setportrait Kael mingkem>>
-Kael : <i>(Sepertinya aku tidak punya pilihan lain..)</i>
+<<setportrait Kael lesu>>
+Kael: Aku… cuma capek, itu saja.
 
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Apa pertanyaannya?
+<<speaker Puffkin>>
+hexagon : Capek biasa? Atau mungkin…
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Apakah kamu merasa lelah, kehilangan arah? Ini bukan hanya fisik, tetapi suasana hati.
+<<speaker Puffkin>>
+hexagon : itu depresi?
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Hah? Semua orang pasti pernah merasa lelah seperti itu, kan? 
+Kael: Depresi? Maksudmu apa?
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Tidak, Kael. Ini bukan sekadar kelelahan. Ini depresi, gangguan mood yang kronis, merusak cara kamu merasa, berpikir, dan bertindak. 
-
-???: Karena itu, kamu terus-menerus merasa letih, bahkan setelah cukup istirahat.
-
-<<speaker Kael>>
-<<setportrait Kael kaget>>
-Kael: Dep… depresi?
-<<speaker Dolly>>
-<<setportrait Dolly kucing_buka>>
-Dolly: Itu yang teman-temanku rasakan tadi!
+<<speaker Puffkin>>
+hexagon : depresi adalah penyakit, tetapi tidak seperti demam atau flu.
 
 
-<<WalkAway DarkKaelCloakDefinisi>>
+<<speaker Puffkin>>
+hexagon : Bisa jadi lebih dari sekadar capek. Banyak orang salah paham soal ini.
 
-<<hideall>>
-<<wait 3>>
-
-<<speaker Kael>>
-<<setportrait Kael kaget>>
-Kael: Hei, jangan pergi!
-
-<<speaker Kael>>
-<<setportrait Kael mingkem>>
-Kael: <i>(Bagaimana dia bisa tau tentang kelelahanku ini?)</i>
-
-Kael: <i>(Aku harus cari dia.. Mungkin dia tahu apa yang sedang aku alami selama ini!)</i>
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Ayo Dolly, kita harus mencarinya!
+Kael: Aku tidak mengerti, sebenarnya apa maksudmu?
+
+<<speaker Puffkin>>
+hexagon : Baiklah, begini deh. Coba jawab satu hal. Dari tiga pernyataan ini, menurutmu mana yang paling benar tentang depresi?
+
+<<speaker Puffkin>>
+hexagon : Coba jawab satu hal. Dari tiga pernyataan ini, menurutmu mana yang paling benar tentang depresi?
+
+-> Perasaan sedih sesaat yang bakal hilang sendiri.
+    <<jump depresi_cabang1>>
+-> Gangguan suasana hati kronis yang memengaruhi cara kita berpikir, merasa, dan bertindak.
+    <<jump depresi_cabang2>>
+-> Sekadar kelelahan fisik karena kurang tidur.
+    <<jump depresi_cabang3>>
+
+	
+===
+
+
+title: depresi_cabang1
+---
+
+
+<<speaker Kael>>
+Kael: Kupikir depresi itu cuma rasa sedih singkat, kan?
+
+<<speaker Puffkin>>
+Puffkin: *Salah.* Sedih biasa memang bisa hilang, tapi depresi adalah kondisi klinis yang bertahan lama.
+
+<<speaker Kael>>
+Kael: Jadi tidak cukup dengan “menunggu mood membaik”?
+
+<<speaker Puffkin>>
+Puffkin: Benar. Orang yang terjebak depresi butuh perhatian dan bantuan, bukan sekadar waktu.
+
+//<<set $jawabanBenar = false>>
 
 <<RemoveTrigger definisi>>
-<<stop>>
+
 ===
+
+
+title: depresi_cabang2
+---
+
+
+<<speaker Kael>>
+Kael: Depresi itu gangguan suasana hati kronis yang mengubah cara kita berpikir, merasa, dan bertindak.
+
+<<speaker Puffkin>>
+Puffkin: *Benar.* Itulah definisi paling tepat.
+
+<<speaker Kael>>
+Kael: Jadi wajar kalau aku merasa lelah terus meski sudah tidur cukup?
+
+<<speaker Puffkin>>
+Puffkin: Ya. Depresi bisa membuat tubuh dan pikiran sama-sama berat.
+
+//<<set $jawabanBenar = true>>
+
+<<RemoveTrigger definisi>>
+
+===
+
+
+title: depresi_cabang3
+---
+
+
+<<speaker Kael>>
+Kael: Kurasa hanya karena kurang tidur dan capek.
+
+<<speaker Puffkin>>
+Puffkin: *Salah.* Kelelahan fisik memang memperburuk suasana hati, tapi depresi jauh melampaui rasa capek biasa.
+
+<<speaker Kael>>
+Kael: Jadi ada sesuatu yang lebih dalam daripada sekadar letih?
+
+<<speaker Puffkin>>
+Puffkin: Tepat. Depresi meresap ke pikiran dan emosi, bukan cuma otot.
+
+
+//<<set $jawabanBenar = false>>
+
+<<RemoveTrigger definisi>>
+
+===
+
+
+
+
 
 
 
