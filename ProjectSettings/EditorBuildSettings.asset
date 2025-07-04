@@ -11,5 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Background/Final Forest.unity
     guid: 4249990ab518f8947b8afdd714bd10cd
+  - enabled: 1
+    path: Assets/Scenes/Background/Desert Final Scene.unity
+    guid: 12f0110f36868464a8576ebcbab5902d
+  - enabled: 1
+    path: Assets/Scenes/Background/Chase Fail.unity
+    guid: caaac722d766abf46b99277b495fcd51
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
