@@ -1,0 +1,21 @@
+﻿title: enable_double_jump
+---
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+<<Show1 Relics>>
+Kael: Aku melihat sesuatu!
+<<setportrait Kael buka>>
+Kael: Sepertinya aku bisa double jump sekarang.
+<<Hide1 Relics>>
+===
+
+title: enable_wall_jump
+---
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+<<Show2 Relics>>
+Kael: Aku melihat sesuatu!
+<<setportrait Kael buka>>
+Kael: Sepertinya aku bisa wall jump sekarang.
+<<Hide2 Relics>>
+===

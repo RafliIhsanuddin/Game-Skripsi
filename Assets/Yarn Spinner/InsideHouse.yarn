@@ -1,0 +1,26 @@
+﻿title: window
+---
+<<once>>
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Astaga, kenapa langitnya?!
+<<setportrait Kael buka>>
+Kael: Aku harus cek keluar.. 
+<<endonce>>
+===
+
+title: snowy
+---
+<<once>>
+<<speaker Snowy>>
+<<setportrait Snowy snowy>>
+Snowy: Meong..
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Snowy.. Kamu lucu hari ini, seperti biasa!
+<<speaker Snowy>>
+<<setportrait Snowy snowy>>
+Snowy: Meong!
+<<endonce>>
+===
