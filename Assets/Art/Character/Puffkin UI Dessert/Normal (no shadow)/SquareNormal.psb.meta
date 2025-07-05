@@ -116,7 +116,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 2283, y: 4}
-    spritePosition: {x: 1663, y: 1349}
+    spritePosition: {x: 1690, y: 1175}
   - name: 4
     originalName: 
     pivot: {x: 0.5, y: 0.5}

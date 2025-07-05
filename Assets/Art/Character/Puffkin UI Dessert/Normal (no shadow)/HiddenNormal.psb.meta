@@ -104,7 +104,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 4
-      y: 2946
+      y: 3109
       width: 926
       height: 754
     spriteID: 31ac153fd93cca3498dc418e7150d0bf
@@ -115,8 +115,8 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 2946}
-    spritePosition: {x: 1585, y: 1324}
+    uvTransform: {x: 4, y: 3109}
+    spritePosition: {x: 1559, y: 1465}
   - name: Layer 3
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -128,8 +128,8 @@ ScriptedImporter:
       x: 4
       y: 4
       width: 3037
-      height: 2934
-    spriteID: 05c6b268fbf33b545bba3bfdbbbd0e32
+      height: 3097
+    spriteID: ff630d07fdbb4b3419121cd77c381a25
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -138,7 +138,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-    spritePosition: {x: 493, y: 611}
+    spritePosition: {x: 503, y: 611}
   spriteImportData: []
   rigSpriteImportData: []
   sharedRigSpriteImportData: []
@@ -184,7 +184,7 @@ ScriptedImporter:
     parentIndex: -1
     spriteID: 31ac153fd93cca3498dc418e7150d0bf
     layerID: 7
-    mosaicPosition: {x: 4, y: 2946}
+    mosaicPosition: {x: 4, y: 3109}
     flatten: 0
     isImported: 1
     isVisible: 1
@@ -206,18 +206,18 @@ ScriptedImporter:
     layerID: 3
     mosaicPosition: {x: 4, y: 4}
     flatten: 0
-    isImported: 1
-    isVisible: 1
+    isImported: 0
+    isVisible: 0
   - name: Layer 3
-    spriteName: 
+    spriteName: Layer 3
     isGroup: 0
     parentIndex: -1
     spriteID: ff630d07fdbb4b3419121cd77c381a25
     layerID: 2
-    mosaicPosition: {x: 0, y: 0}
+    mosaicPosition: {x: 4, y: 4}
     flatten: 0
-    isImported: 0
-    isVisible: 0
+    isImported: 1
+    isVisible: 1
   - name: Background
     spriteName: 
     isGroup: 0
