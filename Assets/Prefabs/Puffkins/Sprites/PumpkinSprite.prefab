@@ -191,12 +191,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e12ec6cb3d3a3643a78ecf6fbe62def, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kael:
+  kaelLayer:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 0
   dialogueRunner: {fileID: 0}
   bubble: {fileID: 0}
-  puffkinAnim: {fileID: 1098859208106083999}
   yarnNode: pumpkin
 --- !u!95 &224914959491690521
 Animator:

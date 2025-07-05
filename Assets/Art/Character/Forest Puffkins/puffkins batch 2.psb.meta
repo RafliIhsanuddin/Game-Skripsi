@@ -104,6 +104,28 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 4
+      y: 591
+      width: 711
+      height: 494
+    spriteID: 8590dc87890c5f046b7c63ae88c175fe
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 591}
+    spritePosition: {x: 1675, y: 1658}
+  - name: Layer 2
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
       y: 4
       width: 711
       height: 579
@@ -172,10 +194,10 @@ ScriptedImporter:
     parentIndex: 0
     spriteID: 8590dc87890c5f046b7c63ae88c175fe
     layerID: 11
-    mosaicPosition: {x: 1333, y: 5789}
+    mosaicPosition: {x: 4, y: 591}
     flatten: 0
-    isImported: 0
-    isVisible: 0
+    isImported: 1
+    isVisible: 1
   - name: Layer 2
     spriteName: Layer 2
     isGroup: 0
