@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      kael fall 1_0: -5626053646458835747
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
