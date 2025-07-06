@@ -3,13 +3,15 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    public GameObject pauseMenu;
+
     void Update()
     {
-        // Check for L every frame
-        if (Input.GetKeyDown(KeyCode.L))
+        // Check for Esc for pause
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Debug.Log("l pressed");
-            SceneManager.LoadScene("Chase Fail");
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0f;
         }
     }
 
@@ -17,6 +19,13 @@ public class LevelManager : MonoBehaviour
     public void BackToChase()
     {
         SceneManager.LoadScene("Desert Final Scene");
+    }
+
+    //Resumes Game
+    public void ResumeGame()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     //Quit Game
