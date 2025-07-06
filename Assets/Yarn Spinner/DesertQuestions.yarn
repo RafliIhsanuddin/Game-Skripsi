@@ -2,56 +2,56 @@
 ---
 
 <<speaker Puffkin>>
-hexagon : Hei! Kamu kelihatan lelah sekali.
+Hexagon: Hei! Kamu kelihatan lelah sekali.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
 Kael: Hah? Siapa kamu?
 
 <<speaker Puffkin>>
-hexagon : Namaku hexagon, Aku salah satu Puffkin di padang pasir ini. 
-
+Hexagon: Namaku Hexagon, Aku salah satu Puffkin di padang pasir ini. 
 
 <<speaker Puffkin>>
-hexagon : Kenapa kamu berjalan seperti menanggung beban berat?
+Hexagon: Kenapa kamu berjalan seperti menanggung beban berat?
 
 <<speaker Kael>>
 <<setportrait Kael lesu>>
 Kael: Aku… cuma capek, itu saja.
 
 <<speaker Puffkin>>
-hexagon : Capek biasa? Atau mungkin…
+Hexagon: Capek biasa? Atau mungkin…
 
 <<speaker Puffkin>>
-hexagon : itu depresi?
+Hexagon: itu depresi?
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
 Kael: Depresi? Maksudmu apa?
 
 <<speaker Puffkin>>
-hexagon : depresi adalah penyakit, tetapi tidak seperti demam atau flu.
-
+Hexagon: depresi adalah penyakit, tetapi tidak seperti demam atau flu.
 
 <<speaker Puffkin>>
-hexagon : Bisa jadi lebih dari sekadar capek. Banyak orang salah paham soal ini.
-
+Hexagon: Bisa jadi lebih dari sekadar capek. Banyak orang salah paham soal ini.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
 Kael: Aku tidak mengerti, sebenarnya apa maksudmu?
 
 <<speaker Puffkin>>
-hexagon : Baiklah, begini deh. Coba jawab satu hal. Dari tiga pernyataan ini, menurutmu mana yang paling benar tentang depresi?
-
-<<speaker Puffkin>>
-hexagon : Coba jawab satu hal. Dari tiga pernyataan ini, menurutmu mana yang paling benar tentang depresi?
+Hexagon: Baiklah, begini deh. Coba jawab satu hal. Dari tiga pernyataan ini, menurutmu mana yang paling benar tentang depresi?
 
 -> Perasaan sedih sesaat yang bakal hilang sendiri.
+    <<SuaraSalah SFXQuestion>>
+    <<SetDefinitionFalse QuestionCheck>>
     <<jump depresi_cabang1>>
 -> Gangguan suasana hati kronis yang memengaruhi cara kita berpikir, merasa, dan bertindak.
+    <<SuaraBenar SFXQuestion>>
+    <<SetDefinitionTrue QuestionCheck>>
     <<jump depresi_cabang2>>
 -> Sekadar kelelahan fisik karena kurang tidur.
+    <<SuaraSalah SFXQuestion>>
+    <<SetDefinitionFalse QuestionCheck>>
     <<jump depresi_cabang3>>
 
 	
@@ -63,18 +63,19 @@ title: depresi_cabang1
 
 
 <<speaker Kael>>
-Kael: Kupikir depresi itu cuma rasa sedih singkat, kan?
+Kael: Kupikir depresi itu cuma rasa sedih singkat.
 
 <<speaker Puffkin>>
-Puffkin: *Salah.* Sedih biasa memang bisa hilang, tapi depresi adalah kondisi klinis yang bertahan lama.
+Hexagon: Banyak yang berpikir begitu, tapi kenyataannya lebih rumit. Sedih biasa bisa cepat hilang, tapi ada kondisi yang lebih berat dan butuh perhatian khusus.
 
 <<speaker Kael>>
 Kael: Jadi tidak cukup dengan “menunggu mood membaik”?
 
 <<speaker Puffkin>>
-Puffkin: Benar. Orang yang terjebak depresi butuh perhatian dan bantuan, bukan sekadar waktu.
+Hexagon: Kadang tidak semudah itu. Ada kalanya seseorang butuh bantuan lebih dari sekadar waktu.
 
 //<<set $jawabanBenar = false>>
+
 
 <<RemoveTrigger definisi>>
 
@@ -89,15 +90,26 @@ title: depresi_cabang2
 Kael: Depresi itu gangguan suasana hati kronis yang mengubah cara kita berpikir, merasa, dan bertindak.
 
 <<speaker Puffkin>>
-Puffkin: *Benar.* Itulah definisi paling tepat.
+Hexagon: Benar. Itulah definisi paling tepat.
 
 <<speaker Kael>>
+<<setportrait Kael buka>>
 Kael: Jadi wajar kalau aku merasa lelah terus meski sudah tidur cukup?
 
 <<speaker Puffkin>>
-Puffkin: Ya. Depresi bisa membuat tubuh dan pikiran sama-sama berat.
+Hexagon: Ya. Depresi bisa membuat tubuh dan pikiran sama-sama berat.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Baiklah terima kasih informasinya
+
+<<speaker Kael>>
+<<setportrait Kael mingkem>>
+Kael: <i>(Sepertinya aku depresi)</i>
+
 
 //<<set $jawabanBenar = true>>
+
 
 <<RemoveTrigger definisi>>
 
@@ -112,16 +124,17 @@ title: depresi_cabang3
 Kael: Kurasa hanya karena kurang tidur dan capek.
 
 <<speaker Puffkin>>
-Puffkin: *Salah.* Kelelahan fisik memang memperburuk suasana hati, tapi depresi jauh melampaui rasa capek biasa.
+Hexagon: Bisa jadi capek memang bikin semua terasa berat. Tapi ada juga kondisi lain yang lebih dalam dan memengaruhi perasaan serta pikiran kita.
 
 <<speaker Kael>>
-Kael: Jadi ada sesuatu yang lebih dalam daripada sekadar letih?
+Kael: Jadi bukan cuma soal fisik ya...
 
 <<speaker Puffkin>>
-Puffkin: Tepat. Depresi meresap ke pikiran dan emosi, bukan cuma otot.
+Hexagon: Ya, kadang kelelahan itu punya banyak sisi, bukan cuma karena kurang tidur.
 
 
 //<<set $jawabanBenar = false>>
+
 
 <<RemoveTrigger definisi>>
 
@@ -138,63 +151,193 @@ Puffkin: Tepat. Depresi meresap ke pikiran dan emosi, bukan cuma otot.
 title: tanda
 ---
 
+<<speaker Puffkin>>
+Square : Hei, kamu kelihatan seperti orang yang sedang menanggung banyak hal.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Hei, kamu bilang aku terkena depresi. Memang apa tanda-tandanya?
+Kael : Huh? Siapa kamu?
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Saat kamu kehilangan rasa senang, merasa lelah setiap hari, dan tidur tapi tetap merasa hampa... itu bukan hal biasa. Itu adalah tanda bahwa jiwamu sedang terluka—itulah depresi.
-
-<<speaker Kael>>
-<<setportrait Kael kaget>>
-Kael: Jadi ini bukan suasana hati yang buruk?
-
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Kalau rasa itu tak pergi—hari demi hari—itu berarti depresi.
+<<speaker Puffkin>>
+Square : Aku? Namaku Square. Aku tinggal di sini, kamu kenapa kamu terlihat sangat letih sekali.
 
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Bukankah ini perasaan capek biasa?
+Kael : Maksudmu?
 
 
+<<speaker Puffkin>>
+Square : Entahlah, kamu kelihatan seperti seseorang yang sedang lelah, tapi bukan lelah biasa. Apa yang sedang kamu pikirkan?
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Tidak, Kael. Itu bukan sekadar capek. Itu… bisa jadi depresi—yaitu kondisi kelelahan ekstrem dan perasaan kosong yang bertahan hampir setiap hari.
+
+<<speaker Kael>>
+<<setportrait Kael lesu>>
+Kael : Tadi aku bertemu Puffkin Hexagon. Dia bilang... mungkin aku mengalami depresi.
+
+
+<<speaker Puffkin>>
+Square : Oh? Depresi, ya? Kamu percaya dengan yang dia bilang?
 
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Hampir setiap hari? Berapa lama aku harus merasakan kelelahan ekstrem itu, sehingga bisa dinyatakan depresi?
+Kael : Aku nggak tahu. Aku masih bingung sebenarnya.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Selama setidaknya dua minggu, disertai gejala lain seperti kehilangan minat, gangguan tidur, atau perasaan putus asa.
+<<speaker Puffkin>>
+Square : Kalau begitu, menurutmu, apa sih yang biasanya tanda-tanda atau hal yang dirasakan seseorang yang mengalami depresi?
 
-<<hideall>>
+-> Mereka merasa kosong, kehilangan minat, kelelahan, perubahan tidur dan makan, motivasi menurun, bahkan bisa merasa tidak berarti dan sulit berkonsentrasi.
+    <<SuaraBenar SFXQuestion>>
+    <<SetSymptomTrue QuestionCheck>>
+    <<jump tanda_benar>>
+-> Mereka cuma sedih sebentar, mungkin menangis sebentar lalu akan membaik sendiri.
+    <<SuaraSalah SFXQuestion>>
+    <<SetSymptomFalse QuestionCheck>>
+    <<jump tanda_salah1>>
+-> Mereka biasanya justru terlihat ceria terus, susah sekali merasa lelah, dan selalu punya motivasi tinggi.
+    <<SuaraSalah SFXQuestion>>
+    <<SetSymptomFalse QuestionCheck>>
+    <<jump tanda_salah2>>
 
-<<WalkAway DarkKaelCloakTanda>>
+===
 
-<<wait 3>>
+
+
+
+title: tanda_benar
+---
 
 <<speaker Kael>>
-<<setportrait Kael kaget>>
-Kael: Hei, jangan pergi lagi, kamu!
+<<setportrait Kael buka>>
+Kael : Mereka merasa kosong, kehilangan minat, kelelahan, perubahan tidur dan makan, motivasi menurun, bahkan bisa merasa tidak berarti dan sulit berkonsentrasi.
+
+<<speaker Puffkin>>
+Square : Hmm... kamu tahu banyak juga ternyata. Itu memang hal-hal yang sering muncul.
 
 <<speaker Kael>>
-<<setportrait Kael mingkem>>
-Kael: <i>(Dia kabur lagi...  Aku harus mencari dia. Sebenarnya dia siapa?)</i>
+<<setportrait Kael buka>>
+Kael : Aku cuma dengar sekilas, tapi rasanya memang aku mengalaminya.
+
+<<speaker Puffkin>>
+Square : Perasaan kosong, kehilangan minat... tidak semua orang sadar sedang mengalaminya, kamu tahu?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael : Iya, rasanya seperti berjalan tapi nggak tahu mau ke mana.
+
+<<speaker Puffkin>>
+Square : Mungkin, kadang kamu hanya butuh waktu untuk mengenali apa yang kamu rasakan.  
+Ya sudah, jalan saja terus. Mungkin kamu akan menemukan sesuatu di perjalananmu.
 
 
 
 <<RemoveTrigger tanda>>
-<<stop>>
+
 ===
+
+
+
+title: tanda_salah1
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael : Mereka cuma sedih sebentar, mungkin menangis sebentar lalu akan membaik sendiri.
+
+<<speaker Puffkin>>
+Square : Begitu ya... kamu pikir depresi itu cuma soal sedih sebentar.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael : Iya, kupikir begitu. Sedih kan wajar.
+
+<<speaker Puffkin>>
+Square : Tapi aneh ya, kamu kelihatan seperti membawa beban yang lebih berat dari sekedar sedih sebentar.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael : Aku juga nggak tahu... mungkin aku salah.
+
+<<speaker Puffkin>>
+Square : Ya sudah, teruskan saja perjalananmu. Siapa tahu kamu menemukan jawabannya nanti.  
+Mungkin jalan berikutnya akan lebih jelas buatmu.
+
+//<<set $jawabanBenar = false>>
+
+<<RemoveTrigger tanda>>
+
+===
+
+
+
+title: tanda_salah2
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael : Mereka biasanya justru terlihat ceria terus, susah sekali merasa lelah, dan selalu punya motivasi tinggi.
+
+<<speaker Puffkin>>
+Square : Oh, begitu menurutmu? Selalu ceria dan punya energi tinggi?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael : Iya, kukira begitu. Biasanya orang depresi kan nggak terlihat sedih?
+
+<<speaker Puffkin>>
+Square : Hmm... tapi rasanya kamu sendiri kelihatan jauh dari ceria dan penuh energi.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael : Mungkin aku cuma capek.
+
+<<speaker Puffkin>>
+Square : Ya sudah, lanjutkan saja perjalananmu. Kadang jawaban muncul belakangan.  
+Mungkin nanti kamu akan bertemu orang yang tahu lebih banyak.
+
+<<RemoveTrigger tanda>>
+
+===
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -203,66 +346,183 @@ title: penyebab
 ---
 
 
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Hei, kamu… Memang apa penyebab depresi?
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Penyebabnya tak cuma satu, Kael. Banyak hal bisa menarik seseorang masuk ke dalam kegelapan itu.
-
-<<speaker Kael>>
-<<setportrait Kael kaget>>
-Kael: Apa maksudmu? Aku belum sepenuhnya mengerti.
-
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Kadang, tubuhmu sendiri jadi penyebab—ketika zat di otak seperti serotonin, dopamin, dan norepinefrin tak seimbang, semuanya terasa berat meski tanpa alasan jelas.
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Tapi bisa juga dari luka batin—trauma masa lalu, kehilangan orang tercinta, atau tekanan yang tak pernah berhenti bisa mengikis semangatmu perlahan.
-
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Ada pula faktor genetik. Jika keluargamu pernah mengalami hal yang sama, risikomu ikut meningkat.
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Dan lingkungan juga bisa jadi pemicu—hidup dalam tekanan, kesepian berkepanjangan, atau terjebak dalam relasi menyakitkan bisa mempercepat runtuhnya dirimu.
-
+<<speaker Puffkin>>
+Oval : Hei... Kamu kelihatan kayak orang yang udah jalan jauh banget.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Jadi… semua itu bisa jadi alasan kenapa aku merasa seperti ini?
+Kael: Yah, jalannya nggak sebentar. Tapi aku harus terus jalan.
 
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Ya. Tidak semua penyebab bisa kau lihat, tapi dampaknya… selalu terasa.
+<<speaker Puffkin>>
+Oval : Apakah kamu sakit mental.
 
-
-
-
-<<WalkAway DarkKaelCloakPenyebab>>
-
-<<hideall>>
-<<wait 3>>
+<<speaker Puffkin>>
+Oval : Kadang... saat mental nggak sehat, penyakit lain bisa datang juga, ya? Rasanya kayak pikiran numpuk, hati berat, badan juga males gerak.
 
 <<speaker Kael>>
-<<setportrait Kael kaget>>
-Kael: Eh, tunggu dulu... jangan kabur lagi.
+<<setportrait Kael buka>>
+Kael: Iya, terdengar sangat familiar, sepertinya itu yang sedang aku rasakan
+
+<<speaker Puffkin>>
+Oval : Aku sering lihat orang ngerasa gitu. Kadang mereka nyalahin diri sendiri, padahal banyak hal yang bikin orang bisa ngerasa kayak gitu.
 
 <<speaker Kael>>
-<<setportrait Kael mingkem>>
-Kael: <i>(Kenapa dia menanyakan hal-hal seperti ini? Cukup, aku lelah menjawab pertanyaannya. Aku hanya ingin pulang.)</i>
+<<setportrait Kael buka>>
+Kael: Maksud kamu, kayak apa?
+
+<<speaker Puffkin>>
+Oval : Hmm... Kalau kamu disuruh nebak, menurutmu apa sih hal paling bikin orang bisa jatuh ngerasa kayak gitu?
+-> Karena dia orangnya lemah, gampang nyerah.
+    <<SuaraSalah SFXQuestion>>
+    <<SetCauseFalse QuestionCheck>>
+    <<jump penyebab_salah1>>
+-> Karena gabungan banyak hal, kayak keturunan, pengalaman hidup, sama cara dia mikir.
+    <<SuaraBenar SFXQuestion>>
+    <<SetCauseTrue QuestionCheck>>
+    <<jump penyebab_benar>>
+-> Karena dia tinggal di tempat yang sepi dan ngebosenin.
+    <<SuaraSalah SFXQuestion>>
+    <<SetCauseFalse QuestionCheck>>
+    <<jump penyebab_salah2>>
+
+
+===
+
+
+
+
+
+
+title: penyebab_salah1
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Mungkin karena dia lemah aja kali ya? Gampang nyerah gitu...
+
+<<speaker Puffkin>>
+Oval : Hmm... Kadang orang ngerasa gitu juga sih. Kayak nyalahin diri sendiri terus. Tapi, aku sering lihat yang keliatan kuat juga bisa ngerasain hal kayak gitu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Jadi bukan cuma soal kuat atau lemah ya?
+
+<<speaker Puffkin>>
+Oval : Iya, kadang lebih rumit dari itu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ya udah, aku lanjut jalan dulu.
+
+<<RemoveTrigger penyebab>>
+
+===
+
+
+
+
+title: penyebab_benar
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku rasa bukan cuma satu hal. Bisa jadi keturunan, pengalaman buruk, sama gimana dia mikir. Campur-campur gitu.
+
+<<speaker Puffkin>>
+Oval : Heh, kamu mikirnya dalem juga ya. Emang kadang, hal kayak genetik, kejadian masa lalu, sama pikiran sendiri itu bisa saling ngikat.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Jadi bukan soal dia lemah atau kuat doang?
+
+<<speaker Puffkin>>
+Oval : Iya, banyak hal di balik itu. Kadang tubuh, kadang pengalaman, kadang pikiran sendiri. Semua numpuk.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Pantes aja rasanya berat kadang tanpa tau kenapa.
+
+<<speaker Puffkin>>
+Oval : Iya, nggak semua hal keliatan dari luar.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Makasih, aku lanjut jalan dulu.
 
 
 <<RemoveTrigger penyebab>>
-<<stop>>
+
+
 ===
+
+
+
+
+
+title: penyebab_salah2
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Mungkin gara-gara dia tinggal di tempat yang sepi dan ngebosenin kali?
+
+<<speaker Puffkin>>
+Oval : Hmm... tempat emang bisa bikin suasana beda, tapi aku lihat, bahkan orang di tempat rame juga kadang ngerasa sendirian.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Iya juga sih, kayak nggak selalu soal tempat.
+
+<<speaker Puffkin>>
+Oval : Iya, kadang hal kayak itu datang dari hal-hal lain, nggak selalu kelihatan.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Oke deh, aku jalan lagi.
+
+
+<<RemoveTrigger penyebab>>
+
+
+===
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -272,80 +532,172 @@ title: dampak
 ---
 
 
-<<speaker Kael>>
-<<setportrait Kael marah>>
-Kael: Hei, kamu, sudah cukup. Aku tidak mau membahas perasaanku lagi. Aku cuma ingin pulang—mana jalan pulangnya?
+<<speaker Puffkin>>
+Cactus: Kamu kelihatan kayak orang yang pikirannya lagi ribet.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Jangan terburu-buru, Kael. Kamu belum benar-benar mengenal dirimu sendiri.
-
-<<speaker Kael>>
-<<setportrait Kael marah>>
-Kael: Hei, sebenarnya siapa kamu?
-
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Aku akan jawab itu nanti, setelah kamu benar-benar paham siapa dirimu.
-
-<<speaker Kael>>
-<<setportrait Kael mingkem>>
-Kael: <i>(Baiklah... sepertinya aku tak punya pilihan selain mengikuti orang ini.)</i>
-
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Kamu pernah merasa hari-harimu begitu melelahkan? Hal-hal yang dulu kamu sukai sekarang justru terasa berat dan kosong?
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Iya... bahkan bangun pagi pun rasanya seperti memikul beban besar. Aku tak punya tenaga.
+Kael: Mungkin. Tapi itu urusan aku.
 
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Itu tanda depresi. Saat motivasi hilang, hal-hal sederhana seperti bicara dengan teman pun terasa jauh dan tak penting.
+<<speaker Puffkin>>
+Cactus: Cactus: Kadang orang nggak sadar, hal kayak gitu menyebar ke hal-hal lain. Pernah ngerasa susah fokus atau susah ngobrol sama orang belakangan ini?
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Iya... bahkan bangun pagi pun rasanya seperti memikul beban besar. Aku tak punya tenaga.
+Kael: ...Tergantung maksud kamu apa dulu.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Itu tanda depresi. Saat motivasi hilang, hal-hal sederhana seperti bicara dengan teman pun terasa jauh dan tak penting.
+<<speaker Puffkin>>
+Cactus: Maksudku, pikiran yang berantakan bisa bikin kamu lupa mengurus hal-hal penting. Jadi tugas atau pekerjaan jadi keteteran, dan ngobrol sama orang lain juga terasa sulit. Kamu pernah ngerasain itu?
+
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Aku sering merasa kesepian, bahkan di tengah keramaian. Suara teman pun terdengar hampa.
+Kael: Mungkin saja. Aku merasa cepat lelah, susah mikir, dan kadang malah nggak mau ketemu siapa-siapa.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Betul. Depresi mempersempit duniamu—interaksi sosial berkurang, dan yang negatif terasa jauh lebih kuat daripada yang positif.
+
+<<speaker Puffkin>>
+Cactus: Kalau begitu, apa menurutmu penyebabnya?
+-> "Pikiran yang kacau bikin aku nggak sanggup nyelesaiin hal-hal penting, jadi semuanya jadi berantakan."
+    <<jump dampak_benar>>
+-> "Kalau orang lain nggak peduli sama aku, ya wajar kalau aku juga nggak peduli sama hal-hal itu."
+    <<jump dampak_salah1>>
+-> "Nggak ada masalah kok, aku cuma nggak suka ribet aja."
+    <<jump dampak_salah2>>
+
+===
+
+
+
+
+
+
+
+
+
+
+title: dampak_benar
+
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Pikiran yang kacau bikin aku nggak sanggup nyelesaiin hal-hal penting, jadi semuanya jadi berantakan.
+
+<<speaker Puffkin>>
+Cactus: Itu masuk akal. Ketika kamu kesulitan mengatur pikiran, belajar dan kerja jadi terbengkalai. Dan saat kamu menghindar dari orang lain, hubungan sosialmu juga terganggu.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Aku sering terjebak dalam pikiran negatif. Bahkan hal kecil bisa terasa sangat berat. Sampai aku pernah berpikir... apakah lebih baik aku menghilang saja.
+Kael: Aku nggak nyadar kalau semua itu saling berhubungan.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Itu dampak nyata dari depresi. Ia mengikis motivasi, merusak koneksi sosial, dan membuat setiap hari terasa seperti perjuangan yang tak berkesudahan.
-
-
-<<WalkAway DarkKaelCloakDampak>>
-
-<<hideall>>
-<<wait 3>>
+<<speaker Puffkin>>
+Cactus: Sekarang kamu sudah tahu. Langkah kecil untuk memperbaiki pikiranmu bisa bantu memperbaiki aktivitasmu dan hubunganmu juga.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Ayolah, jangan pergi gitu aja.
+Kael: Terima kasih sudah mengingatkanku.
 
+<<RemoveTrigger dampak>>
+
+===
+
+
+
+title: dampak_salah1
+
+---
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kalau orang lain nggak peduli sama aku, ya wajar kalau aku juga nggak peduli sama hal-hal itu.
+
+<<speaker Puffkin>>
+Cactus: Tapi kalau kamu hanya menunggu perhatian orang lain, aktivitasmu sendiri akan terus terbengkalai, dan kamu semakin jauh dari mereka.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku nggak kepikiran seperti itu...
+
+<<speaker Puffkin>>
+Cactus: Kadang, memulai dengan merawat dirimu sendiri bisa membuat orang lain lebih mudah mendekat.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Baiklah, aku akan coba pikirkan.
+
+<<RemoveTrigger dampak>>
+
+===
+
+
+
+
+
+
+title: dampak_salah2
+
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Nggak ada masalah kok, aku cuma nggak suka ribet aja.
+
+<<speaker Puffkin>>
+Cactus: Kalau kamu mengabaikan semuanya terus, tugas dan hubunganmu bisa rusak tanpa kamu sadari.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku... mungkin belum mau mikir sejauh itu.
+
+<<speaker Puffkin>>
+Cactus: Semoga suatu hari kamu bisa melihat pentingnya mengurus dirimu sendiri dan orang di sekitarmu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku akan jalan dulu.
 
 
 <<RemoveTrigger dampak>>
-<<stop>>
+
 ===
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -355,66 +707,128 @@ Kael: Ayolah, jangan pergi gitu aja.
 title: stigma
 ---
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Apa kamu pernah merasa harus pura-pura baik-baik saja?
 
 
-<<speaker Kael>>
-<<setportrait Kael lesu>>
-Kael: <i>( Sepertinya aku masih harus menjawabnya...)</i>
 
-
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Setiap hari. Kalau aku bilang aku lelah, mereka tertawa. Mereka anggap aku manja… atau drama. Jadi aku berhenti cerita.
-
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Banyak orang memang salah paham. Mereka kira depresi itu cuma cari perhatian... padahal tidak sesederhana itu.
-
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Aku juga dulu berpikir begitu. Bahkan pada diriku sendiri.
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Dunia terlalu cepat menghakimi, padahal luka yang tak terlihat pun bisa menyakitkan. Depresi bukan kelemahan—itu kondisi nyata.
+<<speaker Puffkin>>
+Cactus: Hei, kamu seperti orang yang banyak pikiran, apakah kamu baik-baik saja?
 
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Tapi kenapa mereka cuma lihat dari luar?
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Karena tidak semua luka terlihat, Kael. Dan banyak yang belum benar-benar paham... mereka pikir kalau kamu masih bisa tersenyum, berarti kamu baik-baik saja.
-
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Padahal dalamnya kosong...
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Iya. Dan itu yang membuat banyak orang memilih diam.
+Kael: Aku tidak tahu, tetapi rasanya memang begitu. Kepalaku penuh dengan hal-hal yang sulit dijelaskan.
 
 
-<<WalkAway DarkKaelCloakStigma>>
-
-<<hideall>>
-<<wait 3>>
+<<speaker Puffkin>>
+Cactus: Kadang kalau beban di pikiran menumpuk, kita jadi merasa ada yang tidak beres di dalam diri.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Hei… jangan pergi lagi…
+Kael: Mungkin. Aku pernah dengar soal depresi, tapi aku masih belum yakin apakah itu yang aku rasakan.
 
 
+<<speaker Puffkin>>
+Cactus: Kalau menurutmu, apa yang sering disalahpahami soal depresi?
+-> Depresi adalah gangguan serius yang bukan sekadar kelemahan, tapi banyak orang kira itu kelemahan karakter.
+    <<jump stigma_benar>>
+-> Depresi itu cuma sedih sebentar yang hilang sendiri, nggak perlu dianggap serius. 
+    <<jump stigma_salah1>>
+-> Depresi hanya terjadi kalau seseorang malas dan nggak mau berusaha keras. 
+    <<jump stigma_salah2>>
 
-<<RemoveTrigger stigma>>
-<<stop>>
 ===
 
+
+
+
+title : stigma_benar
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Depresi adalah gangguan serius yang bukan sekadar kelemahan, tapi banyak orang kira itu kelemahan karakter.
+
+<<speaker Puffkin>>
+Squircle: Itu benar. Sering kali depresi dianggap cuma tanda seseorang tidak cukup kuat.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Padahal bukan soal kuat atau lemah. Kadang semua terasa gelap meski kita sudah berusaha.
+
+<<speaker Puffkin>>
+Squircle: Kalau cukup dengan niat atau pikiran positif, mungkin tak akan ada yang terus terjebak dalam rasa hampa.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Dan karena itu, banyak yang takut bicara, takut dikira cuma cari perhatian.
+
+<<speaker Puffkin>>
+Squircle: Terima kasih sudah mau bicara seperti ini. Kamu tidak perlu menanggung semuanya sendirian.
+
+<<RemoveTrigger stigma>>
+
+===
+
+
+
+
+title: stigma_salah1
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Depresi itu cuma sedih sebentar yang hilang sendiri, nggak perlu dianggap serius.
+
+<<speaker Puffkin>>
+Squircle: Ya, banyak yang menyangka seperti itu. Akibatnya, yang benar-benar merasa hancur sering menahan sendiri perasaannya.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Karena sedih dianggap wajar, jadi orang sering mengira depresi juga cuma begitu.
+
+<<speaker Puffkin>>
+Squircle: Padahal tidak semua luka terlihat dari luar. Kalau terus dibiarkan, bisa makin dalam.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Benar. Sulit rasanya menjelaskan hal yang bahkan aku sendiri belum sepenuhnya mengerti.
+
+<<speaker Puffkin>>
+Squircle: Semoga kamu menemukan cara untuk memahami dan merawat dirimu.
+
+<<RemoveTrigger stigma>>
+
+===
+
+
+
+title: stigma_salah2
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Depresi hanya terjadi kalau seseorang malas dan nggak mau berusaha keras.
+
+<<speaker Puffkin>>
+Squircle: Ya, ada yang percaya begitu. Jadinya kalau ada yang merasa terpuruk, malah disuruh mengandalkan kemauan sendiri.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Seolah semua langsung hilang kalau cukup niat.
+
+<<speaker Puffkin>>
+Squircle: Padahal kalau semudah itu, tak akan ada yang terjebak lama dalam gelapnya pikiran.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kadang aku sendiri bingung apa yang harus kulakukan.
+
+<<speaker Puffkin>>
+Squircle: Yang penting tetap melangkah, meskipun hanya sedikit. Itu sudah cukup untuk hari ini.
+
+<<RemoveTrigger stigma>>
+
+===
 
 
 
@@ -426,46 +840,115 @@ title: mengenali
 ---
 
 
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: hei, bagaimana aku tahu ini benar-benar depresi? Bukan cuma aku yang cengeng?
+<<speaker Puffkin>>
+Round Guard: Kamu tampak agak gelisah.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Dengarkan tubuhmu dan suara hatimu.
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Kamu sering merasa lelah walau tidak banyak bergerak? Tidurmu kacau—terlalu panjang atau malah sulit tidur?
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Apakah hal-hal yang biasanya membuatmu senang terasa hambar atau tak menarik lagi?
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Itu bisa jadi tanda depresi, bukan sekadar perasaan cengeng.
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Mungkin memang ada yang tidak beres denganku akhir-akhir ini.
+Kael: Kael: Ya… rasanya ada yang ganjal, tapi aku sendiri belum yakin.
 
 
+<<speaker Puffkin>>
+Round Guard: Ada kalanya kita merasa seperti kehilangan arah, tapi aku cuma ingin tanya... apa kamu merasa hidupmu jadi terasa kosong belakangan ini?
 
-<<WalkAway DarkKaelCloakMengenali>>
-
-<<hideall>>
-<<wait 4>>
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Dia kenapa pergi terus, ya?
+Kael: Aku sudah dengar soal depresi dari Hexagon... cuma kadang aku bingung bedainnya sendiri.
 
 
+
+<<speaker Puffkin>>
+Round Guard: Kalau begitu, menurutmu, apa yang paling sering kamu rasakan sekarang?
+-> Aku cuma gampang marah. Itu saja kan, bukan depresi?
+-> Aku merasa semua jadi hampa. Tidak ada yang membuatku senang lagi.
+-> Aku cuma sering malas melakukan apa pun. Pasti cuma butuh istirahat.
+
+
+===
+
+
+
+title: mengenali_salah1
+---
+
+<<speaker Puffkin>>
+Round Guard: Emosi memang kadang sulit dikendalikan. Tapi marah bukan satu-satunya tanda ada masalah lebih dalam.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Jadi mungkin ini cuma aku yang harus lebih sabar?
+
+<<speaker Puffkin>>
+Round Guard: Bisa jadi, atau ada hal lain yang kamu rasakan tapi belum kamu sadari.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Entahlah... aku coba pikirkan lagi nanti.
+
+<<speaker Puffkin>>
+Round Guard: Semoga kamu segera merasa lebih baik.
 
 <<RemoveTrigger mengenali>>
-<<stop>>
+
 ===
+
+
+
+
+
+title: mengenali_benar
+---
+
+<<speaker Puffkin>>
+Round Guard: Rasa hampa itu sering muncul saat ada yang mengganggu keseharian kita, bahkan tanpa kita sadari.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Memang banyak hal yang dulu membuatku semangat, sekarang terasa hambar.
+
+<<speaker Puffkin>>
+Round Guard: Itu bisa jadi tanda kalau yang kamu alami lebih dari sekadar lelah biasa.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku akan coba lebih jujur pada diriku soal ini.
+
+<<speaker Puffkin>>
+Round Guard: Bagus. Kadang mengenali itu langkah awal yang penting.
+
+<<RemoveTrigger mengenali>>
+
+===
+
+
+
+
+title: mengenali_salah2
+---
+
+<<speaker Puffkin>>
+Round Guard: Rasa malas memang bisa muncul kalau kita lelah. Tapi kamu sendiri merasa sudah cukup istirahat?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sudah, tapi rasanya tetap saja seperti ini.
+
+<<speaker Puffkin>>
+Round Guard: Mungkin ada hal lain yang memengaruhimu selain sekadar lelah.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ya... aku belum tahu pasti juga.
+
+<<speaker Puffkin>>
+Round Guard: Semoga kamu temukan jawabannya segera.
+
+<<RemoveTrigger mengenali>>
+
+===
+
 
 
 
@@ -476,65 +959,114 @@ title: langkah
 ---
 
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Sekarang kau tahu luka itu ada. Apa yang akan kau lakukan?
 
-<<speaker Kael>>
-<<setportrait Kael lesu>>
-Kael: Aku tidak tahu... harus mulai dari mana.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Coba ceritakan, Kael. Kadang, hanya dengan mulai bercerita ke seseorang yang kamu percaya, bebanmu bisa terasa lebih ringan.
+<<speaker Puffkin>>
+Square Guard: Kamu kelihatan seperti tidak punya tenaga.
 
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Aku takut... jika mereka menolak atau tidak mengerti.
+Kael: Aku cuma lagi nggak enak badan.
 
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Kalau sulit ungkapkan langsung, coba tulis di jurnal — lebih aman, lebih bebas. Kamu bisa menulis apa pun tentang perasaanmu.
 
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Tulis? Sepertinya terasa lebih nyaman daripada langsung ngomong.
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Benar. Dan setelah itu, carilah seseorang yang bersedia mendengarkan. Tak harus orang yang pernah mengalami hal yang sama. Yang penting... dia peduli dan tidak menghakimi.
+<<speaker Puffkin>>
+Square Guard: Kalau nggak enak badan biasa, biasanya cepat hilang. Tapi kamu terlihat berbeda, seolah ada hal yang lebih besar bikin kamu seperti ini.
 
 
 <<speaker Kael>>
 <<setportrait Kael buka>>
-Kael: Jadi bukan soal mereka pernah merasa seperti aku... tapi soal mereka cukup peduli untuk diam dan tetap di sampingku.
-
-<<speaker Dolly>>
-<<setportrait Dolly jubah_netral>>
-???: Ya. Kadang, kamu hanya butuh satu orang yang mau duduk bersamamu... tanpa mencoba memperbaiki apa pun. Hanya hadir.
-
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Kalau begitu... mungkin aku bisa mulai dari situ. Satu orang. Satu cerita.
+Kael: Mungkin kamu benar… kalau aku dengar-dengar, katanya aku bisa saja mengalami depresi.
 
 
-<<speaker Kael>>
-<<setportrait Kael buka>>
-Kael: Hei, jujur, sebenarnya kamu ini siapa?
-
-
-<<WalkAway DarkKaelCloakLangkah>>
-
-<<hideall>>
-<<wait 4>>
-
-<<speaker Kael>>
-<<setportrait Kael marah>>
-Kael: Hei, jangan kabur terus. Jawab aku!
-
-
+<<speaker Puffkin>>
+Square Guard: Depresi, ya? Kalau memang itu yang kamu rasakan, apa kamu sudah kepikiran mau menyembuhkan depresi ini?
+-> Aku cuma ingin diam saja, semuanya akan membaik sendiri tanpa aku harus cerita ke siapa pun.
+    <<jump langkah_salah1>>
+-> Aku ingin cari orang yang bisa bantu dan ahli dalam hal ini, kalau tidak salah mungkin namanya psikolog, supaya aku tidak sendirian.
+    <<jump langkah_benar>>
+-> Aku cuma butuh beli sesuatu biar nggak mikirin ini, nanti juga rasa ini hilang sendiri.
+    <<jump langkah_salah2>>
 
 <<RemoveTrigger langkah>>
-<<stop>>
 ===
+
+
+
+
+title: langkah_salah1
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku cuma ingin diam saja, semuanya akan membaik sendiri tanpa aku harus cerita ke siapa pun.
+
+<<speaker Puffkin>>
+Square Guard: Kadang diam memang bikin tenang. Tapi kalau terlalu lama, rasa itu bisa makin besar dan bikin kamu kesulitan melakukan hal yang biasanya bisa kamu lakukan.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Jadi kamu pikir aku harus cerita?
+
+<<speaker Puffkin>>
+Square Guard: Itu pilihanmu. Tapi kalau nggak mau cerita ke siapa pun, kamu bisa merasa sendirian lebih lama.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku pikir-pikir lagi nanti. Terima kasih sudah ngobrol denganku.
+
+===
+
+
+
+
+title: langkah_benar
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku ingin cari orang yang bisa bantu, mungkin psikolog, supaya nggak sendirian.
+
+<<speaker Puffkin>>
+Square Guard: Bagus kalau kamu sudah terpikir untuk cari bantuan profesional. Konselor atau psikolog bisa bantu kamu memahami apa yang kamu rasakan dan kasih cara buat mengatasinya.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku takut dikira aneh kalau bilang aku lagi depresi.
+
+<<speaker Puffkin>>
+Square Guard: Nggak apa-apa. Kamu nggak sendiri. Orang yang peduli akan tetap mendengarkan, dan itu hal penting.
+
+<<speaker Puffkin>>
+Square Guard: Kamu berani cerita saja sudah luar biasa. Kamu pantas dapat apresiasi karena sudah mau mulai usaha.
+
+===
+
+
+
+
+
+title: langkah_salah2
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku cuma butuh beli sesuatu biar nggak mikirin ini, nanti juga rasa ini hilang sendiri.
+
+<<speaker Puffkin>>
+Square Guard: Kadang menyibukkan diri memang terasa membantu. Tapi itu hanya menunda apa yang kamu rasakan, bukan membuatnya benar-benar hilang.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kalau aku belanja banyak, setidaknya aku senang.
+
+<<speaker Puffkin>>
+Square Guard: Senang sebentar nggak selalu berarti kamu baik-baik saja. Kadang, bantuan dari orang lain lebih membantu daripada sekadar beli barang.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku pikir aku harus cari cara lain. Terima kasih sudah bilang begitu.
+
+===
+
+
