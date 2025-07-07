@@ -559,10 +559,16 @@ Kael: Mungkin saja. Aku merasa cepat lelah, susah mikir, dan kadang malah nggak 
 <<speaker Puffkin>>
 Cactus: Kalau begitu, apa menurutmu penyebabnya?
 -> "Pikiran yang kacau bikin aku nggak sanggup nyelesaiin hal-hal penting, jadi semuanya jadi berantakan."
+    <<SetTreatmentTrue QuestionCheck>>
+    <<SuaraBenar SFXQuestion>>
     <<jump dampak_benar>>
--> "Kalau orang lain nggak peduli sama aku, ya wajar kalau aku juga nggak peduli sama hal-hal itu."
+-> "Kalau orang lain nggak peduli sama aku, ya wajar kalau aku juga nggak peduli sama hal-hal itu." 
+    <<SetTreatmentFalse QuestionCheck>>
+    <<SuaraSalah SFXQuestion>>
     <<jump dampak_salah1>>
 -> "Nggak ada masalah kok, aku cuma nggak suka ribet aja."
+    <<SetTreatmentFalse QuestionCheck>>
+    <<SuaraSalah SFXQuestion>>
     <<jump dampak_salah2>>
 
 ===
@@ -730,10 +736,16 @@ Kael: Mungkin. Aku pernah dengar soal depresi, tapi aku masih belum yakin apakah
 <<speaker Puffkin>>
 Cactus: Kalau menurutmu, apa yang sering disalahpahami soal depresi?
 -> Depresi adalah gangguan serius yang bukan sekadar kelemahan, tapi banyak orang kira itu kelemahan karakter.
+    <<SuaraBenar SFXQuestion>>
+    <<SetMythTrue QuestionCheck>>
     <<jump stigma_benar>>
--> Depresi itu cuma sedih sebentar yang hilang sendiri, nggak perlu dianggap serius. 
+-> Depresi itu cuma sedih sebentar yang hilang sendiri, nggak perlu dianggap serius.
+    <<SuaraSalah SFXQuestion>>
+    <<SetMythFalse QuestionCheck>>
     <<jump stigma_salah1>>
--> Depresi hanya terjadi kalau seseorang malas dan nggak mau berusaha keras. 
+-> Depresi hanya terjadi kalau seseorang malas dan nggak mau berusaha keras.
+    <<SuaraSalah SFXQuestion>>
+    <<SetMythFalse QuestionCheck>>
     <<jump stigma_salah2>>
 
 ===
@@ -862,8 +874,17 @@ Kael: Aku sudah dengar soal depresi dari Hexagon... cuma kadang aku bingung beda
 <<speaker Puffkin>>
 Round Guard: Kalau begitu, menurutmu, apa yang paling sering kamu rasakan sekarang?
 -> Aku cuma gampang marah. Itu saja kan, bukan depresi?
+    <<SuaraSalah SFXQuestion>>
+    <<SetSupportFalse QuestionCheck>>
+    <<jump mengenali_salah1>>
 -> Aku merasa semua jadi hampa. Tidak ada yang membuatku senang lagi.
+    <<SuaraBenar SFXQuestion>>
+    <<SetSupportTrue QuestionCheck>>
+    <<jump mengenali_benar>>
 -> Aku cuma sering malas melakukan apa pun. Pasti cuma butuh istirahat.
+    <<SuaraSalah SFXQuestion>>
+    <<SetSupportFalse QuestionCheck>>
+    <<jump mengenali_salah2>>
 
 
 ===
@@ -982,13 +1003,16 @@ Kael: Mungkin kamu benar… kalau aku dengar-dengar, katanya aku bisa saja menga
 <<speaker Puffkin>>
 Square Guard: Depresi, ya? Kalau memang itu yang kamu rasakan, apa kamu sudah kepikiran mau menyembuhkan depresi ini?
 -> Aku cuma ingin diam saja, semuanya akan membaik sendiri tanpa aku harus cerita ke siapa pun.
+    <<SetSeverityFalse QuestionCheck>>
     <<jump langkah_salah1>>
 -> Aku ingin cari orang yang bisa bantu dan ahli dalam hal ini, kalau tidak salah mungkin namanya psikolog, supaya aku tidak sendirian.
+    <<SuaraBenar SFXQuestion>>
+    <<SetSeverityTrue QuestionCheck>>
     <<jump langkah_benar>>
 -> Aku cuma butuh beli sesuatu biar nggak mikirin ini, nanti juga rasa ini hilang sendiri.
+    <<SuaraSalah SFXQuestion>>
+    <<SetSeverityFalse QuestionCheck>>
     <<jump langkah_salah2>>
-
-<<RemoveTrigger langkah>>
 ===
 
 
@@ -1015,6 +1039,8 @@ Square Guard: Itu pilihanmu. Tapi kalau nggak mau cerita ke siapa pun, kamu bisa
 <<setportrait Kael buka>>
 Kael: Aku pikir-pikir lagi nanti. Terima kasih sudah ngobrol denganku.
 
+<<RemoveTrigger langkah>>
+
 ===
 
 
@@ -1039,6 +1065,8 @@ Square Guard: Nggak apa-apa. Kamu nggak sendiri. Orang yang peduli akan tetap me
 
 <<speaker Puffkin>>
 Square Guard: Kamu berani cerita saja sudah luar biasa. Kamu pantas dapat apresiasi karena sudah mau mulai usaha.
+
+<<RemoveTrigger langkah>>
 
 ===
 
@@ -1067,6 +1095,279 @@ Square Guard: Senang sebentar nggak selalu berarti kamu baik-baik saja. Kadang, 
 <<setportrait Kael buka>>
 Kael: Aku pikir aku harus cari cara lain. Terima kasih sudah bilang begitu.
 
+<<RemoveTrigger langkah>>
+
 ===
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+title: hidden
+---
+
+<<speaker Puffkin>>
+Rex: Seorang manusia… berbaju putih… bercelana cokelat… rambut jingga… hmm, apakah namamu Kael?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Iya, aku Kael. Kamu siapa?
+
+<<speaker Puffkin>>
+Rex: Namaku Rex.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kenapa kamu di sini?
+
+<<speaker Puffkin>>
+Rex: Aku sedang melihat-lihat kuil ini.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: <i>(Berhenti sebentar, melihat tas besar di punggung Rex.)</i>
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Tasmu besar sekali…
+
+<<speaker Puffkin>>
+Rex: Oh, ini? Ini mesin waktu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Mesin waktu?
+
+<<speaker Puffkin>>
+Rex: Betul. Aku dari masa depan. Dan, aku cukup yakin… kamu adalah Kael sang legenda… Penyelamat semua Puffkin, termasuk orang tuaku…
+
+<<speaker Puffkin>>
+Rex: Sayangnya, mereka sudah tiada sebelum sempat berterima kasih langsung ke kamu… Tapi aku ingat cerita mereka waktu aku kecil… tentang kamu…
+
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku… penyelamat para Puffkin? Bagaimana kamu bisa ngomong begitu?
+
+<<speaker Puffkin>>
+Rex: Karena aku pernah lihat sendiri. Aku bisa melakukan perjalanan waktu, Kael.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Kalau kamu bisa ke masa lalu, kenapa aku nggak boleh pinjam mesinnya? Kalau aku bisa ubah semuanya, aku bisa lebih cepat nolong para Puffkin.
+
+<<speaker Puffkin>>
+Rex: Sayangnya nggak semudah itu. Ada hal yang boleh kita lakukan saat melintasi waktu, ada yang nggak boleh. 
+
+<<speaker Puffkin>>
+Rex: Ngobrol sama kamu begini… itu masih boleh.
+
+<<speaker Puffkin>>
+Rex: Tapi, merubah besar-besaran, kayak menentukan siapa yang selamat atau nggak… atau merubah takdir, itu bisa ngerusak semuanya.
+
+<<speaker Puffkin>>
+Rex: Masa lalu tetap masa lalu.
+
+<<speaker Puffkin>>
+Rex: Tapi masa depan… aku rasa masih bisa berubah. Kadang aku ke waktu yang sama di masa depan, hasilnya berbeda-beda.
+
+<<speaker Puffkin>>
+Rex: Bisa masa depan buruk, bisa masa depan baik…
+
+<<speaker Puffkin>>
+Rex: Mungkin itu tergantung pada apa yang kita lakukan sekarang.
+
+<<speaker Puffkin>>
+Rex: Entahlah, aku juga masih baru dalam hal perjalanan waktu ini.
+
+<<speaker Puffkin>>
+Rex: Tapi aku penasaran, Kael… kenapa kamu jadi penyelamat para Puffkin?
+
+-> "Dulu, aku sering dicemooh orang… jadi saat aku bisa bantu orang lain, aku nggak mau sia-siakan."
+    <<SuaraBenar SFXQuestion>>
+    <<SetRecoveryTrue QuestionCheck>>
+    <<jump hidden_opsi1>>
+-> "Aku cuma pengen pulang… tapi nggak tega lihat orang berjubah itu ngerusak para Puffkin di sini."
+    <<SuaraBenar SFXQuestion>>
+    <<SetRecoveryTrue QuestionCheck>>
+    <<jump hidden_opsi2>>
+-> "Aku juga nggak yakin kenapa… mungkin karena aku udah lihat terlalu banyak hal buruk terjadi ke mereka."
+    <<SuaraBenar SFXQuestion>>
+    <<SetRecoveryTrue QuestionCheck>>
+    <<jump hidden_opsi3>>
+
+===
+
+
+
+
+
+
+title: hidden_opsi1
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Dulu… banyak yang ngeremehin aku. Mereka pikir aku nggak berguna… Jadi waktu aku sadar, aku bisa nolong orang lain… aku nggak mikir panjang lagi.
+
+<<speaker Puffkin>>
+Rex: Jadi semua itu karena kamu ngerasa dulu pernah dipandang sebelah mata?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Mungkin. Tapi ngebantu Puffkin… rasanya beda aja. Kayak… akhirnya ada yang bisa aku lakuin bener.
+
+<<speaker Puffkin>>
+Rex: Orang tuaku sering cerita… kamu nggak pernah setengah hati nolong. Jadi mereka selalu kagum sama kamu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku cuma… ngelakuin apa yang aku bisa.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Terima kasih. Kata-kata itu sangat berharga bagiku.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ngomong-ngomong, apakah kamu tahu jalan keluar dari sini?
+
+<<speaker Puffkin>>
+Rex: Kamu bisa cari lorong atau terowongan. Di belakangku ada tangga di situ.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Terima kasih.
+
+<<speaker Puffkin>>
+Rex: Aku seneng bisa ketemu langsung sama Kael sang legenda. Terhormat rasanya ngobrol gini.
+
+
+
+<<RemoveTrigger hidden>>
+
+===
+
+
+
+
+
+
+
+title: hidden_opsi2
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Sebenarnya aku cuma pengen pulang… Tapi tiap lihat orang berjubah itu ngerusak Puffkin… aku nggak bisa tinggal diam.
+
+<<speaker Puffkin>>
+Rex: Orang berjubah itu ya…?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Iya… dia kelihatan selalu muncul di mana-mana. Hancurin semuanya.
+
+<<speaker Puffkin>>
+Rex: Aku pernah denger… sosok itu bener-bener bikin kekacauan.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Makanya, walaupun aku nggak ngerti semua ini… aku nggak mau biarin dia terus ngelakuin itu.
+
+<<speaker Puffkin>>
+Rex: Itu alasan yang… sederhana, tapi berani.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Terima kasih. Kata-kata itu sangat berharga bagiku.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Walaupun, aku cuma ngikutin apa yang aku rasa harus aku lakuin.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ngomong-ngomong, kamu tahu jalan keluar dari sini?
+
+<<speaker Puffkin>>
+Rex: Kamu bisa cari lorong atau terowongan. Di belakangku ada tangga, di situ.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Terima kasih.
+
+<<speaker Puffkin>>
+Rex: Aku seneng bisa ngobrol sama kamu langsung, Kael… Legenda hidup… Rasanya terhormat banget…
+
+<<RemoveTrigger hidden>>
+
+===
+
+
+
+
+
+
+
+
+title: hidden_opsi3
+---
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Aku nggak yakin kenapa. Tiap lihat Puffkin ketakutan… kayak ada sesuatu yang bilang aku harus nolong mereka.
+
+<<speaker Puffkin>>
+Rex: Jadi itu… dorongan dari dalam hati?
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Bisa dibilang begitu… Aku nggak bisa diem aja ngelihat mereka disakitin.
+
+<<speaker Puffkin>>
+Rex: Orang tuaku sering bilang… kamu selalu punya naluri buat nolong, bahkan kalau itu nyusahin diri sendiri.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Nyusahin atau nggak… rasanya cuma itu yang bisa aku pegang.
+
+<<speaker Puffkin>>
+Rex: Mungkin itu sifat kebaikanmu.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Mungkin saja. Terima kasih. Kata-kata itu sangat berharga bagiku.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Ngomong-ngomong, kamu tahu jalan keluar dari sini?
+
+<<speaker Puffkin>>
+Rex: Kamu bisa cari lorong atau terowongan. Di belakangku ada tangga, di situ.
+
+<<speaker Kael>>
+<<setportrait Kael buka>>
+Kael: Baiklah.
+
+<<speaker Puffkin>>
+Rex: Aku bangga bisa ketemu Kael langsung… legenda yang cuma kudengar dari cerita… terhormat banget bisa ngobrol sama kamu…
+
+<<RemoveTrigger hidden>>
+
+===
+
+
+
+
 
 
