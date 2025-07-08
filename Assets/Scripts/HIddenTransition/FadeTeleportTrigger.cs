@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +11,13 @@ public class FadeTeleportTrigger : MonoBehaviour
     [SerializeField] private Image fadeImage;
     [SerializeField] private float fadeInTime = 1f;
     [SerializeField] private float fadeOutTime = 1f;
-    [SerializeField] private float delayBeforeFadeOut = 1f; // Delay setelah teleport sebelum fade out
+    [SerializeField] private float delayBeforeFadeOut = 1f;
     [SerializeField] private GameObject colliderToEnable;
+    [SerializeField] private List<GameObject> objectsToToggle; // List of GameObjects to toggle
 
     private bool isPlayerInTrigger = false;
     private bool hasTeleported = false;
+    private Movement playerMovement; // Reference to Movement component
 
     private void Start()
     {
@@ -22,7 +25,7 @@ public class FadeTeleportTrigger : MonoBehaviour
 
         if (fadeImage != null)
         {
-            fadeImage.gameObject.SetActive(true); // Pastikan GameObject-nya aktif
+            fadeImage.gameObject.SetActive(true);
             fadeImage.color = new Color(0f, 0f, 0f, 0f);
             fadeImage.raycastTarget = false;
         }
@@ -30,6 +33,12 @@ public class FadeTeleportTrigger : MonoBehaviour
         if (colliderToEnable != null)
         {
             colliderToEnable.SetActive(false);
+        }
+
+        // Get reference to Movement component
+        if (player != null)
+        {
+            playerMovement = player.GetComponent<Movement>();
         }
     }
 
@@ -43,25 +52,35 @@ public class FadeTeleportTrigger : MonoBehaviour
 
     private IEnumerator FadeTeleportSequence()
     {
-        // Fade In ke hitam penuh
+        // Disable vignette and overlay at the start of fade
+        if (playerMovement != null)
+        {
+            playerMovement.vignetteEnabled = false;
+            playerMovement.overlayEnabled = false;
+        }
+
+        // Deactivate objects in the list
+        SetObjectsActive(false);
+
+        // Fade In to full black
         yield return StartCoroutine(Fade(0f, 1f, fadeInTime));
 
         if (player != null && teleportTarget != null)
         {
             // Disable player
             player.SetActive(false);
-            Debug.Log("Player dinonaktifkan");
+            Debug.Log("Player disabled");
 
-            // Pindahkan player
+            // Move player
             player.transform.position = teleportTarget.position;
-            Debug.Log("Player dipindahkan ke posisi target: " + teleportTarget.position);
+            Debug.Log("Player moved to target position: " + teleportTarget.position);
 
-            // Tunggu 1 frame agar posisi benar-benar terupdate
+            // Wait one frame to ensure position is updated
             yield return null;
 
-            // Enable player kembali
+            // Enable player
             player.SetActive(true);
-            Debug.Log("Player diaktifkan kembali");
+            Debug.Log("Player re-enabled");
         }
 
         hasTeleported = true;
@@ -71,11 +90,21 @@ public class FadeTeleportTrigger : MonoBehaviour
             colliderToEnable.SetActive(true);
         }
 
-        // Delay sebelum mulai fade out
+        // Delay before starting fade out
         yield return new WaitForSeconds(delayBeforeFadeOut);
 
-        // Fade Out ke transparan
+        // Fade Out to transparent
         yield return StartCoroutine(Fade(1f, 0f, fadeOutTime));
+
+        // Enable vignette and overlay after fade completes
+        if (playerMovement != null)
+        {
+            playerMovement.vignetteEnabled = true;
+            playerMovement.overlayEnabled = true;
+        }
+
+        // Reactivate objects in the list
+        SetObjectsActive(true);
 
         popupUI.SetActive(false);
     }
@@ -103,8 +132,19 @@ public class FadeTeleportTrigger : MonoBehaviour
             color.a = alpha;
             fadeImage.color = color;
 
-            // Raycast aktif hanya saat layar hitam penuh
+            // Raycast active only when screen is fully black
             fadeImage.raycastTarget = alpha >= 0.95f;
+        }
+    }
+
+    private void SetObjectsActive(bool active)
+    {
+        foreach (GameObject obj in objectsToToggle)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(active);
+            }
         }
     }
 

@@ -142,6 +142,7 @@ public class Movement : MonoBehaviour
     public List<PlayerState> positionHistory = new List<PlayerState>();
     public int historyLimit = 100;
 
+    [Header("Vignette Black Settings")]
     public bool vignetteEnabled = false;
     public VignetteBlack vignetteBlack; // Drag your VignetteBlack script here in Inspector
     private bool lastVignetteRunState = true;
