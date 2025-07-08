@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Background/Chase Fail.unity
     guid: caaac722d766abf46b99277b495fcd51
+  - enabled: 1
+    path: Assets/Scenes/Cutscenes/House Cutscene.unity
+    guid: cfc20b25912f75844a4009cc71c3d431
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

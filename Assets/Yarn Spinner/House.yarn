@@ -24,3 +24,16 @@ Kael: Snowy.. Kamu lucu hari ini, seperti biasa!
 Snowy: Meong!
 <<endonce>>
 ===
+
+title: outside
+---
+<<once>>
+<<speaker Kael>>
+<<setportrait Kael kaget>>
+Kael: Apa ini mimpi?
+Kael: Atau halusinasi?
+<<wait 1>>
+<<setportrait Kael buka>>
+Kael: ..Mungkin aku masih kelelahan. Aku pulang saja dulu.
+<<endonce>>
+===
