@@ -116,8 +116,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb65f60d309a694e9a5855a9d6c0e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMovementLocked: 0
   dashLocked: 1
   dashEnabled: 1
+  reverseHorizontalControls: 0
   horizontalInput: 0
   verticalInput: 0
   alwaysRunActive: 0
@@ -160,10 +162,17 @@ MonoBehaviour:
   runSound: {fileID: 0}
   jumpSoundPrefab: {fileID: 0}
   dashSoundPrefab: {fileID: 0}
+  runOffset: {x: 0.029530525, y: 0.45495093}
+  runSize: {x: 2.15312, y: 14.809273}
   jumpOffset: {x: 0.361042, y: 2.143058}
   jumpSize: {x: 8.456917, y: 10.84726}
   canDash: 1
   historyLimit: 100
+  vignetteEnabled: 0
+  vignetteBlack: {fileID: 0}
+  overlayEnabled: 0
+  overlayWithAnimationPicture: {fileID: 0}
+  enableOverlayAlphaRunningCheck: 1
 --- !u!114 &1620564737011133611
 MonoBehaviour:
   m_ObjectHideFlags: 0

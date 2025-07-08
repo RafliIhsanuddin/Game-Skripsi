@@ -111,20 +111,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebb65f60d309a694e9a5855a9d6c0e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vfxRenderer: {fileID: 0}
+  isMovementLocked: 0
+  dashLocked: 1
+  dashEnabled: 1
+  reverseHorizontalControls: 0
+  horizontalInput: 0
+  verticalInput: 0
+  alwaysRunActive: 0
+  isWallSliding: 0
+  wallSlideSpeed: 2
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallCheckRightDistance: 0.2
+  wallCheckLeftDistance: 0.2
+  wallJumpForce: {x: 15, y: 15}
+  wallOnRight: 0
+  wallOnLeft: 0
+  wallJumpHorizontalForce: 15
+  wallJumpVerticalForce: 15
   speed: 5
   runSpeed: 8
   jumpForce: 5
-  groundCheckDistance: 0.94
+  groundCheckStartOffset: {x: 0, y: -0.5}
+  groundCheckRayLength: 1.1
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  platformLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  ghost: {fileID: 0}
   horizontalDashSpeed: 15
   verticalDashSpeed: 7
   dashDuration: 0.5
   dashCooldown: 1
+  doubleJumpEnabled: 1
+  wallJumpDoubleJumpEnabled: 1
+  wallDashDoubleJumpEnabled: 1
   PlayerAnimationController: {fileID: 1276931929365826474}
   bodyHeightOffset: 2.57
+  capsuleCollider: {fileID: 0}
+  dust: {fileID: 0}
+  walkSound: {fileID: 0}
+  runSound: {fileID: 0}
+  jumpSoundPrefab: {fileID: 0}
+  dashSoundPrefab: {fileID: 0}
+  runOffset: {x: 0.029530525, y: 0.45495093}
+  runSize: {x: 2.15312, y: 14.809273}
+  jumpOffset: {x: 0.043530464, y: 2.1430578}
+  jumpSize: {x: 1.8339062, y: 10.847261}
+  canDash: 1
+  historyLimit: 100
+  vignetteEnabled: 0
+  vignetteBlack: {fileID: 0}
+  overlayEnabled: 0
+  overlayWithAnimationPicture: {fileID: 0}
+  enableOverlayAlphaRunningCheck: 1
 --- !u!1001 &6366318561990847880
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -298,7 +298,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8653719598885068355, guid: fb85d01aa933cdc408de131576421d28, type: 3}
       propertyPath: m_Name
-      value: CatFixed
+      value: CatFixedPrefab
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: fb85d01aa933cdc408de131576421d28, type: 3}
       propertyPath: m_LocalScale.x

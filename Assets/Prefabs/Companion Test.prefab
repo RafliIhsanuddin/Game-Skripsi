@@ -283,25 +283,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a615af534b5e314b8fb0d8362c8807d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  startingHealth: 100
   minSpeed: 8
   maxSpeed: 12
-  jumpHeight: 6
-  txtHealth: {fileID: 8057345681266378605}
-  healthBar: {fileID: 1656985740507109470}
+  minJumpHeight: 5
+  maxJumpHeight: 12
+  baseHorizontalForce: 2.5
+  minHorizontalForceMultiplier: 0.5
+  maxHorizontalForceMultiplier: 2
+  horizontalForceAdjustSpeed: 0.5
+  minRequiredJumpHeight: 5
+  maxRequiredJumpHeight: 12
+  heightSmoothingFactor: 0.2
+  distanceWeight: 0.1
+  heightWeight: 1.2
   DEBUGMODE: 1
+  showJumpCalculations: 0
+  showJumpDebugInfo: 0
   followRange: 10
-  minFollowDistance: 2
   wallRayLength: 30
   groundRayLength: 3.5
+  longGroundRayLength: 14
   rayHeight: 22.5
+  platformDetectionRange: 10
   whatIsGround:
     serializedVersion: 2
     m_Bits: 0
   targets: []
   left: {fileID: 846858642262298216}
   right: {fileID: 4687266240517978435}
+  currentPlatformPosition: {x: 0, y: 0}
+  targetPlatformPosition: {x: 0, y: 0}
+  requiredJumpHeight: 0
 --- !u!95 &6818831248718528450
 Animator:
   serializedVersion: 7

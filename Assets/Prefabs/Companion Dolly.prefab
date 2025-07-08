@@ -114,23 +114,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpHeight: 8
-  maxJumpHeight: 12
   walkDistanceThreshold: 5
   idleDistanceThreshold: 1
   runSpeed: 14
   walkSpeed: 7
+  centerAlignSpeed: 20
+  movementSmoothing: 0.05
+  centerPositionTolerance: 0.1
   idleToWalkDuration: 0.2
   walkToRunDuration: 0.3
   runToWalkDuration: 0.2
   walkToIdleDuration: 0.15
   upwardRayLength: 5
-  heightDifferenceThreshold: 2
   obstacleWaitTime: 1
   jumpCooldown: 0.5
+  groundCheckDelayAfterJump: 0.2
+  upwardRayCircleRadius: 0.5
   groundRayLength: 3.5
-  longGroundRayLength: 14
   groundRayHorizontalOffset: 0.5
-  longGroundRayHorizontalOffset: 1
   wallRayLength: 30
   rayHeight: 22.5
   DEBUGMODE: 0
