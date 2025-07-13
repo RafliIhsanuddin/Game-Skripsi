@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Burst.CompilerServices;
+using UnityEngine;
 using Yarn.Unity;
 
 public class DialogueTrigger : MonoBehaviour
@@ -8,7 +9,7 @@ public class DialogueTrigger : MonoBehaviour
     public GameObject bubble;
     [SerializeField] public string yarnNode;
 
-    void Update()
+/*    void Update()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left, 7f, kaelLayer);
         Debug.DrawRay(transform.position, Vector2.left * 7f, Color.cyan);
@@ -23,6 +24,16 @@ public class DialogueTrigger : MonoBehaviour
             }
         }
 
+    }*/
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+                Debug.Log($"[Puffkin] {gameObject.name} starting node: {yarnNode}");
+                dialogueRunner.StartDialogue(yarnNode);
+                bubble.SetActive(false);
+        }
     }
 }
 
