@@ -1,6 +1,5 @@
 ﻿title: forest1
 ---
-<<flip_dolly CompanionDolly>>
 <<speaker Kael>>
 <<setportrait Kael lesu2>>
 Kael: ..Hah?
@@ -98,5 +97,4 @@ title: forest11
 <<speaker Kael>>
 <<setportrait Kael buka>>
 Kael: Terima kasih Dolly, aku akan berhati-hati.
-<<unflip_dolly CompanionDolly>>
 ===
